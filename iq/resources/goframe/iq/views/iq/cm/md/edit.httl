@@ -91,7 +91,7 @@ ${extends("/goframe/function_layout.httl")}
                 <div id="datagrid1" class="nui-datagrid" style="width:100%; height: 100%;" dataField="data"
                      idField="pkId" multiSelect="true" allowCellEdit="true" allowCellSelect="true" sortMode="client"
                      showPager="false" editNextOnEnterKey="true" editNextRowCell="true" onselectionchanged="selected1"
-                     url="${basePath}/iq/md/col/select/${pkId}/1" >
+                     url="${basePath}/iq/md/col/selectQueryColList/${pkId}" >
                     <div property="columns">
                         <div type="checkcolumn" headerAlign="center" width="5"></div>
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>
@@ -140,7 +140,7 @@ ${extends("/goframe/function_layout.httl")}
                 <div id="datagrid2" class="nui-datagrid" style="width:100%; height: 100%;" dataField="data"
                      idField="pkId" multiSelect="true" allowCellEdit="true" allowCellSelect="true" sortMode="client"
                      showPager="false" editNextOnEnterKey="true" editNextRowCell="true" onselectionchanged="selected2"
-                     url="${basePath}/iq/md/col/select/${pkId}/2" >
+                     url="${basePath}/iq/md/col/selectReturnColList/${pkId}" >
                     <div property="columns">
                         <div type="checkcolumn" headerAlign="center" width="5"></div>
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>
@@ -311,22 +311,7 @@ ${extends("/goframe/function_layout.httl")}
     function remove1() {
         var rows = grid1.getSelecteds();
         if (rows.length > 0) {
-            //删除前检查
-            $.ajax({
-                url: "${basePath}/iq/md/col/checkBeforeRemoveCols/${pkId}",
-                type: 'POST',
-                data: null,
-                cache: false,
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.status == false) {
-                        nui.alert(result.message);
-                        return;
-                    }else{
-                        grid1.removeRows(rows, true);
-                    }
-                }
-            });
+            grid1.removeRows(rows, true);
         } else {
             nui.alert("请至少选中一条记录!");
         }
@@ -334,33 +319,10 @@ ${extends("/goframe/function_layout.httl")}
     function remove2() {
         var rows = grid2.getSelecteds();
         if (rows.length > 0) {
-            //删除前检查
-            $.ajax({
-                url: "${basePath}/iq/md/col/checkBeforeRemoveCols/${pkId}",
-                type: 'POST',
-                data: null,
-                cache: false,
-                contentType: 'application/json',
-                success: function (result) {
-                    if (result.status == false) {
-                        nui.alert(result.message);
-                        return;
-                    }else{
-                        grid2.removeRows(rows, true);
-                    }
-                }
-            });
+            grid2.removeRows(rows, true);
         } else {
             nui.alert("请至少选中一条记录!");
         }
-    }
-
-    function getPkIds(rows){
-        var nodes = [];
-        for (var i = 0, len = rows.length; i < len; i++) {
-            nodes.push({name: rows[i].name});
-        }
-        return nodes;
     }
 
     /**

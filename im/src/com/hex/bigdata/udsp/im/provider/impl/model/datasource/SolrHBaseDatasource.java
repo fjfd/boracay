@@ -75,6 +75,13 @@ public class SolrHBaseDatasource extends Datasource {
         return value;
     }
 
+    public String getClientScannerTimeoutPeriod() {
+        String value = getProperty("hbase.client.scanner.timeout.period").getValue();
+        if (StringUtils.isBlank(value))
+            value = "60000";
+        return value;
+    }
+
     public String getSolrServers() {
         String value = getProperty("solr.servers").getValue();
         if (StringUtils.isBlank(value))

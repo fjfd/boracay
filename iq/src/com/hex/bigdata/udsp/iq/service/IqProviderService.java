@@ -31,6 +31,9 @@ import java.util.*;
  */
 @Service
 public class IqProviderService extends BaseService {
+    private static Logger logger = LogManager.getLogger(IqProviderService.class);
+    private static final String IQ_IMPL_CLASS = "IQ_IMPL_CLASS";
+
     @Autowired
     private IqApplicationService iqApplicationService;
     @Autowired
@@ -50,8 +53,6 @@ public class IqProviderService extends BaseService {
     @Autowired
     private GFDictMapper gfDictMapper;
 
-    private static Logger logger = LogManager.getLogger(IqProviderService.class);
-
     /**
      * 获取字段信息
      *
@@ -61,7 +62,7 @@ public class IqProviderService extends BaseService {
      */
     public List<MetadataCol> getColumnInfo(String dsId, String schemaName) {
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comPropertiesList = comPropertiesService.selectList(dsId);
         Datasource datasource = new Datasource(comDatasource, comPropertiesList);
         Provider provider = getProviderImpl(datasource);
         return provider.columnInfo(datasource, schemaName);
@@ -121,7 +122,6 @@ public class IqProviderService extends BaseService {
         return columnMap;
     }
 
-
     /**
      * 获取应用
      *
@@ -162,11 +162,12 @@ public class IqProviderService extends BaseService {
         String mdId = iqApplication.getMdId();
 
         IqMetadata iqMetadata = iqMetadataService.select(mdId);
-        List<IqMetadataCol> iqMetadataColList = iqMetadataColService.selectByMdId(mdId);
+        List<IqMetadataCol> iqMetadataQueryColList = iqMetadataColService.selectQueryColList(mdId);
+        List<IqMetadataCol> iqMetadataReturnColList = iqMetadataColService.selectReturnColList(mdId);
         String dsId = iqMetadata.getDsId();
 
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comPropertiesList = comPropertiesService.selectList(dsId);
 
         // ----------------数据封装-----------------------
         Application application = new Application();
@@ -223,8 +224,7 @@ public class IqProviderService extends BaseService {
         metadata.setNote(iqMetadata.getNote());
         metadata.setTbName(iqMetadata.getTbName());
         List<DataColumn> queryColumns = new ArrayList<>();
-        List<DataColumn> returnColumns = new ArrayList<>();
-        for (IqMetadataCol iqMetadataCol : iqMetadataColList) {
+        for(IqMetadataCol iqMetadataCol: iqMetadataQueryColList){
             DataColumn dataColumn = new DataColumn();
             dataColumn.setSeq(iqMetadataCol.getSeq());
             dataColumn.setName(iqMetadataCol.getName());
@@ -233,13 +233,19 @@ public class IqProviderService extends BaseService {
             dataColumn.setLength(iqMetadataCol.getLength());
             dataColumn.setType(EnumTrans.transDataType(iqMetadataCol.getColType()));
             queryColumns.add(dataColumn);
-            if ("1".equals(iqMetadataCol.getType())) {
-                queryColumns.add(dataColumn);
-            } else {
-                returnColumns.add(dataColumn);
-            }
         }
         metadata.setQueryColumns(queryColumns);
+        List<DataColumn> returnColumns = new ArrayList<>();
+        for(IqMetadataCol iqMetadataCol: iqMetadataReturnColList){
+            DataColumn dataColumn = new DataColumn();
+            dataColumn.setSeq(iqMetadataCol.getSeq());
+            dataColumn.setName(iqMetadataCol.getName());
+            dataColumn.setDescribe(iqMetadataCol.getDescribe());
+            dataColumn.setNote(iqMetadataCol.getNote());
+            dataColumn.setLength(iqMetadataCol.getLength());
+            dataColumn.setType(EnumTrans.transDataType(iqMetadataCol.getColType()));
+            returnColumns.add(dataColumn);
+        }
         metadata.setReturnColumns(returnColumns);
 
         Datasource datasource = new Datasource(comDatasource, comPropertiesList);
@@ -264,7 +270,7 @@ public class IqProviderService extends BaseService {
     private Provider getProviderImpl(Datasource datasource) {
         String implClass = datasource.getImplClass();
         if (StringUtils.isBlank(implClass)) {
-            GFDict gfDict = gfDictMapper.selectByPrimaryKey("IQ_IMPL_CLASS", datasource.getType());
+            GFDict gfDict = gfDictMapper.selectByPrimaryKey(IQ_IMPL_CLASS, datasource.getType());
             implClass = gfDict.getDictName();
         }
         return (Provider) ObjectUtil.newInstance(implClass);

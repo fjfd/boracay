@@ -580,7 +580,7 @@ public class OlqApplicationService extends BaseService {
         long maxSize = 65535;
 
         if (null != olqApplicationDto) {
-            List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(rcService.getAppId());
+            List<ComProperties> comPropertiesList = comPropertiesService.selectList(rcService.getAppId());
             for (ComProperties item : comPropertiesList) {
                 if ("max.data.size".equals(item.getName())) {
                     if (org.apache.commons.lang.StringUtils.isNotBlank(item.getValue())) {

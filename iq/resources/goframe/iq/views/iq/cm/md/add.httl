@@ -14,7 +14,7 @@ ${extends("/goframe/function_layout.httl")}
                     <th class="nui-form-label"><label for="dsId">数据源：</label></th>
                     <td>
                         #if(hasPermission("IQ.cm.md.link"))
-                        <div id="dsId" class="nui-combobox" style="width:80%;"  popupWidth="400" textField="name" valueField="pkId"
+                        <div id="dsId" class="nui-combobox" style="width:79%;"  popupWidth="400" textField="name" valueField="pkId"
                              url="${basePath}/com/ds/select?model=IQ" dataField="data" name="dsId" multiSelect="false"
                              allowInput="true" required="true">
                             <div property="columns">
@@ -656,7 +656,7 @@ ${extends("/goframe/function_layout.httl")}
         var row = {};
         row.describe = value.describe;
         row.name = value.name;
-        row.length = "";
+        row.length = value.length;
         row.note = "";
         row.colType = value.type;
         return row;
@@ -666,7 +666,7 @@ ${extends("/goframe/function_layout.httl")}
         var row = {};
         row.describe = value.describe;
         row.name = value.name;
-        row.length = "";
+        row.length = value.length;
         row.note = "";
         row.colType = value.type;
         return row;

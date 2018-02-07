@@ -63,6 +63,7 @@ public class MmProviderService {
         put("async", "2");
         put("batch", "3");
     }};
+
     @Autowired
     private MmApplicationService mmApplicationService;
 

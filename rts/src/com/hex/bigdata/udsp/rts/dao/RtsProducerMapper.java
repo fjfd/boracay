@@ -7,6 +7,7 @@ import com.hex.goframe.model.Page;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 /**
  * 实时流-生产者者配置Dao层服务
  * Created by tomnic on 2017/2/28.
@@ -67,10 +68,15 @@ public class RtsProducerMapper extends SyncMapper<RtsProducer> {
 
     /**
      * 根据查询条件查询结果list，不分页
+     *
      * @param rtsProConfigView 查询参数
      * @return
      */
     public List<RtsProducerView> select(RtsProducerView rtsProConfigView) {
-        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.rts.dao.RtsProducerMapper.selectPage",rtsProConfigView);
+        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.rts.dao.RtsProducerMapper.selectPage", rtsProConfigView);
+    }
+
+    public List<RtsProducer> selectAll() {
+        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.rts.dao.RtsProducerMapper.selectAll");
     }
 }

@@ -1,20 +1,15 @@
 package com.hex.bigdata.udsp.im.provider.impl.util;
 
-import com.hex.bigdata.udsp.im.provider.impl.factory.JdbcConnectionPoolFactory;
 import com.hex.bigdata.udsp.im.provider.impl.model.datasource.HiveDatasource;
-import com.hex.bigdata.udsp.im.provider.impl.model.datasource.JdbcDatasource;
 import com.hex.bigdata.udsp.im.service.BatchJobService;
 import com.hex.bigdata.udsp.im.thread.HiveGetLogThread;
 import com.hex.goframe.util.WebApplicationContextUtil;
 import org.apache.commons.dbcp.DelegatingStatement;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.hive.jdbc.HiveStatement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;

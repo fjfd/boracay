@@ -126,7 +126,7 @@ public abstract class SyncMapper<T> extends BaseMapper {
         Cache<T> cache = getCache();
         T t = cache.selectCache(key);
         if (t == null) {
-            t  = selectExe(id);
+            t = selectExe(id);
             if (t != null) {
                 cache.insertCache(key, t);
             }
@@ -230,6 +230,15 @@ public abstract class SyncMapper<T> extends BaseMapper {
     // --------------------------------------------------------------------------------------
     private void tranInsertObject(T t) {
         Class clazz = t.getClass();
+//        try {
+//            Field field = clazz.getDeclaredField("pkId");
+//            String pkId = getField(field, t);
+//            if (pkId == null) {
+//                setField(field, t, Util.uuid());
+//            }
+//        } catch (NoSuchFieldException e) {
+//            //
+//        }
         try {
             Field field = clazz.getDeclaredField("delFlg");
             setField(field, t, "0");
@@ -291,6 +300,18 @@ public abstract class SyncMapper<T> extends BaseMapper {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getField(Field field, T t) {
+        if (field != null) {
+            try {
+                field.setAccessible(true);
+                return (String) field.get(t);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     private void insertLog(String type, String log) {

@@ -6,6 +6,8 @@ import com.hex.bigdata.udsp.im.provider.impl.wrapper.SolrHBaseWrapper;
 import com.hex.bigdata.udsp.im.provider.model.Metadata;
 import com.hex.bigdata.udsp.im.provider.model.MetadataCol;
 import com.hex.bigdata.udsp.im.provider.model.Model;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +38,14 @@ public class SolrHBaseProvider extends SolrHBaseWrapper {
 
     @Override
     public void createSchema(Metadata metadata) throws Exception {
-        boolean result;
         hbaseProvider.createSchema(metadata);
         try {
+            // Solr+HBase时Solr除了主键其他字段都不存储
+            List<MetadataCol> metadataCols = metadata.getMetadataCols();
+            for (MetadataCol metadataCol : metadataCols) {
+                if (metadataCol.isPrimary()) continue;
+                metadataCol.setStored(false);
+            }
             solrProvider.createSchema(metadata);
         } catch (Exception e) {
             // 回滚删除hbase对应的表 删除失败怎么办？暂时不考虑

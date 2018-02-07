@@ -86,7 +86,7 @@ public class ImModelController {
     @RequestMapping("page")
     public PageListResult page(ImModelView imModelView, Page page) {
         log.debug("查询交互建模列表的查询为：" + JSONUtil.parseObj2JSON(imModelView) + ";页面信息为：" + JSONUtil.parseObj2JSON(page));
-        List<ImModelView> imModels = imModelService.selectPage(imModelView, page);
+        List<ImModelView> imModels = imModelService.select(imModelView, page);
 
         return new PageListResult(imModels, page);
     }
@@ -116,8 +116,7 @@ public class ImModelController {
     @ResponseBody
     @RequestMapping("selectByPkId/{pkId}")
     public ImModel selectByPkId(@PathVariable String pkId) {
-
-        return imModelService.selectByPkId(pkId);
+        return imModelService.select(pkId);
     }
 
     /**
@@ -222,7 +221,7 @@ public class ImModelController {
         boolean result = false;
         String message = "";
         try {
-            ImModel imModel = imModelService.selectByPkId(pkId);
+            ImModel imModel = imModelService.select(pkId);
             //如果是删除的话要判断是否能够删除，原则上构建了的不能够直接删除，或者删除连带构建一起删除
             if ("1".equals(status) && "2".equals(imModel.getStatus())) {
                 result = false;
@@ -249,7 +248,7 @@ public class ImModelController {
         String message = "";
         try {
             //先获取该对一个pkId的交互建模模型
-            ImModel imModel = imModelService.selectByPkId(pkId);
+            ImModel imModel = imModelService.select(pkId);
             //如果相同则说明已经已经构建或则已经删除构建
             if (imModel.getStatus() == status) {
                 result = false;

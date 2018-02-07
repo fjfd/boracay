@@ -16,7 +16,7 @@ public class OlqApplicationParam implements Serializable {
 
     private String isNeed; // 是否必填
 
-    private String olqAppId; // APP ID
+    private String appId; // APP ID
 
     public int getSeq() {
         return seq;
@@ -66,12 +66,11 @@ public class OlqApplicationParam implements Serializable {
         this.isNeed = isNeed;
     }
 
-    public String getOlqAppId() {
-        return olqAppId;
+    public String getAppId() {
+        return appId;
     }
 
-    public void setOlqAppId(String olqAppId) {
-        this.olqAppId = olqAppId;
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
-
 }

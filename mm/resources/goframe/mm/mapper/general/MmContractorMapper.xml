@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hex.bigdata.udsp.mm.dao.ContractorMapper" >
-  <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mm.model.Contractor" >
+<mapper namespace="com.hex.bigdata.udsp.mm.dao.MmContractorMapper" >
+  <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mm.model.MmContractor" >
     <id column="PK_ID" property="pkId" jdbcType="VARCHAR" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
     <result column="CN_NAME" property="cnName" jdbcType="VARCHAR" />
@@ -22,7 +22,7 @@
     delete from MM_CONTRACTOR
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hex.bigdata.udsp.mm.model.Contractor" >
+  <insert id="insert" parameterType="com.hex.bigdata.udsp.mm.model.MmContractor" >
     insert into MM_CONTRACTOR (PK_ID, NAME,CN_NAME,HTTP_URL,
       PRINCIPAL, MOBILE, NOTE, 
       DEL_FLG, CRT_USER, CRT_TIME, 
@@ -34,7 +34,7 @@
       #{uptUser,jdbcType=VARCHAR}, #{uptTime,jdbcType=VARCHAR}, #{extendField1,jdbcType=VARCHAR}, 
       #{extendField2,jdbcType=VARCHAR} ,#{ftpPassword,jdbcType=VARCHAR})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.mm.model.Contractor" >
+  <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.mm.model.MmContractor" >
     update MM_CONTRACTOR
     set NAME = #{name,jdbcType=VARCHAR},
       CN_NAME = #{cnName,jdbcType=VARCHAR},
@@ -79,7 +79,7 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <!--分页查询-->
-  <select id="selectPage" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.ContractorView">
+  <select id="selectPage" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.MmContractorView">
     select PK_ID, NAME,CN_NAME, HTTP_URL, PRINCIPAL, MOBILE, NOTE, DEL_FLG, CRT_USER, CRT_TIME,
     UPT_USER, UPT_TIME, EXTEND_FIELD1, EXTEND_FIELD2,FTP_PASSWORD
     from MM_CONTRACTOR

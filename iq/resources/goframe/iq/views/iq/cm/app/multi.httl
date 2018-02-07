@@ -65,7 +65,13 @@ ${extends("/goframe/function_layout.httl")}
             //console.warn(datas);
             // 查询字段集合
             grid1.loading("正在加载，请稍等");
-            $.post("${basePath}/iq/md/col/select/${mdId}/${type}", function (result) {
+            var url = "";
+            if ("${type}" == "1") {
+                url = "${basePath}/iq/md/col/selectQueryColList/${mdId}";
+            } else {
+                url = "${basePath}/iq/md/col/selectReturnColList/${mdId}";
+            }
+            $.post(url, function (result) {
                 var data = result.data;
                 // 去重并判断字段是否存在
                 var items = [];

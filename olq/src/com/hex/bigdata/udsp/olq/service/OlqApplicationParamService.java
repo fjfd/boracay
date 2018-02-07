@@ -37,19 +37,20 @@ public class OlqApplicationParamService extends BaseService {
     /**
      * 批量插入应用参数信息
      *
-     * @param paramList
+     * @param params
+     * @param appId
      * @return
      */
     @Transactional
-    public boolean insertList(List<OlqApplicationParam> paramList, String olqApplicationId) {
-        for (OlqApplicationParam item : paramList) {
-            if (null == item.getIsNeed() || "否".equals(item.getIsNeed())) {
-                item.setIsNeed("1");
-            } else if ("是".equals(item.getIsNeed())) {
-                item.setIsNeed("0");
+    public boolean insertList(List<OlqApplicationParam> params, String appId) {
+        for (OlqApplicationParam param : params) {
+            if (null == param.getIsNeed() || "否".equals(param.getIsNeed())) {
+                param.setIsNeed("1");
+            } else if ("是".equals(param.getIsNeed())) {
+                param.setIsNeed("0");
             }
-            item.setOlqAppId(olqApplicationId);
-            this.insert(item);
+            param.setAppId(appId);
+            this.insert(param);
         }
         return true;
     }

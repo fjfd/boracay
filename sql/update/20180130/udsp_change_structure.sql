@@ -1,0 +1,3 @@
+
+-- 20180130 修改OLQ_APPLICATION_PARAM字段名
+alter table OLQ_APPLICATION_PARAM rename column OLQ_APP_ID to APP_ID;

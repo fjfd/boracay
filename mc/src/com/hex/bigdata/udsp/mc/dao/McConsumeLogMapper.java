@@ -23,8 +23,8 @@ public class McConsumeLogMapper extends AsyncInsertMapper<McConsumeLog> {
     protected boolean insertExe(McConsumeLog mcConsumeLog) {
         //输入内容过长处理
         String requestContent = mcConsumeLog.getRequestContent();
-        if(StringUtils.isNotBlank(requestContent) && requestContent.length() > 4000) {
-            mcConsumeLog.setRequestContent(requestContent.substring(0,4000));
+        if (StringUtils.isNotBlank(requestContent) && requestContent.length() > 4000) {
+            mcConsumeLog.setRequestContent(requestContent.substring(0, 4000));
         }
         try {
             return this.sqlSessionTemplate.insert("com.hex.bigdata.udsp.mc.dao.McConsumeLogMapper.insert", mcConsumeLog) == 1;
@@ -48,5 +48,16 @@ public class McConsumeLogMapper extends AsyncInsertMapper<McConsumeLog> {
     public List<McConsumeLog> select(McConsumeLogView mcConsumeLogView) {
         return this.sqlSessionTemplate.selectList(
                 "com.hex.bigdata.udsp.mc.dao.McConsumeLogMapper.select", mcConsumeLogView);
+    }
+
+    /**
+     * 清空某天和其之前的消费日志数据
+     *
+     * @param date
+     * @return
+     */
+    public boolean clean(String date) {
+        return this.sqlSessionTemplate.update(
+                "com.hex.bigdata.udsp.mc.dao.McConsumeLogMapper.clean", date) >= 0;
     }
 }

@@ -8,8 +8,8 @@ import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.im.provider.model.MetadataCol;
 import com.hex.bigdata.udsp.iq.provider.Provider;
 import com.hex.bigdata.udsp.iq.provider.impl.factory.HBaseConnectionPoolFactory;
-import com.hex.bigdata.udsp.iq.provider.impl.model.HBaseDatasource;
-import com.hex.bigdata.udsp.iq.provider.impl.model.HBasePage;
+import com.hex.bigdata.udsp.iq.provider.impl.model.hbase.HBaseDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.hbase.HBasePage;
 import com.hex.bigdata.udsp.iq.provider.model.*;
 import com.hex.goframe.util.GFStringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -312,8 +312,10 @@ public class HBaseProvider implements Provider {
                     DataType dataType = orderColumn.getType();
                     String val1 = obj1.get(colName);
                     String val2 = obj2.get(colName);
-                    flg = compareTo(val1, val2, order, dataType);
-                    if (flg != 0) break;
+                    if(StringUtils.isNotBlank(val1) && StringUtils.isNotBlank(val2)) {
+                        flg = compareTo(val1, val2, order, dataType);
+                        if (flg != 0) break;
+                    }
                 }
                 return flg;
             }

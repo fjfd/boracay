@@ -39,7 +39,6 @@ public class IqMetadataColService extends BaseService {
         return iqMetadataColMapper.delete(pkId);
     }
 
-
     @Transactional
     public boolean deleteByMdId(String mdId) {
         return iqMetadataColMapper.deleteByMdId(mdId);
@@ -53,40 +52,35 @@ public class IqMetadataColService extends BaseService {
         return iqMetadataColMapper.select(iqMetadataCol, page);
     }
 
-    public List<IqMetadataCol> select(String mdId, String type) {
-        return iqMetadataColMapper.select(mdId, type);
-    }
-
     public List<IqMetadataCol> select(IqMetadataCol iqMetadataCol) {
         return iqMetadataColMapper.select(iqMetadataCol);
     }
 
-    public List<IqMetadataCol> selectByMdId(String mdId) {
-        return iqMetadataColMapper.selectByMdId(mdId);
+    public List<IqMetadataCol> selectQueryColList(String mdId) {
+        return iqMetadataColMapper.selectList(mdId + "_1");
+    }
+
+    public List<IqMetadataCol> selectReturnColList(String mdId) {
+        return iqMetadataColMapper.selectList(mdId + "_2");
     }
 
     public boolean insertQueryColList(String mdId, List<IqMetadataCol> iqMetadataQueryColList) {
+        if (iqMetadataQueryColList == null) return true;
         for (IqMetadataCol iqMetadataCol : iqMetadataQueryColList) {
             iqMetadataCol.setPkId(Util.uuid());
             iqMetadataCol.setMdId(mdId);
             iqMetadataCol.setType("1");
         }
-        return iqMetadataColMapper.insertList(mdId, iqMetadataQueryColList);
+        return iqMetadataColMapper.insertList(mdId + "_1", iqMetadataQueryColList);
     }
 
     public boolean insertReturnColList(String mdId, List<IqMetadataCol> iqMetadataQueryColList) {
-        if (iqMetadataQueryColList == null) {
-            return true;
-        }
+        if (iqMetadataQueryColList == null) return true;
         for (IqMetadataCol iqMetadataCol : iqMetadataQueryColList) {
             iqMetadataCol.setPkId(Util.uuid());
             iqMetadataCol.setMdId(mdId);
             iqMetadataCol.setType("2");
         }
-        return iqMetadataColMapper.insertList(mdId, iqMetadataQueryColList);
-    }
-
-    public List<String> selectAppPkIdsByMdid(String mdId) {
-        return iqMetadataColMapper.selectAppPkIdsByMdid(mdId);
+        return iqMetadataColMapper.insertList(mdId + "_2", iqMetadataQueryColList);
     }
 }

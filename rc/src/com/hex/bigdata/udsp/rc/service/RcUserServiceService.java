@@ -8,6 +8,7 @@ import com.hex.bigdata.udsp.common.util.CreateFileUtil;
 import com.hex.bigdata.udsp.common.util.ExcelCopyUtils;
 import com.hex.bigdata.udsp.common.util.ExcelUploadhelper;
 import com.hex.bigdata.udsp.common.util.ExceptionUtil;
+import com.hex.bigdata.udsp.im.service.ImModelService;
 import com.hex.bigdata.udsp.iq.service.IqApplicationService;
 import com.hex.bigdata.udsp.mm.service.MmApplicationService;
 import com.hex.bigdata.udsp.olq.service.OlqApplicationService;
@@ -79,6 +80,8 @@ public class RcUserServiceService extends BaseService {
     private OlqApplicationService olqApplicationService;
     @Autowired
     private ComPropertiesService comPropertiesService;
+    @Autowired
+    private ImModelService imModelService;
 
     @Transactional
     public String insert(RcUserServiceDto rcUserServiceDto) {
@@ -87,7 +90,7 @@ public class RcUserServiceService extends BaseService {
         if (org.apache.commons.lang.StringUtils.isBlank(pkId)) {
             return "";
         }
-        comPropertiesService.insertList(pkId, rcUserServiceDto.getComPropertiesList());
+        comPropertiesService.insertList(pkId, rcUserServiceDto.getAlarmProperties());
         return pkId;
     }
 
@@ -106,17 +109,14 @@ public class RcUserServiceService extends BaseService {
         return "";
     }
 
+    @Transactional
     public boolean update(RcUserServiceDto rcUserServiceDto) {
         RcUserService rcUserService = rcUserServiceDto.getRcUserService();
+        List<ComProperties> alarmProperties = rcUserServiceDto.getAlarmProperties();
         String pkId = rcUserService.getPkId();
-        if (!update(rcUserService)) {
-            return false;
-        }
-        if (!comPropertiesService.deleteByFkId(pkId)) {
-            return false;
-        }
-        comPropertiesService.insertList(pkId, rcUserServiceDto.getComPropertiesList());
-        return true;
+        if (!update(rcUserService)) return false;
+        return comPropertiesService.deleteList(pkId)
+                && comPropertiesService.insertList(pkId, alarmProperties);
     }
 
     /**
@@ -127,7 +127,8 @@ public class RcUserServiceService extends BaseService {
      */
     @Transactional
     public boolean update(RcUserService rcUserService) {
-        if (checkBeforeInsetOrUpdate(rcUserService) && rcUserServiceMapper.update(rcUserService.getPkId(), rcUserService)) {
+        if (checkBeforeInsetOrUpdate(rcUserService)
+                && rcUserServiceMapper.update(rcUserService.getPkId(), rcUserService)) {
             /*
             同时按照不同ID在内存中更新
              */
@@ -209,7 +210,7 @@ public class RcUserServiceService extends BaseService {
     @Transactional
     public boolean insertBatch(RcUserServiceBatchDto rcUserServiceBatchDto) {
         RcUserServiceView rcUserServiceView = rcUserServiceBatchDto.getRcUserServiceView();
-        List<ComProperties> comPropertiesList = rcUserServiceBatchDto.getComPropertiesList();
+        List<ComProperties> alarmProperties = rcUserServiceBatchDto.getAlarmProperties();
         String userIds = rcUserServiceView.getUserIds();
         String serviceIds = rcUserServiceView.getServiceIds();
         String[] serviceIdArray = serviceIds.split(",");
@@ -235,7 +236,7 @@ public class RcUserServiceService extends BaseService {
                 service.setAlarmType(rcUserServiceView.getAlarmType());
                 service.setUserId(userId);
                 String pkId = this.insert(service);
-                comPropertiesService.insertList(pkId, comPropertiesList);
+                comPropertiesService.insertList(pkId, alarmProperties);
             }
         }
         return true;
@@ -668,6 +669,7 @@ public class RcUserServiceService extends BaseService {
                     break;
                 }
                 rcService.setServiceId(rcServiceService.selectByName(rcService.getServiceId()).getPkId());
+                rcService.setAlarmType("NONE"); // 默认无告警
                 inseResult = insert(rcService);
                 if (inseResult != null) {
                     resultMap.put("status", "true");
@@ -840,9 +842,8 @@ public class RcUserServiceService extends BaseService {
                 //联机查询应用
                 olqApplicationService.setWorkbooksheet(workbook, rcUserServiceView);
             } else if (RcConstant.UDSP_SERVICE_TYPE_IM.equals(type)) {
-                //暂不支持
-            } else {
-
+                //交互建模
+                imModelService.setWorkbooksheet(workbook, rcUserServiceView);
             }
         }
 

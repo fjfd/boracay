@@ -235,7 +235,7 @@ public class RtsMatedataService extends BaseService {
             dataSourceContent.setComExcelParams(comExcelParams);
             List<ComExcelProperties> comExcelPropertiesList = new ArrayList<>();
             //添加对应的配置栏内容
-            comExcelPropertiesList.add(new ComExcelProperties("数据列配置","com.hex.bigdata.udsp.rts.model.RtsMatedataCol",10,0,1, ComExcelEnums.RtsMatedata.getAllNums()));
+            comExcelPropertiesList.add(new ComExcelProperties("数据列配置","com.hex.bigdata.udsp.rts.model.RtsMatedataCol",10,0,1, ComExcelEnums.RtsMatedataCol.getAllNums()));
 
             dataSourceContent.setComExcelPropertiesList(comExcelPropertiesList);
             dataSourceContent.setType("fixed");
@@ -356,6 +356,8 @@ public class RtsMatedataService extends BaseService {
                     cell = row.createCell(1);
                     cell.setCellValue(rtsMatedataCol.getName());
                     cell = row.createCell(2);
+                    cell.setCellValue(rtsMatedataCol.getType());
+                    cell = row.createCell(3);
                     cell.setCellValue(rtsMatedataCol.getDescribe());
                     i++;
                 }

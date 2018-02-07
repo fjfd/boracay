@@ -158,14 +158,7 @@ public class IqMetadataController extends BaseController {
             message = "请求参数为空";
         }
         try {
-            for (IqMetadata iqMetadata : iqMetadatas) {
-                if (iqMetadataService.hasUsed(iqMetadata)) {
-                    status = false;
-                    message = "名称为" + iqMetadataService.select(iqMetadata.getPkId()).getName() + "元数据已经被引用！";
-                    break;
-                }
-            }
-            if (status && !iqMetadataService.delete(iqMetadatas)) {
+            if (!iqMetadataService.delete(iqMetadatas)) {
                 status = false;
                 message = "删除失败";
             }
@@ -192,11 +185,7 @@ public class IqMetadataController extends BaseController {
             message = "请求参数为空";
         } else {
             try {
-                if (iqMetadataService.hasUsed(iqMetadataPropsView.getIqMetadata())) {
-                    status = false;
-                    message = "该元数据已经被引用！";
-                }
-                if (status && !iqMetadataService.update(iqMetadataPropsView)) {
+                if (!iqMetadataService.update(iqMetadataPropsView)) {
                     status = false;
                     message = "更新失败";
                 }
@@ -237,7 +226,7 @@ public class IqMetadataController extends BaseController {
             } catch (Exception e) {
                 e.printStackTrace();
                 status = false;
-                message = "系统异常：" + e.getMessage();
+                message = "获取字段信息失败！\n错误信息如下：" + e.getMessage();
             }
         }
         if (status) {

@@ -7,7 +7,7 @@ import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.im.provider.model.MetadataCol;
 import com.hex.bigdata.udsp.iq.provider.Provider;
 import com.hex.bigdata.udsp.iq.provider.impl.factory.RedisConnectionPoolFactory;
-import com.hex.bigdata.udsp.iq.provider.impl.model.RedisDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.redis.RedisDatasource;
 import com.hex.bigdata.udsp.iq.provider.model.*;
 import com.hex.bigdata.udsp.iq.util.IqCommonUtil;
 import org.apache.commons.lang3.StringUtils;

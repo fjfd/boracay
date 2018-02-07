@@ -13,10 +13,7 @@ import com.hex.bigdata.udsp.iq.dao.IqMetadataMapper;
 import com.hex.bigdata.udsp.iq.dto.IqApplicationPropsView;
 import com.hex.bigdata.udsp.iq.dto.IqApplicationView;
 import com.hex.bigdata.udsp.iq.dto.IqIndexDto;
-import com.hex.bigdata.udsp.iq.model.IqAppOrderCol;
-import com.hex.bigdata.udsp.iq.model.IqAppQueryCol;
-import com.hex.bigdata.udsp.iq.model.IqAppReturnCol;
-import com.hex.bigdata.udsp.iq.model.IqApplication;
+import com.hex.bigdata.udsp.iq.model.*;
 import com.hex.bigdata.udsp.rc.dto.RcUserServiceView;
 import com.hex.bigdata.udsp.rc.dto.ServiceBaseInfo;
 import com.hex.bigdata.udsp.rc.model.RcService;
@@ -142,6 +139,10 @@ public class IqApplicationService extends BaseService {
         return iqApplicationMapper.select(iqApplicationView);
     }
 
+    public List<IqApplication> selectAll() {
+        return iqApplicationMapper.selectAll();
+    }
+
     public boolean checkName(String name) {
         return iqApplicationMapper.selectByName(name) != null;
     }
@@ -193,15 +194,14 @@ public class IqApplicationService extends BaseService {
                     resultMap.put("message", "第" + (i + 1) + "个名称已存在！");
                     break;
                 }
-                String userName = WebUtil.getCurrentUserId();
-                iqApplication.setCrtUser(userName);
-                if (iqMetadataMapper.selectByName(iqApplication.getMdId()) == null) {
+                IqMetadata iqMetadata = iqMetadataMapper.selectByName(iqApplication.getMdId());
+                if (iqMetadata == null) {
                     resultMap.put("status", "false");
                     resultMap.put("message", "第" + (i + 1) + "个应用对应元数据名称不存在！");
                     break;
                 }
                 //更新元数据
-                iqApplication.setMdId(iqMetadataMapper.selectByName(iqApplication.getMdId()).getPkId());
+                iqApplication.setMdId(iqMetadata.getPkId());
                 String pkId = insert(iqApplication);
                 List<IqAppQueryCol> queryColumnList = (List<IqAppQueryCol>) uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqAppQueryCol");
                 List<IqAppOrderCol> iqAppOrderColList = (List<IqAppOrderCol>) uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqAppOrderCol");
@@ -479,6 +479,5 @@ public class IqApplicationService extends BaseService {
             }
         }
     }
-
 
 }

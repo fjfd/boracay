@@ -105,7 +105,7 @@ public class ImMetadataService extends BaseService {
         if (!imMetadataMapper.update(pkId, imMetadata)) {
             return false;
         }
-        if (!comPropertiesService.deleteByFkId(pkId)) {
+        if (!comPropertiesService.deleteList(pkId)) {
             return false;
         }
         comPropertiesService.insertList(pkId, imMetadataDto.getComPropertiesList());
@@ -152,7 +152,7 @@ public class ImMetadataService extends BaseService {
 
     public List<MetadataCol> getCloumnInfo(String dsId, String tbName) {
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comProperties = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comProperties = comPropertiesService.selectList(dsId);
         Datasource datasource = new Datasource(comDatasource, comProperties);
         Metadata metadata = new Metadata();
         metadata.setType(MetadataType.EXTERNAL);
@@ -164,7 +164,7 @@ public class ImMetadataService extends BaseService {
 
     public boolean checkSchema(String dsId, String tbName) throws Exception {
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comProperties = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comProperties = comPropertiesService.selectList(dsId);
         Datasource datasource = new Datasource(comDatasource, comProperties);
         Metadata metadata = new Metadata();
         metadata.setType(MetadataType.EXTERNAL);
@@ -193,9 +193,9 @@ public class ImMetadataService extends BaseService {
         ImMetadata imMetadata = this.select(pkId);
         String dsId = imMetadata.getDsId();
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comProperties = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comProperties = comPropertiesService.selectList(dsId);
         Datasource datasource = new Datasource(comDatasource, comProperties);
-        List<Property> prop = PropertyUtil.convertToPropertyList(comPropertiesService.selectByFkId(pkId));
+        List<Property> prop = PropertyUtil.convertToPropertyList(comPropertiesService.selectList(pkId));
         Metadata metadata = new Metadata(prop);
         metadata.setName(imMetadata.getName());
         metadata.setType(MetadataType.EXTERNAL);
@@ -388,7 +388,7 @@ public class ImMetadataService extends BaseService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            List<ComProperties> comProperties = comPropertiesService.selectByFkId(imMetadata.getPkId());
+            List<ComProperties> comProperties = comPropertiesService.selectList(imMetadata.getPkId());
             if (comProperties.size() > 0) {
                 int k = 1;
                 for (ComProperties comProperty : comProperties) {

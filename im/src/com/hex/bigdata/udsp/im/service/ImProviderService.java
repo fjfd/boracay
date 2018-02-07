@@ -25,6 +25,7 @@ import java.util.List;
 public class ImProviderService {
     private static Logger logger = LogManager.getLogger(ImProviderService.class);
     private static final String IM_IMPL_CLASS = "IM_IMPL_CLASS";
+
     @Autowired
     private GFDictMapper gfDictMapper;
 

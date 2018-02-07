@@ -129,7 +129,7 @@ ${extends("/goframe/function_layout.httl")}
                     <table style="width: 100%;">
                         <tr>
                             <td style="text-align: left;">
-                                <b>配置参数</b>
+                                <b>配置参数</b><font color="red">（注：不需要的配置参数可以删除）</font>
                             </td>
                             <td style="text-align: right;">
                                 <a class="nui-button" iconCls="icon-add" onclick="add2">添加</a>

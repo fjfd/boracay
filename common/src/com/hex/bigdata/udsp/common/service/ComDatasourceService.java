@@ -66,11 +66,10 @@ public class ComDatasourceService extends BaseService {
     @Transactional
     public String insert(ComDatasourcePropsView comDatasourcePropsView) {
         ComDatasource comDatasource = comDatasourcePropsView.getComDatasource();
+        List<ComProperties> comPropertiesList = comDatasourcePropsView.getComPropertiesList();
         String pkId = this.insert(comDatasource);
-        if (StringUtils.isBlank(pkId)) {
-            return "";
-        }
-        comPropertiesService.insertList(pkId, comDatasourcePropsView.getComPropertiesList());
+        if (StringUtils.isBlank(pkId)) return "";
+        if (!comPropertiesService.insertList(pkId, comPropertiesList)) return "";
         return pkId;
     }
 
@@ -82,15 +81,11 @@ public class ComDatasourceService extends BaseService {
     @Transactional
     public boolean update(ComDatasourcePropsView comDatasourcePropsView) {
         ComDatasource comDatasource = comDatasourcePropsView.getComDatasource();
+        List<ComProperties> comPropertiesList = comDatasourcePropsView.getComPropertiesList();
         String pkId = comDatasource.getPkId();
-        if (!comDatasourceMapper.update(pkId, comDatasource)) {
-            return false;
-        }
-        if (!comPropertiesService.deleteByFkId(pkId)) {
-            return false;
-        }
-        comPropertiesService.insertList(pkId, comDatasourcePropsView.getComPropertiesList());
-        return true;
+        if (!comDatasourceMapper.update(pkId, comDatasource)) return false;
+        return comPropertiesService.deleteList(pkId)
+                && comPropertiesService.insertList(pkId, comPropertiesList);
     }
 
     @Transactional
@@ -127,6 +122,10 @@ public class ComDatasourceService extends BaseService {
         return comDatasourceMapper.selectByModelAndName(model, name) != null;
     }
 
+    public List<ComDatasource> selectByModel(String model) {
+        return comDatasourceMapper.selectByModel(model);
+    }
+
     public ComDatasource selectByModelAndName(String model, String name) {
         return comDatasourceMapper.selectByModelAndName(model, name);
     }
@@ -141,6 +140,7 @@ public class ComDatasourceService extends BaseService {
      * @param uploadFilePath
      * @return
      */
+    @Transactional
     public Map<String, String> uploadExcel(String uploadFilePath) {
         Map resultMap = new HashMap<String, String>(2);
         File uploadFile = new File(uploadFilePath);
@@ -246,7 +246,7 @@ public class ComDatasourceService extends BaseService {
                 }
             }
 
-            List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(comDatasource.getPkId());
+            List<ComProperties> comPropertiesList = comPropertiesService.selectList(comDatasource.getPkId());
             int k = 0;
             if (comPropertiesList.size() > 0) {
                 for (ComProperties comProperties : comPropertiesList) {
@@ -278,7 +278,6 @@ public class ComDatasourceService extends BaseService {
     }
 
     public List<GFDict> selectParameterBySourceId(String sourceId) {
-
         return comDatasourceMapper.selectParameterBySourceId(sourceId);
     }
 

@@ -34,6 +34,8 @@ import java.util.Map;
  */
 @Service
 public class RtsProviderService extends BaseService {
+    private static final String RTS_IMPL_CLASS = "RTS_IMPL_CLASS";
+
     @Autowired
     private ComPropertiesService comPropertiesService;
     @Autowired
@@ -72,9 +74,9 @@ public class RtsProviderService extends BaseService {
         //获取数据源
         ComDatasource comDatasource = this.comDatasourceService.select(rtsMatedata.getDsId());
         //获取消费者配置
-        List<ComProperties> consumerProperties = this.comPropertiesService.selectByFkId(rtsConsumer.getPkId());
+        List<ComProperties> consumerProperties = this.comPropertiesService.selectList(rtsConsumer.getPkId());
         //获取数据源配置
-        List<ComProperties> dsProperties = this.comPropertiesService.selectByFkId(comDatasource.getPkId());
+        List<ComProperties> dsProperties = this.comPropertiesService.selectList(comDatasource.getPkId());
         //获取生产者的最终配置
         List<ComProperties> resultProperties = CommonUtil.getProducerProperties(consumerProperties, dsProperties);
 
@@ -137,9 +139,9 @@ public class RtsProviderService extends BaseService {
         //获取数据源
         ComDatasource comDatasource = this.comDatasourceService.select(rtsMatedata.getDsId());
         //获取生产者配置
-        List<ComProperties> producerProperties = this.comPropertiesService.selectByFkId(rtsProducer.getPkId());
+        List<ComProperties> producerProperties = this.comPropertiesService.selectList(rtsProducer.getPkId());
         //获取数据源配置
-        List<ComProperties> dsProperties = this.comPropertiesService.selectByFkId(comDatasource.getPkId());
+        List<ComProperties> dsProperties = this.comPropertiesService.selectList(comDatasource.getPkId());
         //获取生产者的最终配置
         List<ComProperties> resultProperties = CommonUtil.getProducerProperties(producerProperties, dsProperties);
 
@@ -182,7 +184,7 @@ public class RtsProviderService extends BaseService {
     private Provider getProviderImpl(Datasource datasource) {
         String implClass = datasource.getImplClass();
         if (StringUtils.isBlank(implClass)) {
-            GFDict gfDict = gfDictMapper.selectByPrimaryKey("RTS_IMPL_CLASS", datasource.getType());
+            GFDict gfDict = gfDictMapper.selectByPrimaryKey(RTS_IMPL_CLASS, datasource.getType());
             implClass = gfDict.getDictName();
         }
         return (Provider) ObjectUtil.newInstance(implClass);

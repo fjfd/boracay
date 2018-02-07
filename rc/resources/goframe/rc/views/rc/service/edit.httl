@@ -26,7 +26,7 @@ ${extends("/goframe/function_layout.httl")}
                 <th class="nui-form-label"><label for="appId">应用名称：</label></th>
                 <td>
                     <div id="appId" class="nui-combobox" style="width:97%;"  popupWidth="400" textField="name" valueField="pkId"
-                         dataField="data" name="appId" multiSelect="false" allowInput="true" required="true"
+                         dataField="data" name="appId" multiSelect="false" allowInput="true" required="true" emptyText="请选择应用名称"
                          onvalidation = "checkAppIdAndType" >
                         <div property="columns">
                             <div header="名称" field="name"></div>
@@ -137,8 +137,6 @@ ${extends("/goframe/function_layout.httl")}
             }
         });
     }
-
-
 
     function selectApps(e){
         appId_nuiObject.setValue("");

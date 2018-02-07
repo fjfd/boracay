@@ -1,13 +1,10 @@
 package com.hex.bigdata.udsp.mm.dao;
 
 import com.hex.bigdata.udsp.common.dao.base.SyncMapper;
-import com.hex.bigdata.udsp.common.dao.cache.Cache;
-import com.hex.bigdata.udsp.common.util.CacheUtil;
 import com.hex.bigdata.udsp.mm.dto.MmApplicationView;
 import com.hex.bigdata.udsp.mm.dto.MmFullAppInfoView;
 import com.hex.bigdata.udsp.mm.model.MmApplication;
 import com.hex.goframe.model.Page;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

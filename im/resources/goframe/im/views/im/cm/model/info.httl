@@ -40,7 +40,7 @@ ${extends("/goframe/function_layout.httl")}
                                 <!--<div header="类型" field="dsType"></div>-->
                             </div>
                         </div>
-                        <a class="nui-button" style="margin-left: 5px;" iconCls="icon-add" onclick="addTarget">添加</a>
+                        <a class="nui-button" style="margin-left: 5px;" iconCls="icon-add" onclick="addTarget" enabled="false">添加</a>
                     </td>
                 </tr>
                 <tr id="updateType" style="display:none">
@@ -87,7 +87,7 @@ ${extends("/goframe/function_layout.httl")}
                     <table style="width: 100%;">
                         <tr>
                             <td style="text-align: left;">
-                                <b>配置参数</b>
+                                <b>配置参数</b><font color="red">（注：不需要的配置参数可以删除）</font>
                             </td>
                             <td style="text-align: right;">
                                 <a class="nui-button" iconCls="icon-add" onclick="addComProperties" enabled="false">添加</a>
@@ -132,7 +132,7 @@ ${extends("/goframe/function_layout.httl")}
                                 <b>字段映射信息</b>
                             </td>
                             <td style="text-align: right;">
-                                <a class="nui-button" iconCls="icon-reload" onclick="lodaMapping" id="lodaMapping">加载映射字段</a>
+                                <a class="nui-button" iconCls="icon-reload" onclick="lodaMapping" id="lodaMapping" enabled="false">加载映射字段</a>
                                 <a class="nui-button" iconCls="icon-add" onclick="addMapp" enabled="false">添加</a>
                                 <a class="nui-button" iconCls="icon-remove" onclick="removeMapp" enabled="false"
                                    id="removeMapp">删除</a>

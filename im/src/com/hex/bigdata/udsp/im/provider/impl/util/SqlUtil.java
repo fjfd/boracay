@@ -12,6 +12,7 @@ import java.util.List;
  * Created by JunjieM on 2017-9-25.
  */
 public class SqlUtil {
+    private static final String UDSP_VIEW = "UDSP_VIEW";
 
     /**
      * 查询表
@@ -38,7 +39,7 @@ public class SqlUtil {
     public static String select2(List<String> selectColumns,
                                  String selectSql, List<WhereProperty> whereProperties) {
         return "SELECT " + getSelectColumns2(selectColumns) + "\n FROM (\n"
-                + selectSql + "\n) UDSP_VIEW " + getWhere2(whereProperties);
+                + selectSql + "\n) " + UDSP_VIEW + " " + getWhere2(whereProperties);
     }
 
     private static String getWhere2(List<WhereProperty> whereProperties) {
@@ -57,7 +58,7 @@ public class SqlUtil {
                 if (StringUtils.isBlank(name) || StringUtils.isBlank(value) || operator == null)
                     continue;
                 sql += (count == 0 ? "\n WHERE " : " AND ");
-                sql += "UDSP_VIEW." + name + SqlUtil.getCondition(value, type, operator);
+                sql += UDSP_VIEW + "." + name + SqlUtil.getCondition(value, type, operator);
                 count++;
             }
         }
@@ -65,7 +66,7 @@ public class SqlUtil {
     }
 
     private static String getSelectColumns2(List<String> columns) {
-        return getColumns(columns, " UDSP_VIEW.* ");
+        return getColumns(columns, " " + UDSP_VIEW + ".* ");
     }
 
     private static String getSelectColumns(List<String> columns) {

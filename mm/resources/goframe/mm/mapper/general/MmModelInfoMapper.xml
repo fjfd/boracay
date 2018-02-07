@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hex.bigdata.udsp.mm.dao.ModelInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mm.model.ModelInfo" >
+<mapper namespace="com.hex.bigdata.udsp.mm.dao.MmModelInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mm.model.MmModelInfo" >
     <id column="PK_ID" property="pkId" jdbcType="VARCHAR" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
     <result column="DESCRIBE" property="describe" jdbcType="VARCHAR" />
@@ -17,14 +17,14 @@
     <result column="CONTRACTOR" property="contractor" jdbcType="VARCHAR" />
     <result column="MODEL_TYPE" property="modelType" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="FullResultMap" type="com.hex.bigdata.udsp.mm.dto.ModelInfoView" extends="BaseResultMap">
+  <resultMap id="FullResultMap" type="com.hex.bigdata.udsp.mm.dto.MmModelInfoView" extends="BaseResultMap">
 
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from MM_MODEL_INFO
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.hex.bigdata.udsp.mm.model.ModelInfo" >
+  <insert id="insert" parameterType="com.hex.bigdata.udsp.mm.model.MmModelInfo" >
     insert into MM_MODEL_INFO (PK_ID, NAME, DESCRIBE, 
       VER_NOTE, VER_NUM, STATUS, 
       NOTE, DEL_FLG, CRT_USER, 
@@ -35,7 +35,7 @@
       #{crtTime,jdbcType=VARCHAR}, #{uptUser,jdbcType=VARCHAR}, #{uptTime,jdbcType=VARCHAR},
       #{contractor,jdbcType=VARCHAR},#{modelType,jdbcType=VARCHAR})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.mm.model.ModelInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.mm.model.MmModelInfo" >
     update MM_MODEL_INFO
     set NAME = #{name,jdbcType=VARCHAR},
       DESCRIBE = #{describe,jdbcType=VARCHAR},
@@ -78,7 +78,7 @@
     set DEL_FLG = '1'
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
-  <select id="selectPage" resultMap="FullResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.ModelInfoView">
+  <select id="selectPage" resultMap="FullResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.MmModelInfoView">
     select mmi.PK_ID, mmi.NAME, mmi.DESCRIBE, mmi.VER_NOTE, mmi.VER_NUM, mmi.STATUS,
     mmi.NOTE, mmi.DEL_FLG, mmi.CRT_USER,
     mmi.CRT_TIME, mmi.UPT_USER, mmi.UPT_TIME,mc.cn_name AS CONTRACTOR,mmi.MODEL_TYPE

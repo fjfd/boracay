@@ -43,26 +43,4 @@ public class ComPropertiesMapper extends SyncMapper<ComProperties> {
     public List<ComProperties> selectAll() {
         return sqlSessionTemplate.selectList("com.hex.bigdata.udsp.common.dao.ComPropertiesMapper.selectAll");
     }
-
-    public List<ComProperties> selectByFkId(String fkId) {
-        return this.selectList(fkId);
-    }
-
-    public boolean deleteByFkId(String fkId) {
-        return this.deleteList(fkId);
-    }
-
-    public boolean insertModelComProperties(String pkId, List<ComProperties> comPropertiesList) {
-
-        String comPropertiesId;
-        for(ComProperties comProperties : comPropertiesList){
-            comProperties.setFkId(pkId);
-            comPropertiesId = Util.uuid();
-            comProperties.setPkId(comPropertiesId);
-            if(!insert(comPropertiesId,comProperties)){
-                return false;
-            }
-        }
-        return true;
-    }
 }

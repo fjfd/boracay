@@ -1,19 +1,15 @@
 package com.hex.bigdata.udsp.mm.controller;
 
-import com.hex.bigdata.udsp.common.dto.ComDatasourceView;
-import com.hex.bigdata.udsp.common.model.ComDatasource;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.mm.dao.ExecuteParamMapper;
 import com.hex.bigdata.udsp.mm.dto.MmApplicationParamView;
 import com.hex.bigdata.udsp.mm.dto.MmApplicationView;
-import com.hex.bigdata.udsp.mm.dto.ModelInfoView;
-import com.hex.bigdata.udsp.mm.model.Contractor;
+import com.hex.bigdata.udsp.mm.dto.MmModelInfoView;
 import com.hex.bigdata.udsp.mm.model.MmAppExecuteParam;
 import com.hex.bigdata.udsp.mm.model.MmAppReturnParam;
 import com.hex.bigdata.udsp.mm.model.MmApplication;
-import com.hex.bigdata.udsp.mm.service.ExecuteParamService;
+import com.hex.bigdata.udsp.mm.service.MmAppExecuteParamService;
 import com.hex.bigdata.udsp.mm.service.MmApplicationService;
-import com.hex.bigdata.udsp.mm.service.ReturnParamService;
+import com.hex.bigdata.udsp.mm.service.MmAppReturnParamService;
 import com.hex.goframe.controller.BaseController;
 import com.hex.goframe.model.MessageResult;
 import com.hex.goframe.model.Page;
@@ -60,13 +56,13 @@ public class MmApplicationController extends BaseController{
      * 模型管理-模型应用配置管理字段定义
      */
     @Autowired
-    private ExecuteParamService executeParamService;
+    private MmAppExecuteParamService executeParamService;
 
     /**
      * 模型管理-模型应用配置返回字段定义
      */
     @Autowired
-    private ReturnParamService returnParamService;
+    private MmAppReturnParamService returnParamService;
 
 
 
@@ -234,7 +230,7 @@ public class MmApplicationController extends BaseController{
      */
     @RequestMapping({"/select"})
     @ResponseBody
-    public PageListResult select(ModelInfoView modelInfoView) {
+    public PageListResult select(MmModelInfoView modelInfoView) {
         logger.debug("select search=" + JSONUtil.parseObj2JSON(modelInfoView));
         List<MmApplication> list = null;
         try {

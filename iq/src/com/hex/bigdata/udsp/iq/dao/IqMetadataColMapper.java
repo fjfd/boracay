@@ -11,7 +11,6 @@ import java.util.List;
 public class IqMetadataColMapper extends SyncMapper<IqMetadataCol> {
 
     protected boolean insertExe(IqMetadataCol iqMetadataCol) {
-
         return sqlSessionTemplate.insert("com.hex.bigdata.udsp.iq.dao.IqMetadataColMapper.insert", iqMetadataCol) == 1;
     }
 
@@ -32,21 +31,13 @@ public class IqMetadataColMapper extends SyncMapper<IqMetadataCol> {
         return sqlSessionTemplate.delete("com.hex.bigdata.udsp.iq.dao.IqMetadataColMapper.deleteByMdId", id) >= 0;
     }
 
+    @Override
     protected List<IqMetadataCol> selectListExe(String fkId) {
+        String[] fkIds = fkId.split("_");
         IqMetadataCol iqMetadataCol = new IqMetadataCol();
-        iqMetadataCol.setMdId(fkId);
+        iqMetadataCol.setMdId(fkIds[0]);
+        iqMetadataCol.setType(fkIds[1]);
         return select(iqMetadataCol);
-    }
-
-    public List<IqMetadataCol> select(String mdId, String type) {
-        IqMetadataCol iqMetadataCol = new IqMetadataCol();
-        iqMetadataCol.setMdId(mdId);
-        iqMetadataCol.setType(type);
-        return select(iqMetadataCol);
-    }
-
-    public List<IqMetadataCol> selectByMdId(String mdId) {
-        return this.selectList(mdId);
     }
 
     public List<IqMetadataCol> select(IqMetadataCol iqMetadataCol, Page page) {
@@ -62,12 +53,5 @@ public class IqMetadataColMapper extends SyncMapper<IqMetadataCol> {
 
     public boolean deleteByMdId(String mdId) {
         return this.deleteList(mdId);
-    }
-
-
-
-    public List<String> selectAppPkIdsByMdid(String mdId) {
-        return sqlSessionTemplate.selectList(
-                "com.hex.bigdata.udsp.iq.dao.IqMetadataColMapper.selectAppPkIdsByMdid", mdId);
     }
 }

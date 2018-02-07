@@ -1,6 +1,7 @@
 package com.hex.bigdata.udsp.iq.provider.impl.factory;
 
-import com.hex.bigdata.udsp.iq.provider.impl.model.HBaseDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.hbase.HBaseDatasource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool.Config;
@@ -73,13 +74,22 @@ class HBaseConnectionFactory extends BasePoolableObjectFactory {
         conf = HBaseConfiguration.create();
         conf.set("hbase.zookeeper.quorum", datasource.getZkQuorum());
         conf.set("hbase.zookeeper.property.clientPort", datasource.getZkPort());
-        conf.set("hbase.rpc.timeout", datasource.getRpcTimeout());
-        conf.set("hbase.client.retries.number", datasource.getClientRetriesNumber());
-        conf.set("hbase.client.pause", datasource.getClientPause());
-        conf.set("zookeeper.recovery.retry", datasource.getZkRecoveryRetry());
-        conf.set("zookeeper.recovery.retry.intervalmill", datasource.getZkRecoveryRetryIntervalmill());
-        conf.set("hbase.client.operation.timeout", datasource.getClientOperationTimeout());
-        conf.set("hbase.regionserver.lease.period", datasource.getRegionserverLeasePeriod());
+        if (StringUtils.isNotBlank(datasource.getRpcTimeout()))
+            conf.set("hbase.rpc.timeout", datasource.getRpcTimeout());
+        if (StringUtils.isNotBlank(datasource.getClientRetriesNumber()))
+            conf.set("hbase.client.retries.number", datasource.getClientRetriesNumber());
+        if (StringUtils.isNotBlank(datasource.getClientPause()))
+            conf.set("hbase.client.pause", datasource.getClientPause());
+        if (StringUtils.isNotBlank(datasource.getZkRecoveryRetry()))
+            conf.set("zookeeper.recovery.retry", datasource.getZkRecoveryRetry());
+        if (StringUtils.isNotBlank(datasource.getZkRecoveryRetryIntervalmill()))
+            conf.set("zookeeper.recovery.retry.intervalmill", datasource.getZkRecoveryRetryIntervalmill());
+        if (StringUtils.isNotBlank(datasource.getClientOperationTimeout()))
+            conf.set("hbase.client.operation.timeout", datasource.getClientOperationTimeout());
+//        if (StringUtils.isNotBlank(datasource.getRegionserverLeasePeriod()))
+//            conf.set("hbase.regionserver.lease.period", datasource.getRegionserverLeasePeriod()); // 已被弃用
+        if (StringUtils.isNotBlank(datasource.getClientScannerTimeoutPeriod()))
+            conf.set("hbase.client.scanner.timeout.period", datasource.getClientScannerTimeoutPeriod());
     }
 
     @Override

@@ -62,14 +62,11 @@ public class IqAppReturnColService extends BaseService {
 
     @Transactional
     public boolean insertList(String appId, List<IqAppReturnCol> iqAppReturnColList) {
-        if (iqAppReturnColList == null) {
-            return true;
-        }
+        if (iqAppReturnColList == null) return true;
         for (IqAppReturnCol iqAppReturnCol : iqAppReturnColList) {
             if("".equals(iqAppReturnCol.getStats()) || null == iqAppReturnCol.getStats()){
                 iqAppReturnCol.setStats("none");
             }
-
             if("".equals(iqAppReturnCol.getLabel()) || null == iqAppReturnCol.getLabel()){
                 iqAppReturnCol.setLabel(iqAppReturnCol.getName());
             }

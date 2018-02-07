@@ -100,6 +100,22 @@ public class JdbcDatasource extends Datasource {
         return getProperty("test.on.return").getValue();
     }
 
+    public String getPoolPreparedStatements() {
+        return getProperty("pool.prepared.statements").getValue();
+    }
+
+    public String getMaxOpenPreparedStatements() {
+        return getProperty("max.open.prepared.statements").getValue();
+    }
+
+    public String getRemoveAbandoned() {
+        return getProperty("remove.abandoned").getValue();
+    }
+
+    public String getRemoveAbandonedTimeout() {
+        return getProperty("remove.abandoned.timeout").getValue();
+    }
+
     public int getMaxNum() {
         String value = getProperty("max.data.size").getValue();
         if (StringUtils.isBlank(value)) {

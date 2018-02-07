@@ -26,6 +26,8 @@ import java.util.List;
  */
 @Service
 public class OlqProviderService extends BaseService {
+    private static final String OLQ_IMPL_CLASS = "OLQ_IMPL_CLASS";
+
     @Autowired
     private ComDatasourceService comDatasourceService;
 
@@ -76,7 +78,7 @@ public class OlqProviderService extends BaseService {
      */
     private Datasource getDatasource(String dsId) {
         ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(dsId);
+        List<ComProperties> comPropertiesList = comPropertiesService.selectList(dsId);
         Datasource datasource = new Datasource(comDatasource, comPropertiesList);
         return datasource;
     }
@@ -101,7 +103,7 @@ public class OlqProviderService extends BaseService {
     private Provider getProviderImpl(Datasource datasource) {
         String implClass = datasource.getImplClass();
         if (StringUtils.isBlank(implClass)) {
-            GFDict gfDict = gfDictMapper.selectByPrimaryKey("OLQ_IMPL_CLASS", datasource.getType());
+            GFDict gfDict = gfDictMapper.selectByPrimaryKey(OLQ_IMPL_CLASS, datasource.getType());
             implClass = gfDict.getDictName();
         }
         return (Provider) ObjectUtil.newInstance(implClass);

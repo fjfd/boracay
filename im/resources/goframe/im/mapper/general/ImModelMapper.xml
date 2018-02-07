@@ -74,7 +74,7 @@
     ORDER BY CRT_TIME desc
   </select>
 
-    <select id="selectPage" resultMap="ImModelView" parameterType="com.hex.bigdata.udsp.im.dto.ImModelView">
+    <select id="select" resultMap="ImModelView" parameterType="com.hex.bigdata.udsp.im.dto.ImModelView">
         select IM.PK_ID, IM.NAME, IM.DESCRIBE, IM.S_DS_ID, IM.T_MD_ID, IM.NOTE, IM.DEL_FLG, IM.CRT_USER,
         IM.CRT_TIME, IM.UPT_USER, IM.UPT_TIME, IM.TYPE, IM.BUILD_MODE, IM.UPDATE_MODE,IM.E_DS_ID,IM.STATUS,CD.NAME
         S_DS_NAME,IMM.NAME T_MD_NAME

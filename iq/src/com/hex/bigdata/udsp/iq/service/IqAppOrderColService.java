@@ -62,9 +62,7 @@ public class IqAppOrderColService extends BaseService {
 
     @Transactional
     public boolean insertList(String appId, List<IqAppOrderCol> iqAppOrderColList) {
-        if (iqAppOrderColList == null) {
-            return true;
-        }
+        if (iqAppOrderColList == null) return true;
         for (IqAppOrderCol iqAppOrderCol : iqAppOrderColList) {
             iqAppOrderCol.setPkId(Util.uuid());
             iqAppOrderCol.setAppId(appId);

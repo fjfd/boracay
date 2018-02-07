@@ -18,6 +18,7 @@ import com.hex.goframe.service.BaseService;
 import com.hex.goframe.util.DateUtil;
 import com.hex.goframe.util.FileUtil;
 import com.hex.goframe.util.Util;
+import com.hex.goframe.util.WebUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -123,20 +124,14 @@ public class IqMetadataService extends BaseService {
         return iqMetadataMapper.selectByName(name) != null;
     }
 
-    public boolean hasUsed(IqMetadata iqMetadata) {
-        if(iqMetadataColService.selectAppPkIdsByMdid(iqMetadata.getPkId()).size() > 0){
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 数据源excel文件导入
+     *
      * @param uploadFilePath
      * @return
      */
     public Map<String, String> uploadExcel(String uploadFilePath) {
-        Map resultMap = new HashMap<String,String>(2);
+        Map resultMap = new HashMap<String, String>(2);
         File uploadFile = new File(uploadFilePath);
         FileInputStream in = null;
         try {
@@ -144,17 +139,17 @@ public class IqMetadataService extends BaseService {
             dataSourceContent.setClassName("com.hex.bigdata.udsp.iq.model.IqMetadata");
             List<ComExcelParam> comExcelParams = new ArrayList<>();
             //固定栏内容
-            comExcelParams.add(new ComExcelParam(2,1,"name"));
-            comExcelParams.add(new ComExcelParam(2,3,"dsId"));
-            comExcelParams.add(new ComExcelParam(2,5,"note"));
-            comExcelParams.add(new ComExcelParam(3,1,"describe"));
-            comExcelParams.add(new ComExcelParam(3,3,"tbName"));
+            comExcelParams.add(new ComExcelParam(2, 1, "name"));
+            comExcelParams.add(new ComExcelParam(2, 3, "dsId"));
+            comExcelParams.add(new ComExcelParam(2, 5, "note"));
+            comExcelParams.add(new ComExcelParam(3, 1, "describe"));
+            comExcelParams.add(new ComExcelParam(3, 3, "tbName"));
 
             dataSourceContent.setComExcelParams(comExcelParams);
             List<ComExcelProperties> comExcelPropertiesList = new ArrayList<>();
             //添加对应的配置栏内容
-            comExcelPropertiesList.add(new ComExcelProperties("查询字段","com.hex.bigdata.udsp.iq.model.IqMetadataCol",11,0,1, ComExcelEnums.IqMetadataCol.getAllNums()));
-            comExcelPropertiesList.add(new ComExcelProperties("返回字段","com.hex.bigdata.udsp.iq.model.IqMetadataCol",10,0,2, ComExcelEnums.IqMetadataCol.getAllNums()));
+            comExcelPropertiesList.add(new ComExcelProperties("查询字段", "com.hex.bigdata.udsp.iq.model.IqMetadataCol", 11, 0, 1, ComExcelEnums.IqMetadataCol.getAllNums()));
+            comExcelPropertiesList.add(new ComExcelProperties("返回字段", "com.hex.bigdata.udsp.iq.model.IqMetadataCol", 10, 0, 2, ComExcelEnums.IqMetadataCol.getAllNums()));
 
             dataSourceContent.setComExcelPropertiesList(comExcelPropertiesList);
             dataSourceContent.setType("fixed");
@@ -162,42 +157,43 @@ public class IqMetadataService extends BaseService {
             in = new FileInputStream(uploadFile);
             HSSFWorkbook hfb = new HSSFWorkbook(in);
             HSSFSheet sheet;
-            for(int i = 0 ,activeIndex =  hfb.getNumberOfSheets();i < activeIndex;i++){
+            for (int i = 0, activeIndex = hfb.getNumberOfSheets(); i < activeIndex; i++) {
                 sheet = hfb.getSheetAt(i);
-                Map<String,List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel(sheet, dataSourceContent);
-                List<IqMetadata> iqMetadatas = (List<IqMetadata>)uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadata");
+                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel(sheet, dataSourceContent);
+                List<IqMetadata> iqMetadatas = (List<IqMetadata>) uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadata");
                 IqMetadata iqMetadata = iqMetadatas.get(0);
-                if(iqMetadataMapper.selectByName(iqMetadata.getName()) != null){
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个名称已存在！");
+                if (iqMetadataMapper.selectByName(iqMetadata.getName()) != null) {
+                    resultMap.put("status", "false");
+                    resultMap.put("message", "第" + (i + 1) + "个名称已存在！");
                     break;
                 }
-                if(comDatasourceMapper.selectByModelAndName("IQ",iqMetadata.getDsId()) == null){
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个元数据对应数据源不存在！");
+                ComDatasource comDatasource = comDatasourceMapper.selectByModelAndName("IQ", iqMetadata.getDsId());
+                if (comDatasource == null) {
+                    resultMap.put("status", "false");
+                    resultMap.put("message", "第" + (i + 1) + "个元数据对应数据源不存在！");
                     break;
                 }
                 //跟新其对应数据源
-                iqMetadata.setDsId(comDatasourceMapper.selectByModelAndName("IQ",iqMetadata.getDsId()).getPkId());
+                iqMetadata.setDsId(comDatasource.getPkId());
                 String pkId = insert(iqMetadata);
-                List<IqMetadataCol> queryColumnList = (List<IqMetadataCol>)uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadataCol");
-                List<IqMetadataCol> iqAppReturnColList = (List<IqMetadataCol>)uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadataCol1");
-                boolean insertReturn = iqAppReturnColList.size() == 0 || iqMetadataColService.insertReturnColList(pkId, iqAppReturnColList);
+                List<IqMetadataCol> queryColumnList = (List<IqMetadataCol>) uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadataCol");
+                List<IqMetadataCol> iqAppReturnColList = (List<IqMetadataCol>) uploadExcelModel.get("com.hex.bigdata.udsp.iq.model.IqMetadataCol1");
                 boolean insertQuery = queryColumnList.size() == 0 || iqMetadataColService.insertQueryColList(pkId, queryColumnList);
-                if(insertQuery  && insertReturn){
-                    resultMap.put("status","true");
-                }else{
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个保存失败！");
+                boolean insertReturn = iqAppReturnColList.size() == 0 || iqMetadataColService.insertReturnColList(pkId, iqAppReturnColList);
+                if (insertQuery && insertReturn) {
+                    resultMap.put("status", "true");
+                } else {
+                    resultMap.put("status", "false");
+                    resultMap.put("message", "第" + (i + 1) + "个保存失败！");
                     break;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("status","false");
-            resultMap.put("message","程序内部异常：" + e.getMessage());
-        }finally {
-            if(in != null){
+            resultMap.put("status", "false");
+            resultMap.put("message", "程序内部异常：" + e.getMessage());
+        } finally {
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
@@ -208,7 +204,7 @@ public class IqMetadataService extends BaseService {
         return resultMap;
     }
 
-    public String createExcel( IqMetadata[] iqMetadatas) {
+    public String createExcel(IqMetadata[] iqMetadatas) {
         HSSFWorkbook workbook = null;
         HSSFWorkbook sourceWork;
         HSSFSheet sourceSheet = null;
@@ -225,7 +221,7 @@ public class IqMetadataService extends BaseService {
         if (!file.exists()) {
             FileUtil.mkdir(dirPath);
         }
-        dirPath += seprator+"download_iqMetadata_excel_"+ DateUtil.format(new Date(), "yyyyMMddHHmmss")+".xls";
+        dirPath += seprator + "download_iqMetadata_excel_" + DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
 
@@ -242,19 +238,19 @@ public class IqMetadataService extends BaseService {
         }
         HSSFSheet sheet;
         List<ComExcelParam> comExcelParams = new ArrayList<>();
-        comExcelParams.add(new ComExcelParam(2,1,"name"));
-        comExcelParams.add(new ComExcelParam(2,3,"dsId"));
-        comExcelParams.add(new ComExcelParam(2,5,"note"));
-        comExcelParams.add(new ComExcelParam(3,1,"describe"));
-        comExcelParams.add(new ComExcelParam(3,3,"tbName"));
+        comExcelParams.add(new ComExcelParam(2, 1, "name"));
+        comExcelParams.add(new ComExcelParam(2, 3, "dsId"));
+        comExcelParams.add(new ComExcelParam(2, 5, "note"));
+        comExcelParams.add(new ComExcelParam(3, 1, "describe"));
+        comExcelParams.add(new ComExcelParam(3, 3, "tbName"));
 
-        for(IqMetadata iqMetadata : iqMetadatas){
+        for (IqMetadata iqMetadata : iqMetadatas) {
             sheet = workbook.createSheet();
 
 
             //将前面样式内容复制到下载表中
             int i = 0;
-            for( ; i < 11 ; i++){
+            for (; i < 11; i++) {
                 try {
                     ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
                 } catch (Exception e) {
@@ -266,18 +262,18 @@ public class IqMetadataService extends BaseService {
             IqMetadata iqmeta = iqMetadataMapper.select(iqMetadata.getPkId());
             //设置数据源名
             iqmeta.setDsId(comDatasourceMapper.select(iqmeta.getDsId()).getName());
-            for(ComExcelParam comExcelParam : comExcelParams){
+            for (ComExcelParam comExcelParam : comExcelParams) {
                 try {
                     Field field = iqmeta.getClass().getDeclaredField(comExcelParam.getName());
                     field.setAccessible(true);
-                    ExcelCopyUtils.setCellValue(sheet,comExcelParam.getRowNum(),comExcelParam.getCellNum(),field.get(iqmeta) == null? "":field.get(iqmeta).toString());
+                    ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), field.get(iqmeta) == null ? "" : field.get(iqmeta).toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            List<IqMetadataCol> iqMetadataQueryCols = iqMetadataColService.select(iqmeta.getPkId(), "1");
-            if(iqMetadataQueryCols.size() > 0){
-                for(IqMetadataCol iqMetadataCol : iqMetadataQueryCols){
+            List<IqMetadataCol> iqMetadataQueryCols = iqMetadataColService.selectQueryColList(iqmeta.getPkId());
+            if (iqMetadataQueryCols.size() > 0) {
+                for (IqMetadataCol iqMetadataCol : iqMetadataQueryCols) {
                     row = sheet.createRow(i);
                     cell = row.createCell(0);
                     cell.setCellValue(iqMetadataCol.getSeq());
@@ -301,9 +297,9 @@ public class IqMetadataService extends BaseService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            List<IqMetadataCol> iqMetadataReturnCols = iqMetadataColService.select(iqmeta.getPkId(), "2");
-            if(iqMetadataReturnCols.size() > 0){
-                for(IqMetadataCol iqMetadataCol : iqMetadataReturnCols){
+            List<IqMetadataCol> iqMetadataReturnCols = iqMetadataColService.selectReturnColList(iqmeta.getPkId());
+            if (iqMetadataReturnCols.size() > 0) {
+                for (IqMetadataCol iqMetadataCol : iqMetadataReturnCols) {
                     row = sheet.createRow(i);
                     cell = row.createCell(0);
                     cell.setCellValue(iqMetadataCol.getSeq());

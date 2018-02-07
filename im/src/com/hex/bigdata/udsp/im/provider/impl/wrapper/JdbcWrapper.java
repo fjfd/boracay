@@ -294,10 +294,9 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetProvider
 //        logger.debug("getColumnTypeName:" + md.getColumnTypeName(i));
 //        logger.debug("getPrecision:" + md.getPrecision(i));
 //        logger.debug("getScale:" + md.getScale(i));
-        MetadataCol metadataCol = new MetadataCol();
 //        String columnName = md.getColumnName(i);
         String columnLabel = md.getColumnLabel(i);
-        int columnType = md.getColumnType(i);
+//        int columnType = md.getColumnType(i);
         String columnTypeName = md.getColumnTypeName(i);
 //        int columnDisplaySize = 0;
 //        try {
@@ -326,17 +325,21 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetProvider
         } else if (scale > 0 && precision > 0 && scale <= precision) {
             colLength = String.valueOf(precision) + "," + String.valueOf(scale);
         }
-        metadataCol.setSeq((short) i);
-        metadataCol.setName(columnLabel);
-        metadataCol.setType(getColType(columnTypeName));
-        metadataCol.setLength(colLength);
-        return metadataCol;
+        MetadataCol mdCol = new MetadataCol();
+        mdCol.setSeq((short) i);
+        mdCol.setName(columnLabel);
+        mdCol.setType(getColType(columnTypeName));
+        mdCol.setLength(colLength);
+        mdCol.setPrimary(false);
+        mdCol.setIndexed(false);
+        mdCol.setStored(true);
+        return mdCol;
     }
 
     protected List<MetadataCol> getMetadataCols(Connection conn, String dbName, String tbName) throws SQLException {
-        List<MetadataCol> metadataCols = null;
         List<Column> columns = getColumns(conn, dbName, tbName);
-        metadataCols = new ArrayList<>();
+        if (columns == null) return null;
+        List<MetadataCol> mdCols = new ArrayList<>();
         MetadataCol mdCol = null;
         for (Column col : columns) {
             mdCol = new MetadataCol();
@@ -348,9 +351,9 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetProvider
             mdCol.setPrimary(col.getPrimaryKeyN() > 0 ? true : false);
             mdCol.setIndexed(col.getPrimaryKeyN() > 0 ? true : false);
             mdCol.setStored(true);
-            metadataCols.add(mdCol);
+            mdCols.add(mdCol);
         }
-        return metadataCols;
+        return mdCols;
     }
 
     @Override

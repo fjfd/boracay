@@ -71,7 +71,11 @@ public class RtsConsumerMapper extends SyncMapper<RtsConsumer> {
      * @param rtsDatasourceView 查询参数
      * @return
      */
-    public List<RtsConsumer> select(RtsConsumerView rtsDatasourceView) {
+    public List<RtsConsumerView> select(RtsConsumerView rtsDatasourceView) {
         return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.rts.dao.RtsConsumerMapper.selectPage",rtsDatasourceView);
+    }
+
+    public List<RtsConsumer> selectAll(){
+        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.rts.dao.RtsConsumerMapper.selectAll");
     }
 }

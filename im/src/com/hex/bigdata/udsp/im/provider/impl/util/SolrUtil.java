@@ -23,6 +23,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -39,10 +40,19 @@ import java.util.concurrent.CountDownLatch;
  */
 public class SolrUtil {
     private static Logger logger = LogManager.getLogger(SolrUtil.class);
-
-    private static final String SOLR_CONFIGS_TEMPLATE = "goframe/im/solr/template/conf";
-    private static final String SOLR_CONFIGS_TEMPLATE_SCHEMA = SOLR_CONFIGS_TEMPLATE + "/schema.xml";
     private static final String SOLR_CONFIG_ZOOKEEPER_DIR = "/configs";
+    private static String solrConfigPath;
+    private static String solrConfigSchemaPath;
+
+    static {
+        try {
+            solrConfigPath = ResourceUtils.getFile("classpath:goframe/im/solr/template/conf")
+                    .getAbsolutePath();
+            solrConfigSchemaPath = solrConfigPath + "/schema.xml";
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 检查Collection
@@ -182,7 +192,7 @@ public class SolrUtil {
      */
     public static void uploadSolrConfig(String solrUrl, String collectionName, List<MetadataCol> metadataCols) throws Exception {
         ZooKeeper zkClient = getZkClient(solrUrl);
-        upload(zkClient, getSolrConfigPath(), SOLR_CONFIG_ZOOKEEPER_DIR, collectionName, metadataCols);
+        upload(zkClient, solrConfigPath, SOLR_CONFIG_ZOOKEEPER_DIR, collectionName, metadataCols);
     }
 
     /**
@@ -257,13 +267,14 @@ public class SolrUtil {
 //                zkClient.delete(solrConfigPath, -1);
                 throw new Exception("该名称的配置文件已存在！");
             }
-            zkClient.create(solrConfigPath, file.getName().getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            byte[] bytes = file.getName().getBytes();
+            zkClient.create(solrConfigPath, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             File[] files = file.listFiles();
             for (File e : files) {
                 if (e.isDirectory()) {
                     upload(zkClient, e.getPath(), solrConfigPath, null, metadataCols);
                 } else {
-                    byte[] bytes = getSchemaXMLBytes(configName, metadataCols, e);
+                    bytes = getSchemaXMLBytes(configName, metadataCols, e);
                     zkClient.create(solrConfigPath + "/" + e.getName(), bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
                     continue;
                 }
@@ -282,8 +293,7 @@ public class SolrUtil {
      * @return
      */
     public static byte[] setSchemaField(String collectionName, List<MetadataCol> metadataCols) {
-        URL url = ClassLoader.getSystemResource(SOLR_CONFIGS_TEMPLATE_SCHEMA);
-        File file = new File(url.getPath());
+        File file = new File(solrConfigSchemaPath);
         Document document = File2Doc(file);
         Element root = document.getRootElement();
         root.addAttribute("name", collectionName);
@@ -468,11 +478,6 @@ public class SolrUtil {
         return result;
     }
 
-    public static String getSolrConfigPath() {
-        URL url = ClassLoader.getSystemResource(SOLR_CONFIGS_TEMPLATE);
-        return url.getPath();
-    }
-
     /**
      * 删除solr配置
      *
@@ -486,7 +491,6 @@ public class SolrUtil {
         delPath(zkClient, path);
         zkClient.delete(path, -1);
     }
-
 
     /**
      * 删除配置目录及文件（递归）
@@ -838,16 +842,15 @@ public class SolrUtil {
 
     public static String getQuery(List<WhereProperty> whereProperties) {
         StringBuffer queryConditons = new StringBuffer("*:*");
-        String name = null;
-        String value = null;
-        Operator operator = null;
-        for (WhereProperty property : whereProperties) {
-            name = property.getName();
-            value = property.getValue();
-            operator = property.getOperator();
-            if (StringUtils.isBlank(name) || StringUtils.isBlank(value) || operator == null)
-                continue;
-            queryConditons.append(" AND " + name + getCondition(value, operator));
+        if (whereProperties != null && whereProperties.size() != 0) {
+            for (WhereProperty property : whereProperties) {
+                String name = property.getName();
+                String value = property.getValue();
+                Operator operator = property.getOperator();
+                if (StringUtils.isBlank(name) || StringUtils.isBlank(value) || operator == null)
+                    continue;
+                queryConditons.append(" AND " + name + getCondition(value, operator));
+            }
         }
         return queryConditons.toString();
     }

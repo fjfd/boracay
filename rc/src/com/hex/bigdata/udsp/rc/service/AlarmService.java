@@ -40,7 +40,7 @@ public class AlarmService extends BaseService {
     public void send(RcUserService rcUserService, String message) throws Exception {
         Alarm alarm = getAlarmImpl(rcUserService.getAlarmType());
         if (alarm == null) return;
-        List<ComProperties> comPropertiesList = comPropertiesService.selectByFkId(rcUserService.getPkId());
+        List<ComProperties> comPropertiesList = comPropertiesService.selectList(rcUserService.getPkId());
         Config config = new Config(comPropertiesList);
         alarm.send(config, message);
     }

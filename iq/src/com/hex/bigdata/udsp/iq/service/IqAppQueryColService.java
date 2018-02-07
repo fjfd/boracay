@@ -62,22 +62,18 @@ public class IqAppQueryColService extends BaseService {
 
     @Transactional
     public boolean insertList(String appId, List<IqAppQueryCol> iqAppQueryColList) {
-        if (iqAppQueryColList == null) {
-            return true;
-        }
+        if (iqAppQueryColList == null) return true;
         for (IqAppQueryCol iqAppQueryCol : iqAppQueryColList) {
             if("是".equals(iqAppQueryCol.getIsNeed())){
                 iqAppQueryCol.setIsNeed("0");
             }else if("否".equals(iqAppQueryCol.getIsNeed()) || "".equals(iqAppQueryCol.getIsNeed()) || null == iqAppQueryCol.getIsNeed()){
                 iqAppQueryCol.setIsNeed("1");
             }
-
             if("是".equals(iqAppQueryCol.getIsOfferOut()) || "".equals(iqAppQueryCol.getIsOfferOut()) || null == iqAppQueryCol.getIsOfferOut()){
                 iqAppQueryCol.setIsOfferOut("0");
-            }else if("否".equals(iqAppQueryCol.getIsOfferOut()) ){
+            }else if("否".equals(iqAppQueryCol.getIsOfferOut()) ) {
                 iqAppQueryCol.setIsOfferOut("1");
             }
-
             if("".equals(iqAppQueryCol.getLabel()) || null == iqAppQueryCol.getLabel()){
                 iqAppQueryCol.setLabel(iqAppQueryCol.getName());
             }

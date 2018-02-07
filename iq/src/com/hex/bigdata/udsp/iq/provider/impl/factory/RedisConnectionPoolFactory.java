@@ -1,6 +1,6 @@
 package com.hex.bigdata.udsp.iq.provider.impl.factory;
 
-import com.hex.bigdata.udsp.iq.provider.impl.model.RedisDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.redis.RedisDatasource;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;

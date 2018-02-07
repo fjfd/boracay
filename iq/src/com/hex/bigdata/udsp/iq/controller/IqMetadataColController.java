@@ -70,13 +70,13 @@ public class IqMetadataColController extends BaseController {
         return new MessageResult(true, "", iqMetadataCol);
     }
 
-    @RequestMapping({"/select/{mdId}/{type}"})
+    @RequestMapping({"/selectQueryColList/{mdId}"})
     @ResponseBody
-    public MessageResult selectByPkIdAndType(@PathVariable("mdId") String mdId, @PathVariable("type") String type) {
-        logger.debug("select mdId=" + mdId + ",type=" + type);
+    public MessageResult selectQueryColList(@PathVariable("mdId") String mdId) {
+        logger.debug("selectQueryColList mdId=" + mdId);
         List<IqMetadataCol> list = null;
         try {
-            list = iqMetadataColService.select(mdId, type);
+            list = iqMetadataColService.selectQueryColList(mdId);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("系统异常：" + e);
@@ -84,22 +84,50 @@ public class IqMetadataColController extends BaseController {
         return new PageListResult(list);
     }
 
-    @RequestMapping({"/checkBeforeRemoveCols/{mdId}"})
+    @RequestMapping({"/selectReturnColList/{mdId}"})
     @ResponseBody
-    public MessageResult checkBeforeRemoveCols(@PathVariable("mdId") String mdId) {
-        boolean status = true;
-        String message = "";
-        //删除检查
-        try{
-            if(iqMetadataColService.selectAppPkIdsByMdid(mdId).size() > 0){
-                status = false;
-                message = "该元数据已被引用！";
-            }
-        }catch (Exception e){
-            status = false;
-            message = e.getMessage();
+    public MessageResult selectReturnColList(@PathVariable("mdId") String mdId) {
+        logger.debug("selectReturnColList mdId=" + mdId);
+        List<IqMetadataCol> list = null;
+        try {
+            list = iqMetadataColService.selectReturnColList(mdId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("系统异常：" + e);
         }
-
-        return  new MessageResult(status, message);
+        return new PageListResult(list);
     }
+
+//    @RequestMapping({"/select/{mdId}/{type}"})
+//    @ResponseBody
+//    public MessageResult selectByPkIdAndType(@PathVariable("mdId") String mdId, @PathVariable("type") String type) {
+//        logger.debug("select mdId=" + mdId + ",type=" + type);
+//        List<IqMetadataCol> list = null;
+//        try {
+//            list = iqMetadataColService.select(mdId, type);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logger.error("系统异常：" + e);
+//        }
+//        return new PageListResult(list);
+//    }
+
+//    @RequestMapping({"/checkBeforeRemoveCols/{mdId}"})
+//    @ResponseBody
+//    public MessageResult checkBeforeRemoveCols(@PathVariable("mdId") String mdId) {
+//        boolean status = true;
+//        String message = "";
+//        //删除检查
+//        try{
+//            if(iqMetadataColService.selectAppPkIdsByMdid(mdId).size() > 0){
+//                status = false;
+//                message = "该元数据已被引用！";
+//            }
+//        }catch (Exception e){
+//            status = false;
+//            message = e.getMessage();
+//        }
+//
+//        return  new MessageResult(status, message);
+//    }
 }

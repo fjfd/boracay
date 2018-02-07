@@ -1,8 +1,7 @@
 package com.hex.bigdata.udsp.im.controller;
 
 import com.hex.bigdata.udsp.im.model.ImModelFilterCol;
-import com.hex.bigdata.udsp.im.service.ImModelFilterService;
-import com.hex.bigdata.udsp.im.service.ImModelMappingService;
+import com.hex.bigdata.udsp.im.service.ImModelFilterColService;
 import com.hex.goframe.model.MessageResult;
 import com.hex.goframe.model.PageListResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import java.util.List;
 public class ImModelFilterColController {
 
     @Autowired
-    private ImModelFilterService imModelFilterService;
+    private ImModelFilterColService imModelFilterService;
 
     @ResponseBody
     @RequestMapping("getImMFilterByMid/{mid}")

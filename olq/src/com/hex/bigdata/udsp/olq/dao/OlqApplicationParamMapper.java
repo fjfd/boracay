@@ -29,20 +29,18 @@ public class OlqApplicationParamMapper extends SyncMapper<OlqApplicationParam> {
     }
 
     @Override
-    protected boolean deleteListExe(String id) {
-        return this.sqlSessionTemplate.delete("com.hex.bigdata.udsp.olq.dao.OlqApplicationParamMapper.deleteListByAppId", id) >= 0;
+    protected boolean deleteListExe(String appId) {
+        return this.sqlSessionTemplate.delete("com.hex.bigdata.udsp.olq.dao.OlqApplicationParamMapper.deleteListByAppId", appId) >= 0;
     }
 
     @Override
-    protected List<OlqApplicationParam> selectListExe(String id) {
-        return this.selectByAppId(id);
+    protected List<OlqApplicationParam> selectListExe(String appId) {
+        OlqApplicationParam param = new OlqApplicationParam();
+        param.setAppId(appId);
+        return select(param);
     }
 
-
-    protected List<OlqApplicationParam> selectByAppId(String olqAppId) {
-        OlqApplicationParam applicationParam = new OlqApplicationParam();
-        applicationParam.setOlqAppId(olqAppId);
-        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.olq.dao.OlqApplicationParamMapper.selectByCondition", applicationParam);
-
+    public List<OlqApplicationParam> select(OlqApplicationParam olqApplicationParam) {
+        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.olq.dao.OlqApplicationParamMapper.select", olqApplicationParam);
     }
 }

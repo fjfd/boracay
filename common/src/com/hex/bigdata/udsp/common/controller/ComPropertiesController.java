@@ -39,7 +39,7 @@ public class ComPropertiesController extends BaseController {
             message = "请求参数为空";
         } else {
             try {
-                list = this.comPropertiesService.selectByFkId(fkId);
+                list = this.comPropertiesService.selectList(fkId);
             } catch (Exception e) {
                 e.printStackTrace();
                 status = false;

@@ -94,6 +94,13 @@
     </if>
     order by UPT_TIME desc, CRT_TIME desc, NAME asc
   </select>
+  <select id="selectByModel" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select A.PK_ID, A.NAME, A.DESCRIBE, A.TYPE, A.NOTE, A.DEL_FLG, A.CRT_USER, A.CRT_TIME, A.UPT_USER,
+    A.UPT_TIME, A.IMPL_CLASS, A.MODEL
+    from COM_DATASOURCE A
+    where A.DEL_FLG = '0'
+    and A.MODEL = #{model}
+  </select>
   <select id="selectByModelAndName" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.common.model.ComDatasource" >
     select A.PK_ID, A.NAME, A.DESCRIBE, A.TYPE, A.NOTE, A.DEL_FLG, A.CRT_USER, A.CRT_TIME, A.UPT_USER,
     A.UPT_TIME, A.IMPL_CLASS, A.MODEL

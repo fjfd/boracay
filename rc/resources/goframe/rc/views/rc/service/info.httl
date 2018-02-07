@@ -20,7 +20,7 @@ ${extends("/goframe/function_layout.httl")}
                 <th class="nui-form-label"><label for="appId">应用名称：</label></th>
                 <td>
                     <input id="appId" name="appId" class="nui-dictcombobox" valueField="pkId" textField="name" style="width:97%"
-                           readonly="true" emptyText="请应用类型"/>
+                           readonly="true" emptyText="请选择应用名称"/>
                 </td>
             </tr>
 

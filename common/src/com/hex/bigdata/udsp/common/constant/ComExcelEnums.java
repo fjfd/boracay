@@ -1264,4 +1264,60 @@ public class ComExcelEnums {
         }
     }
 
+    public enum RtsMatedataCol implements ExcelProperty{
+        Excel_0("seq", "0"),
+        Excel_1("name", "1"),
+        Excel_2("type", "2"),
+        Excel_3("describe", "3");
+
+
+        private String value;
+        private String name;
+
+        private static List<RtsMatedataCol> enums;
+
+        private RtsMatedataCol(String na, String va) {
+            value = va;
+            name = na;
+        }
+
+        public static List getAllNums() {
+            if (enums == null) {
+                enums = new ArrayList();
+                enums.add(Excel_0);
+                enums.add(Excel_1);
+                enums.add(Excel_2);
+                enums.add(Excel_3);
+            }
+            return enums;
+        }
+
+        public List getNums() {
+            if (enums == null) {
+                enums = new ArrayList();
+                enums.add(Excel_0);
+                enums.add(Excel_1);
+                enums.add(Excel_2);
+                enums.add(Excel_3);
+            }
+            return enums;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
 }

@@ -57,6 +57,10 @@ public class ComDatasourceMapper extends SyncMapper<ComDatasource> {
                 "com.hex.bigdata.udsp.common.dao.ComDatasourceMapper.select", comDatasourceView);
     }
 
+    public List<ComDatasource> selectByModel(String model) {
+        return this.sqlSessionTemplate.selectList("com.hex.bigdata.udsp.common.dao.ComDatasourceMapper.selectByModel", model);
+    }
+
     public ComDatasource selectByModelAndName(String model, String name) {
         ComDatasource comDatasource = new ComDatasource();
         comDatasource.setModel(model);
@@ -75,7 +79,6 @@ public class ComDatasourceMapper extends SyncMapper<ComDatasource> {
     }
 
     public boolean checkSourceType(String sourceId) {
-
         return sqlSessionTemplate.selectList(
                 "com.hex.bigdata.udsp.common.dao.ComDatasourceMapper.checkSourceType",sourceId).size() > 0;
     }

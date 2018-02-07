@@ -42,13 +42,13 @@ public class ComPropertiesService extends BaseService {
         return comPropertiesMapper.select(pkId);
     }
 
-    public List<ComProperties> selectByFkId(String fkId) {
-        return comPropertiesMapper.selectByFkId(fkId);
+    public List<ComProperties> selectList(String fkId) {
+        return comPropertiesMapper.selectList(fkId);
     }
 
     @Transactional
-    public boolean deleteByFkId(String fkId) {
-        return comPropertiesMapper.deleteByFkId(fkId);
+    public boolean deleteList(String fkId) {
+        return comPropertiesMapper.deleteList(fkId);
     }
 
     @Transactional
@@ -62,10 +62,10 @@ public class ComPropertiesService extends BaseService {
 
     @Transactional
     public boolean updateList(String fkId, List<ComProperties> comPropertiesList) {
+        if (comPropertiesList == null) return true;
         for (ComProperties comProperties : comPropertiesList) {
             comProperties.setFkId(fkId);
         }
         return comPropertiesMapper.updateList(fkId, comPropertiesList);
     }
-
 }

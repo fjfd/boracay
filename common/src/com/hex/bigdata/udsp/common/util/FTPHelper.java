@@ -437,12 +437,14 @@ public class FTPHelper {
      * @throws Exception
      */
     public void closeFTPClient(FTPClient ftp) throws Exception {
-        try {
-            if (ftp.isConnected())
-                ftp.logout();
-            ftp.disconnect();
-        } catch (Exception e) {
-            throw new Exception("关闭FTP服务出错!");
+        if (ftp != null) {
+            try {
+                if (ftp.isConnected())
+                    ftp.logout();
+                ftp.disconnect();
+            } catch (Exception e) {
+                throw new Exception("关闭FTP服务出错!");
+            }
         }
     }
 

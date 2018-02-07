@@ -27,16 +27,20 @@ ${extends("/goframe/function_layout.httl")}
                     <a class="nui-button" iconCls="icon-add" plain="true" onclick="add">添加</a>
                     #end
                     #if(hasPermission("RC.service.list.edit"))
-                    <a class="nui-button" iconCls="icon-edit" plain="true" onclick="edit" enabled="false" id="edit">编辑</a>
+                    <a class="nui-button" iconCls="icon-edit" plain="true" onclick="edit" enabled="false"
+                       id="edit">编辑</a>
                     #end
                     #if(hasPermission("RC.service.list.remove"))
-                    <a class="nui-button" iconCls="icon-remove" plain="true" onclick="remove" enabled="false" id="remove">删除</a>
+                    <a class="nui-button" iconCls="icon-remove" plain="true" onclick="remove" enabled="false"
+                       id="remove">删除</a>
                     #end
                     #if(hasPermission("RC.service.list.start"))
-                    <a class="nui-button" iconCls="icon-ok" plain="true" onclick="start_service" enabled="false" id="start_service">启用</a>
+                    <a class="nui-button" iconCls="icon-ok" plain="true" onclick="startService" enabled="false"
+                       id="startService">启用</a>
                     #end
                     #if(hasPermission("RC.service.list.stop"))
-                    <a class="nui-button" iconCls="icon-no" plain="true" onclick="stop_service" enabled="false" id="stop_service">停用</a>
+                    <a class="nui-button" iconCls="icon-no" plain="true" onclick="stopService" enabled="false"
+                       id="stopService">停用</a>
                     #end
                 </td>
             </tr>
@@ -54,14 +58,14 @@ ${extends("/goframe/function_layout.httl")}
                         </td>
                         <td class="tit roleLabel" style="width: 100px;text-align: right">应用类型：</td>
                         <td class="roleText" style="width: 25%">
-                            <input id="type" name="type"class="nui-dictcombobox nui-form-input" emptyText="请选择应用类型"
+                            <input id="type" name="type" class="nui-dictcombobox nui-form-input" emptyText="请选择应用类型"
                                    valueField="dictId" emptyText="全部" showNullItem="true" nullItemText="全部"
-                                   textField="dictName" dictTypeId="UDSP_SERVICE_TYPE" style="width: 97%;" />
+                                   textField="dictName" dictTypeId="UDSP_SERVICE_TYPE" style="width: 97%;"/>
                         </td>
                         <!--<td class="tit roleLabel" style="width: 100px;text-align: right">应用类型：</td>-->
                         <!--<td class="roleText" style="width: 25%">-->
-                            <!--<input id="appId" name="appId" class="nui-dictcombobox" valueField="pkId" textField="name" style="width:97%"-->
-                                   <!--required="true" emptyText="请应用类型"/>-->
+                        <!--<input id="appId" name="appId" class="nui-dictcombobox" valueField="pkId" textField="name" style="width:97%"-->
+                        <!--required="true" emptyText="请应用类型"/>-->
                         <!--</td>-->
                         <td class="tit roleLabel" style="width: 100px;text-align: right">说明：</td>
                         <td class="roleText" style="width: 25%">
@@ -88,9 +92,9 @@ ${extends("/goframe/function_layout.httl")}
 
                         <td class="tit roleLabel" style="width: 100px;text-align: right">服务状态：</td>
                         <td class="roleText" style="width: 25%">
-                            <input id="status" name="status"class="nui-dictcombobox nui-form-input"
+                            <input id="status" name="status" class="nui-dictcombobox nui-form-input"
                                    valueField="dictId" emptyText="全部" showNullItem="true" nullItemText="全部"
-                                   textField="dictName" dictTypeId="RC_SERVICE_STATUS" style="width: 97%;" />
+                                   textField="dictName" dictTypeId="RC_SERVICE_STATUS" style="width: 97%;"/>
                         </td>
                     </tr>
 
@@ -111,16 +115,16 @@ ${extends("/goframe/function_layout.httl")}
     <div id="updateForm" style="width:100%;height:auto;overflow:hidden;">
         <table style="width:100%;table-layout:fixed;" class="nui-form-table">
             <tr>
-                <th class="nui-form-label"  width="15%" align="right"><label>EXCEL配置文件：</label></th>
+                <th class="nui-form-label" width="15%" align="right"><label>EXCEL配置文件：</label></th>
                 <td><input id="fileUpload" class="nui-fileupload" style="width:100%"
                            name="excelFile" limitType="*.xls;*.xlsx"
                            flashUrl="${basePath}/s/js/nui/swfupload/swfupload.swf"
                            uploadUrl="${basePath}/rc/service/upload"
                            onuploadsuccess="uploadSuccess"
-                        />
+                />
                 </td>
-                <td width="15%"  align="center">
-                    <a type="submit" id="impimp" class="nui-button"   iconCls="icon-upload" onclick="startUpload">上传</a>
+                <td width="15%" align="center">
+                    <a type="submit" id="impimp" class="nui-button" iconCls="icon-upload" onclick="startUpload">上传</a>
                 </td>
             </tr>
         </table>
@@ -129,7 +133,7 @@ ${extends("/goframe/function_layout.httl")}
     <div style="display:none">
         <table>
             <form id="downForm" action="${basePath}/com/file/download" method="get">
-                <input id="filePath" name="filePath" type="hidden" />
+                <input id="filePath" name="filePath" type="hidden"/>
             </form>
         </table>
     </div>
@@ -142,9 +146,10 @@ ${extends("/goframe/function_layout.httl")}
          allowCellSelect="false" onselectionchanged="selected" onrowdblclick="deteil">
         <div property="columns">
             <div type="checkcolumn" width="20"></div>
-            <div field="name" headerAlign="center" allowSort="true" >名称</div>
+            <div field="name" headerAlign="center" allowSort="true">名称</div>
             <div field="describe" headerAlign="center" allowSort="true">说明</div>
-            <div field="dsType" headerAlign="center" allowSort="true" renderer="renderServiceType">应用类型</div>
+            <div field="dsType" headerAlign="center" allowSort="true" renderer="renderAppType">应用类型</div>
+            <div headerAlign="center" allowSort="true" renderer="renderAppName">应用名称</div>
             <div field="status" headerAlign="center" allowSort="true" renderer="renderServiceStatus">服务状态</div>
             <div field="crtTime" headerAlign="center" allowSort="true" renderer="timeFormat">创建时间</div>
             <div field="uptTime" headerAlign="center" allowSort="true" renderer="timeFormat">更新时间</div>
@@ -157,7 +162,7 @@ ${extends("/goframe/function_layout.httl")}
     var grid1;
     var appId_nuiObject;
 
-    var updateForm ;
+    var updateForm;
     var uploadFileStatus;
     var fileIndex = 0;
     /**
@@ -167,11 +172,11 @@ ${extends("/goframe/function_layout.httl")}
         nui.parse();
         grid1 = nui.get("datagrid1");
         grid1.load();
-        appId_nuiObject=nui.get("appId");
+        appId_nuiObject = nui.get("appId");
         $("#pull").hide();
 
-        updateForm =  new nui.Form("updateForm");
-        uploadFileStatus = false ;
+        updateForm = new nui.Form("updateForm");
+        uploadFileStatus = false;
     });
 
     /**
@@ -201,18 +206,18 @@ ${extends("/goframe/function_layout.httl")}
         if (rows.length == 1) {
             nui.get("edit").enable();
             nui.get("remove").enable();
-            nui.get("start_service").enable();
-            nui.get("stop_service").enable();
+            nui.get("startService").enable();
+            nui.get("stopService").enable();
         } else if (rows.length == 0) {
             nui.get("edit").disable();
             nui.get("remove").disable();
-            nui.get("start_service").disable();
-            nui.get("stop_service").disable();
+            nui.get("startService").disable();
+            nui.get("stopService").disable();
         } else {
             nui.get("edit").disable();
             nui.get("remove").enable();
-            nui.get("start_service").enable();
-            nui.get("stop_service").enable();
+            nui.get("startService").enable();
+            nui.get("stopService").enable();
         }
 
     }
@@ -231,14 +236,14 @@ ${extends("/goframe/function_layout.httl")}
     }
 
 
-    function selectApps(e){
+    function selectApps(e) {
         $.ajax({
-            url: "${basePath}/rc/service/selectApps/"+e.value,
+            url: "${basePath}/rc/service/selectApps/" + e.value,
             type: 'POST',
             cache: false,
             contentType: 'application/json',
             success: function (result) {
-                if (result.status ) {
+                if (result.status) {
                     appId_nuiObject.setData(result.data);
                 }
             }
@@ -253,7 +258,7 @@ ${extends("/goframe/function_layout.httl")}
             url: "${basePath}/goframe/p/rc.service.add",
             title: "添加",
             width: 800,
-            height:280,
+            height: 280,
             onload: function () {
             },
             ondestroy: function (action) {
@@ -278,7 +283,7 @@ ${extends("/goframe/function_layout.httl")}
             url: "${basePath}/goframe/p/rc.service.edit?pkId=" + row.pkId,
             title: "编辑",
             width: 800,
-            height:280,
+            height: 280,
             onload: function () {
             },
             ondestroy: function (action) {
@@ -288,7 +293,6 @@ ${extends("/goframe/function_layout.httl")}
             }
         })
     }
-
 
 
     /**
@@ -305,7 +309,7 @@ ${extends("/goframe/function_layout.httl")}
             url: "${basePath}/goframe/p/rc.service.auth?pkId=" + row.pkId,
             title: "授权",
             width: 800,
-            height:400,
+            height: 400,
             onload: function () {
             },
             ondestroy: function (action) {
@@ -334,9 +338,9 @@ ${extends("/goframe/function_layout.httl")}
             data: json,
             contentType: 'application/json',
             success: function (result) {
-                if(result.status){
-                    removeList(rows,"确定删除选中记录？");
-                }else{
+                if (result.status) {
+                    removeList(rows, "确定删除选中记录？");
+                } else {
                     nui.alert(result.message);
                 }
             }
@@ -346,12 +350,12 @@ ${extends("/goframe/function_layout.httl")}
     function getCheckRows(rows) {
         var nodes = [];
         for (var i = 0, len = rows.length; i < len; i++) {
-            nodes.push({pkId: rows[i].pkId,name:rows[i].name});
+            nodes.push({pkId: rows[i].pkId, name: rows[i].name});
         }
         return nodes;
     }
 
-    function removeList(rows,title){
+    function removeList(rows, title) {
         nui.confirm(title, "系统提示", function (action) {
             if (action == "ok") {
                 var json = nui.encode(getRows(rows));
@@ -368,24 +372,24 @@ ${extends("/goframe/function_layout.httl")}
                             grid1.reload();
                         } else {
                             nui.alert(result.message, "错误提示");
-                                grid1.unmask();
+                            grid1.unmask();
                         }
                     }
                 });
             }
-         });
+        });
     }
 
 
-    function start_service(){
-        change_serviceStatus("0");
+    function startService() {
+        changeServiceStatus("0");
     }
 
-    function stop_service(){
-        change_serviceStatus("1");
+    function stopService() {
+        changeServiceStatus("1");
     }
-    
-    function change_serviceStatus(type) {
+
+    function changeServiceStatus(type) {
         var rows = grid1.getSelecteds();
         if (!rows) {
             nui.alert("请至少选择一条记录!");
@@ -394,7 +398,7 @@ ${extends("/goframe/function_layout.httl")}
         var json = nui.encode(getRows(rows));
         grid1.loading("正在修改服务状态,请稍等...");
         $.ajax({
-            url: "${basePath}/rc/service/shangeStatus/"+type,
+            url: "${basePath}/rc/service/changeStatus/" + type,
             type: 'POST',
             data: json,
             cache: false,
@@ -430,12 +434,12 @@ ${extends("/goframe/function_layout.httl")}
      * @param pkId
      * @param title
      */
-    function authInfoList(pkId,serviceName,type) {
+    function authInfoList(pkId, serviceName, type) {
         nui.open({
-            url: "${basePath}/goframe/p/rc.service.authList/?serviceName=" + serviceName+"&serviceType="+type+'&pkId='+pkId,
-            title: "服务授权情况-"+serviceName,
+            url: "${basePath}/goframe/p/rc.service.authList/?serviceName=" + serviceName + "&serviceType=" + type + '&pkId=' + pkId,
+            title: "服务授权情况-" + serviceName,
             width: 740,
-            height:500,
+            height: 500,
             onload: function () {
             },
             ondestroy: function (action) {
@@ -456,7 +460,7 @@ ${extends("/goframe/function_layout.httl")}
             url: "${basePath}/goframe/p/rc.service.info/?pkId=" + row.pkId,
             title: "详情-" + row.name,
             width: 640,
-            height:320,
+            height: 320,
             onload: function () {
             },
             ondestroy: function (action) {
@@ -477,81 +481,110 @@ ${extends("/goframe/function_layout.httl")}
     }
 
     /**
-     * 转换数据源类型
+     * 转换应用类型
      * @param e
      * @returns {*}
      */
-    function renderServiceType(e) {
+    function renderAppType(e) {
         return nui.getDictText("UDSP_SERVICE_TYPE", e.row.type);
     }
-    
-    function  renderServiceStatus(e) {
+
+    /** 转换应用名称
+     * @param e
+     * @returns {*}
+     */
+    function renderAppName(e) {
+        var appName = "";
+        $.ajax({
+            url: "${basePath}/rc/service/selectAppName/" + e.row.type + "/" + e.row.appId,
+            type: 'POST',
+            cache: false,
+            async: false,
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status) {
+                    if(result.data) {
+                        appName = result.data.name;
+                    }
+                } else {
+                    appName = "<font color='red'>" + result.message + "</font>";
+                }
+            }
+        });
+        return appName;
+    }
+
+    /**
+     * 转换服务状态
+     * @param e
+     * @returns {*}
+     */
+    function renderServiceStatus(e) {
         return nui.getDictText("RC_SERVICE_STATUS", e.row.status);
     }
 
-
     // 开始上传文件
     function startUpload() {
-        var o = updateForm.getData(true,true);
+        var o = updateForm.getData(true, true);
         updateForm.validate();
         if (updateForm.isValid() == false) return;
         var fileupload = nui.get("fileUpload");
-        var file = fileupload.text ;
-        if(file==""){
+        var file = fileupload.text;
+        if (file == "") {
             nui.alert("请选择上传文件");
-            return ;
+            return;
         }
         var obj = fileupload.swfUpload.getFile(fileIndex);
-        if(obj==null&&fileIndex>0)
-            obj = fileupload.swfUpload.getFile(fileIndex-1);
-        if(obj==null){
+        if (obj == null && fileIndex > 0)
+            obj = fileupload.swfUpload.getFile(fileIndex - 1);
+        if (obj == null) {
             nui.alert("文件已上传，请重新选择文件上传");
-            return ;
-        }else if(obj.filestatus!=-1){
-            if(obj.filestatus==-4 && uploadFileStatus){
+            return;
+        } else if (obj.filestatus != -1) {
+            if (obj.filestatus == -4 && uploadFileStatus) {
                 nui.alert("文件已上传，请重新选择文件上传");
-                return ;
-            }else if(obj.filestatus==-3){
+                return;
+            } else if (obj.filestatus == -3) {
                 nui.alert("文件上传失败，请重新选择文件上传");
-                return ;
-            }else if(!uploadFileStatus){
+                return;
+            } else if (!uploadFileStatus) {
                 nui.alert("请重新选择文件上传");
-                return ;
+                return;
             }
         }
         fileupload.startUpload();
         mask();
     }
 
-    function mask(content){
+    function mask(content) {
         mini.mask({
-            el:document.body,
-            cls:'mini-mask-loading',
-            html:'导入中...'
+            el: document.body,
+            cls: 'mini-mask-loading',
+            html: '导入中...'
         })
     }
 
 
-    function uploadSuccess(e){
+    function uploadSuccess(e) {
         var retData = nui.decode(e.serverData);
         uploadFileStatus = retData.status;
         nui.unmask(document.body);
-        if(uploadFileStatus){
-            nui.alert("导入成功！") ;
-            uploadFileStatus=true;
+        if (uploadFileStatus) {
+            nui.alert("导入成功！");
+            uploadFileStatus = true;
             grid1.reload();
-        }else{
-            if(undefined==retData.message || ""==retData.message){
-                nui.alert("上传失败！请重新上传") ;
-            }else{
-                nui.alert(retData.message) ;
+        } else {
+            if (undefined == retData.message || "" == retData.message) {
+                nui.alert("上传失败！请重新上传");
+            } else {
+                nui.alert(retData.message);
             }
-            uploadFileStatus=false;
+            uploadFileStatus = false;
         }
         fileIndex++;
     }
 
-    function downLoad(){
+    function downLoad() {
         var rows = grid1.getSelecteds();
         if (!rows || rows.length == 0) {
             nui.alert("请至少选择一条记录!");
@@ -560,12 +593,12 @@ ${extends("/goframe/function_layout.httl")}
         var json = nui.encode(getRows(rows));
         grid1.loading("正在导出中,请稍等...");
         $.ajax({
-            url:"${basePath}/rc/service/download",
-            type : 'POST',
-            data : json,
-            cache : false,
-            contentType : 'application/json',
-            success : function(text) {
+            url: "${basePath}/rc/service/download",
+            type: 'POST',
+            data: json,
+            cache: false,
+            contentType: 'application/json',
+            success: function (text) {
                 if (text != null && text.trim() != "") {
                     $("#filePath").val(text);
                     $("#downForm").submit();

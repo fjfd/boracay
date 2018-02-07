@@ -88,7 +88,7 @@ ${extends("/goframe/function_layout.httl")}
             </div>
         </fieldset>
         <div class="nui-toolbar" style="text-align:center;padding-top:10px;padding-bottom:5px;" borderStyle="border:0;">
-            <a class="nui-button" iconCls="icon-save" onclick="save" id="saveButton" onclick="saveCols">关联</a>
+            <a class="nui-button" iconCls="icon-save" onclick="save">关联</a>
             <span style="display:inline-block;width:25px;"></span>
             <a class="nui-button" iconCls="icon-cancel" onclick="cancel">返回</a>
         </div>
@@ -98,8 +98,6 @@ ${extends("/goframe/function_layout.httl")}
 <script type="text/javascript">
     var form1;
     var grid1;
-    var originTbName;
-    var originName;
     var dsIdObject;
     var mdIdObject;
 
@@ -141,16 +139,16 @@ ${extends("/goframe/function_layout.httl")}
         });
     }
 
-    function mdIdChanged(){
+    function mdIdChanged() {
         var mdIdSelected = mdIdObject.getSelected();
         //清除所有行
         grid1.clearRows();
         if (!mdIdSelected || mdIdSelected == undefined) {
             return;
         }
-        var mdId =  mdIdSelected.pkId;
+        var mdId = mdIdSelected.pkId;
         $.ajax({
-            url: "${basePath}/im/md/col/select/"+mdId,
+            url: "${basePath}/im/md/col/select/" + mdId,
             type: 'POST',
             data: null,
             cache: false,
@@ -166,8 +164,9 @@ ${extends("/goframe/function_layout.httl")}
     /**
      * 保存
      */
-    function save(){
-        var colsSelected = grid1.getSelecteds();
+    function save() {
+        //var colsSelected = grid1.getSelecteds();
+        var colsSelected = grid1.getData(true, true);
         window.Owner.setColsData(colsSelected);
         cancel();
     }

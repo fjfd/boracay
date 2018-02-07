@@ -24,6 +24,11 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <table tableName="MM_MODEL_PARAM" domainObjectName="ModelParam"/>
+        <table tableName="MM_APPLICATION" domainObjectName="MmApplication"/>
+        <table tableName="MM_APPLICATION_EXECUTE_PARAM" domainObjectName="MmAppExecuteParam"/>
+        <table tableName="MM_APPLICATION_RETURN_PARAM" domainObjectName="MmAppReturnParam"/>
+        <table tableName="MM_CONTRACTOR" domainObjectName="MmContractor"/>
+        <table tableName="MM_MODEL_INFO" domainObjectName="MmModelInfo"/>
+        <table tableName="MM_MODEL_PARAM" domainObjectName="MmModelParam"/>
   </context>
 </generatorConfiguration>

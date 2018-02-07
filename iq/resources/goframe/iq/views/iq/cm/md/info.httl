@@ -82,7 +82,7 @@ ${extends("/goframe/function_layout.httl")}
             <div class="nui-fit" style="height:150px; padding: 0px 5px 0px 5px;">
                 <div id="datagrid1" class="nui-datagrid" style="width:100%; height: 100%;" dataField="data"
                      idField="pkId" multiSelect="true" allowCellSelect="true" sortMode="client" showPager="false"
-                     url="${basePath}/iq/md/col/select/${pkId}/1">
+                     url="${basePath}/iq/md/col/selectQueryColList/${pkId}">
                     <div property="columns">
                         <div type="checkcolumn" headerAlign="center" width="5"></div>
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>
@@ -130,7 +130,7 @@ ${extends("/goframe/function_layout.httl")}
             <div class="nui-fit" style="height:200px; padding: 0px 5px 0px 5px;">
                 <div id="datagrid2" class="nui-datagrid" style="width:100%; height: 100%;" dataField="data"
                      idField="pkId" multiSelect="true" allowCellSelect="true" sortMode="client" showPager="false"
-                     url="${basePath}/iq/md/col/select/${pkId}/2">
+                     url="${basePath}/iq/md/col/selectReturnColList/${pkId}">
                     <div property="columns">
                         <div type="checkcolumn" headerAlign="center" width="5"></div>
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>

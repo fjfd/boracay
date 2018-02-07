@@ -9,7 +9,7 @@ import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.im.provider.model.*;
 import com.hex.bigdata.udsp.iq.provider.Provider;
 import com.hex.bigdata.udsp.iq.provider.impl.factory.ElasticSearchConnectionPoolFactory;
-import com.hex.bigdata.udsp.iq.provider.impl.model.ELSearchDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.elsearch.ELSearchDatasource;
 import com.hex.bigdata.udsp.iq.provider.impl.model.elsearch.*;
 import com.hex.bigdata.udsp.iq.provider.model.*;
 import com.hex.bigdata.udsp.iq.provider.model.Metadata;

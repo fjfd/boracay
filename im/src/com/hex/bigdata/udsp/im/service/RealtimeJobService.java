@@ -309,7 +309,7 @@ public class RealtimeJobService {
         List<RealtimeTotalInfoDto> infos = selectAll(realtimeTotalInfoView);
         int pageIndex = page.getPageIndex();
         int pageSize = page.getPageSize();
-        int befNum = pageSize * (pageIndex - 1); // 不需要显示的数据条数
+        int befNum = pageSize * pageIndex; // 不需要显示的数据条数
         if (befNum < 0) befNum = 0;
         int count = 0;
         List<RealtimeTotalInfoDto> list = new ArrayList<>();

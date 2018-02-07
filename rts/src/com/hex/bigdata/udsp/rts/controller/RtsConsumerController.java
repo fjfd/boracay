@@ -64,7 +64,7 @@ public class RtsConsumerController extends BaseController {
     @RequestMapping({"/select"})
     @ResponseBody
     public MessageResult<List> select(RtsConsumerView rtsDatasourceView) {
-        List<RtsConsumer> list = rtsConsumerService.select(rtsDatasourceView);
+        List<RtsConsumerView> list = rtsConsumerService.select(rtsDatasourceView);
         logger.debug("select search=" + JSONUtil.parseObj2JSON(rtsDatasourceView));
         return new MessageResult(true, list);
     }

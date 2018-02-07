@@ -111,6 +111,7 @@ public abstract class Wrapper {
         String eDsId = eDs.getId();
         Datasource tDs = metadata.getDatasource();
         String tDsId = tDs.getId();
+        String tDsType = tDs.getType();
 
         // 获取是否暴力查询
         /*
@@ -136,7 +137,9 @@ public abstract class Wrapper {
         String selectSql = null;
         String selectTableName = null;
         String insertTableName = null;
+        String insertSql = null;
         try {
+            List<WhereProperty> whereProperties = getWhereProperties(modelFilterCols);
 
             if (sDsId.equals(eDsId)) { // 源、引擎的数据源相同
                 HiveModel hiveModel = new HiveModel(model);
@@ -150,6 +153,8 @@ public abstract class Wrapper {
                     // 创建动态的源引擎Schema
                     ImProviderService imProviderService = (ImProviderService) WebApplicationContextUtil.getBean("imProviderService");
                     imProviderService.createSourceEngineSchema(model, selectTableName);
+                    // 过滤条件清空
+                    whereProperties = null;
                 }
             }
 
@@ -160,11 +165,41 @@ public abstract class Wrapper {
                 insertTableName = getTargetTableName(id);
             }
 
-            // 插入目标表
-            insert(key, eHiveDs, metadata, modelMappings, selectSql, selectTableName, insertTableName, modelFilterCols);
+            List<String> selectColumns = getSelectColumns(modelMappings, metadata);
+
+            // 目标表是HBase类型，或者目标是SOLR+HBASE类型且key是以HBASE开头
+            if (DatasourceType.HBASE.getValue().equals(tDsType)
+                    || (DatasourceType.SOLR_HBASE.getValue().equals(tDsType) && key.startsWith(DatasourceType.HBASE.getValue()))
+                    ) {
+                // 新的select sql
+                if (StringUtils.isNotBlank(selectSql)) {
+                    selectSql = HiveSqlUtil.selectByHBase(selectColumns, selectSql, whereProperties);
+                } else {
+                    selectSql = HiveSqlUtil.select(selectColumns, selectTableName, whereProperties);
+                }
+                // 生成新的集合，必须在下面
+                selectColumns = new ArrayList<>();
+                selectColumns.add("KEY");
+                selectColumns.add("VAL");
+                // 过滤条件清空，必须在下面
+                whereProperties = null;
+            }
+
+            // 生成插入目标表SQL
+            if (StringUtils.isNotBlank(selectSql)) {
+                insertSql = HiveSqlUtil.insert2(false, insertTableName, null,
+                        selectColumns, selectSql, whereProperties);
+            } else {
+                insertSql = HiveSqlUtil.insert(false, insertTableName, null,
+                        selectColumns, selectTableName, whereProperties);
+            }
+
+            // 执行SQL
+            HiveJdbcUtil.executeUpdate(key, eHiveDs, insertSql);
 
         } finally {
-            if (!violenceQuery) { // 非暴力查询
+            // 源、引擎的数据源不同且非暴力查询
+            if (!sDsId.equals(eDsId) && !violenceQuery) {
                 dropSourceEngineSchema(model, selectTableName); // 删除动态源引擎Schema
             }
         }
@@ -202,20 +237,6 @@ public abstract class Wrapper {
             list.add(modelMapping);
         }
         return list;
-    }
-
-    private void insert(String key, HiveDatasource eHiveDs, Metadata metadata, List<ModelMapping> modelMappings,
-                        String selectSql, String selectTableName, String insertTableName,
-                        List<ModelFilterCol> modelFilterCols) throws SQLException {
-        String insertSql = null;
-        if (StringUtils.isNotBlank(selectSql)) {
-            insertSql = HiveSqlUtil.insert2(false, insertTableName, null,
-                    getSelectColumns(modelMappings, metadata), selectSql, getWhereProperties(modelFilterCols));
-        } else {
-            insertSql = HiveSqlUtil.insert(false, insertTableName, null,
-                    getSelectColumns(modelMappings, metadata), selectTableName, getWhereProperties(modelFilterCols));
-        }
-        HiveJdbcUtil.executeUpdate(key, eHiveDs, insertSql);
     }
 
     /**

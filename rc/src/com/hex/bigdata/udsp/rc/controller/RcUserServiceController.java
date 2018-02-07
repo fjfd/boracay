@@ -191,15 +191,16 @@ public class RcUserServiceController extends BaseController {
         if (rcServices.length == 0) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            if (!rcUserServiceService.delete(rcServices)) {
+        } else {
+            try {
+                if (!rcUserServiceService.delete(rcServices)) {
+                    status = false;
+                    message = "删除失败";
+                }
+            } catch (Exception e) {
                 status = false;
-                message = "删除失败";
+                message = "系统异常：" + e.getMessage();
             }
-        } catch (Exception e) {
-            status = false;
-            message = "系统异常：" + e.getMessage();
         }
         if (status) {
             logger.debug(message);
@@ -218,14 +219,15 @@ public class RcUserServiceController extends BaseController {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(serviceId)) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            message = "删除失败";
-            flg = rcUserServiceService.checkExists(userId, serviceId);
-        } catch (Exception e) {
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                message = "删除失败";
+                flg = rcUserServiceService.checkExists(userId, serviceId);
+            } catch (Exception e) {
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -244,14 +246,15 @@ public class RcUserServiceController extends BaseController {
         if (StringUtils.isBlank(userIds) || StringUtils.isBlank(serviceIds)) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            message = "检查失败";
-            flg = rcUserServiceService.checkExistsBatch(userIds, serviceIds);
-        } catch (Exception e) {
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                message = "检查失败";
+                flg = rcUserServiceService.checkExistsBatch(userIds, serviceIds);
+            } catch (Exception e) {
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -278,14 +281,15 @@ public class RcUserServiceController extends BaseController {
         if (rcUserServiceView == null) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            users = rcUserServiceService.selectNotRelationUsers(rcUserServiceView, page);
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                users = rcUserServiceService.selectNotRelationUsers(rcUserServiceView, page);
+            } catch (Exception e) {
+                e.printStackTrace();
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -312,14 +316,15 @@ public class RcUserServiceController extends BaseController {
         if (rcUserServiceView == null) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            users = rcUserServiceService.selectRelationUsers(rcUserServiceView);
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                users = rcUserServiceService.selectRelationUsers(rcUserServiceView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -345,14 +350,15 @@ public class RcUserServiceController extends BaseController {
         if (rcUserServiceView == null) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            users = rcUserServiceService.selectUsersByServiceName(rcUserServiceView);
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                users = rcUserServiceService.selectUsersByServiceName(rcUserServiceView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -371,14 +377,15 @@ public class RcUserServiceController extends BaseController {
         if (rcUserServiceView == null) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            status = true;
-            users = rcUserServiceService.selectServicesByUserId(rcUserServiceView);
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                status = true;
+                users = rcUserServiceService.selectServicesByUserId(rcUserServiceView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);
@@ -408,13 +415,14 @@ public class RcUserServiceController extends BaseController {
         if (rcUserServiceView == null) {
             status = false;
             message = "请求参数为空";
-        }
-        try {
-            result = rcUserServiceService.checkModels(rcUserServiceView.getIpSection());
-        } catch (Exception e) {
-            e.printStackTrace();
-            status = false;
-            message = "系统异常：" + e.getMessage();
+        } else {
+            try {
+                result = rcUserServiceService.checkModels(rcUserServiceView.getIpSection());
+            } catch (Exception e) {
+                e.printStackTrace();
+                status = false;
+                message = "系统异常：" + e.getMessage();
+            }
         }
         if (status) {
             logger.debug(message);

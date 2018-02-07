@@ -1,5 +1,5 @@
-#########################################################################
-#					ÒÀÀµjar°ü
+ï»¿#########################################################################
+#					ä¾èµ–jaråŒ…
 #########################################################################
 httpmime-4.3.1.jar
 netty-3.7.0.Final.jar
@@ -11,15 +11,15 @@ wstx-asl-3.2.7.jar
 
 
 #########################################################################
-#					²âÊÔHive²éÑ¯SolrÖĞÊı¾İ£¨³É¹¦£©
+#					æµ‹è¯•HiveæŸ¥è¯¢Solrä¸­æ•°æ®ï¼ˆæˆåŠŸï¼‰
 #########################################################################
 beeline -u jdbc:hive2://localhost:10000 -n hive -p 111111
 
---´æÔÚ±í¾ÍÉ¾³ı
+--å­˜åœ¨è¡¨å°±åˆ é™¤
 drop table if exists solr_handler_test1;
 
--- ´´½¨Ò»¸öSolrµÄÍâÁ´±í£¨µ¥»úSolr£©
-create external table solr_handler_test1 ( --¶¨Òå×Ö¶Î£¬ÕâÀïÃæµÄ×Ö¶ÎĞèÒªÓësolrµÄ×Ö¶ÎÒ»ÖÂ
+-- åˆ›å»ºä¸€ä¸ªSolrçš„å¤–é“¾è¡¨ï¼ˆå•æœºSolrï¼‰
+create external table solr_handler_test1 ( --å®šä¹‰å­—æ®µï¼Œè¿™é‡Œé¢çš„å­—æ®µéœ€è¦ä¸solrçš„å­—æ®µä¸€è‡´
 id string,
 dt string,
 bu_ret_code string,
@@ -41,20 +41,20 @@ auth_code string,
 tran_status string,
 message_type string
 )  
-stored by "com.hex.hive.solr.SolrStorageHandler" --¶¨Òå´æ´¢µÄstorehandler
-tblproperties( --ÅäÖÃsolrÊôĞÔ
-'solr.url' = 'http://node1:8983/solr/HDS_CUPATRXJNL', -- Solr Rest·şÎñµÄµØÖ·¡¢¶Ë¿ÚºÍCollection Name
-'solr.query' = '*:*', -- Solr²éÑ¯Óï¾ä
-'solr.cursor.batch.size' = '1000', -- ÅúÁ¿´óĞ¡
-'solr.primary.key' = 'id', -- Solr Collection Ö÷¼ü×Ö¶ÎÃû
-'is.solrcloud' = '0' -- 0£ºµ¥»úÄ£Ê½£¬1£º¼¯ÈºÄ£Ê½£¬Default£º0
+stored by "com.hex.hive.solr.SolrStorageHandler" --å®šä¹‰å­˜å‚¨çš„storehandler
+tblproperties( --é…ç½®solrå±æ€§
+'solr.url' = 'http://node1:8983/solr/HDS_CUPATRXJNL', -- Solr RestæœåŠ¡çš„åœ°å€ã€ç«¯å£å’ŒCollection Name
+'solr.query' = '*:*', -- SolræŸ¥è¯¢è¯­å¥
+'solr.cursor.batch.size' = '1000', -- æ‰¹é‡å¤§å°
+'solr.primary.key' = 'id', -- Solr Collection ä¸»é”®å­—æ®µå
+'is.solrcloud' = '0' -- 0ï¼šå•æœºæ¨¡å¼ï¼Œ1ï¼šé›†ç¾¤æ¨¡å¼ï¼ŒDefaultï¼š0
 );
 
 select * from solr_handler_test1 limit 10;
 
 
--- ´´½¨Ò»¸öSolrµÄÍâÁ´±í£¨¼¯ÈºSolr£©
-create external table solr_handler_test2 ( --¶¨Òå×Ö¶Î£¬ÕâÀïÃæµÄ×Ö¶ÎĞèÒªÓësolrµÄ×Ö¶ÎÒ»ÖÂ
+-- åˆ›å»ºä¸€ä¸ªSolrçš„å¤–é“¾è¡¨ï¼ˆé›†ç¾¤Solrï¼‰
+create external table solr_handler_test2 ( --å®šä¹‰å­—æ®µï¼Œè¿™é‡Œé¢çš„å­—æ®µéœ€è¦ä¸solrçš„å­—æ®µä¸€è‡´
 id string,
 dt string,
 bu_ret_code string,
@@ -76,20 +76,20 @@ auth_code string,
 tran_status string,
 message_type string
 )  
-stored by "com.hex.hive.solr.SolrStorageHandler" --¶¨Òå´æ´¢µÄstorehandler
-tblproperties( --ÅäÖÃsolrÊôĞÔ
-'solr.url' = 'node1:2181,node2:2181,node3:2181/solr', -- zookeeperµØÖ·¡¢¶Ë¿ÚºÍÄ¿Â¼
-'solr.query' = '*:*', -- Solr²éÑ¯Óï¾ä
-'solr.cursor.batch.size' = '1000', -- ÅúÁ¿´óĞ¡
-'solr.primary.key' = 'id', -- Solr Collection Ö÷¼ü×Ö¶ÎÃû
-'is.solrcloud' = '1', -- 0£ºµ¥»úÄ£Ê½£¬1£º¼¯ÈºÄ£Ê½£¬Default£º0
+stored by "com.hex.hive.solr.SolrStorageHandler" --å®šä¹‰å­˜å‚¨çš„storehandler
+tblproperties( --é…ç½®solrå±æ€§
+'solr.url' = 'node1:2181,node2:2181,node3:2181/solr', -- zookeeperåœ°å€ã€ç«¯å£å’Œç›®å½•
+'solr.query' = '*:*', -- SolræŸ¥è¯¢è¯­å¥
+'solr.cursor.batch.size' = '1000', -- æ‰¹é‡å¤§å°
+'solr.primary.key' = 'id', -- Solr Collection ä¸»é”®å­—æ®µå
+'is.solrcloud' = '1', -- 0ï¼šå•æœºæ¨¡å¼ï¼Œ1ï¼šé›†ç¾¤æ¨¡å¼ï¼ŒDefaultï¼š0
 'collection.name' = 'HDS_CUPATRXJNL' -- Solr Collection Name
 );
 
 select * from solr_handler_test2 limit 10;
 
 #########################################################################
-#					²âÊÔHive²åÈëÊı¾İµ½Solr£¨³É¹¦£©
+#					æµ‹è¯•Hiveæ’å…¥æ•°æ®åˆ°Solrï¼ˆæˆåŠŸï¼‰
 #########################################################################
 
 create external table solr_handler_test3 (
@@ -121,19 +121,19 @@ SELECT id, card_no, channel_type, 11, dt FROM solr_handler_test1 limit 3;
 select * from solr_handler_test3 limit 10;
 
 #########################################################################
-#					²âÊÔHive¸üĞÂÊı¾İµ½DB£¨²»Ö§³Ö£©
+#					æµ‹è¯•Hiveæ›´æ–°æ•°æ®åˆ°DBï¼ˆä¸æ”¯æŒï¼‰
 #########################################################################
 
 UPDATE solr_handler_test3 SET amt = 110 where id = '000069915bdbd75f';
 
 #########################################################################
-#					²âÊÔHiveÉ¾³ıÊı¾İµ½DB£¨²»Ö§³Ö£©
+#					æµ‹è¯•Hiveåˆ é™¤æ•°æ®åˆ°DBï¼ˆä¸æ”¯æŒï¼‰
 #########################################################################
 
 DELETE FROM jdbc_handler_test3 where s_name = '000069915bdbd75f';
 
 
-×¢£º
-1¡¢Hive½¨±í×Ö¶ÎÀàĞÍÖ»ÄÜÊÇStringÀàĞÍ£»
-2¡¢OVERWRITEºÍINTOĞ§¹ûÏàÍ¬Ö»ÊÇÔöÁ¿Ìí¼Ó£»
-3¡¢Ö»Ö§³Öcreate¡¢selectºÍinsert²Ù×÷£»
+æ³¨ï¼š
+1ã€Hiveå»ºè¡¨å­—æ®µç±»å‹åªèƒ½æ˜¯Stringç±»å‹ï¼›
+2ã€OVERWRITEå’ŒINTOæ•ˆæœç›¸åŒåªæ˜¯å¢é‡æ·»åŠ ï¼›
+3ã€åªæ”¯æŒcreateã€selectå’Œinsertæ“ä½œï¼›

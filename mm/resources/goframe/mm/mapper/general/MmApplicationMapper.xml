@@ -70,7 +70,7 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
 
-    <select id="selectPage" resultMap="FullResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.ModelInfoView">
+    <select id="selectPage" resultMap="FullResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.MmModelInfoView">
         select app.PK_ID, app.MODEL_ID, app.NAME, app.DESCRIBE, app.MAX_NUM, app.DEL_FLG, app.CRT_USER, app.CRT_TIME,
         app.UPT_USER,
         app.UPT_TIME, app.NOTE,info.NAME AS MODEL_NAME,mc.cn_name AS CONTRACTOR
@@ -94,16 +94,15 @@
         order by app.UPT_TIME desc, app.CRT_TIME desc, app.NAME asc
 
     </select>
-
-
     <!--查询名称是否重复-->
     <select id="selectByName" resultMap="BaseResultMap">
     select PK_ID, MODEL_ID,NAME, DESCRIBE, MAX_NUM, DEL_FLG,CRT_USER,
     CRT_TIME,UPT_USER,UPT_TIME,NOTE
     from MM_APPLICATION
     where NAME = #{name,jdbcType=VARCHAR}
+    and DEL_FLG = '0'
   </select>
-<select id="selectFullAppInfo" resultMap="FullAppInfoMap" parameterType="java.lang.String">
+    <select id="selectFullAppInfo" resultMap="FullAppInfoMap" parameterType="java.lang.String">
     select app.PK_ID as APP_ID, app.MAX_NUM, mi.NAME as MODEL_NAME, mi.MODEL_TYPE,
     c.NAME as CONTRACTOR_NAME,c.HTTP_URL
     from mm_application app
@@ -113,11 +112,12 @@
     on c.PK_ID = mi.CONTRACTOR
     where app.PK_ID = #{pkId,jdbcType=VARCHAR}
 </select>
-<select id="selectByModelId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="selectByModelId" resultMap="BaseResultMap" parameterType="java.lang.String">
     select PK_ID, MODEL_ID, NAME, DESCRIBE, MAX_NUM, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
     UPT_TIME, NOTE
     from MM_APPLICATION
-    where MODEL_ID = #{modelId,jdbcType=VARCHAR} AND DEL_FLG = '0'
+    where MODEL_ID = #{modelId,jdbcType=VARCHAR}
+    and DEL_FLG = '0'
 </select>
 
 </mapper>

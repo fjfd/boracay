@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RcUserServiceDto {
     private RcUserService rcUserService;
-    private List<ComProperties> comPropertiesList;
+    private List<ComProperties> alarmProperties; // 告警配置
 
     public RcUserService getRcUserService() {
         return rcUserService;
@@ -20,11 +20,11 @@ public class RcUserServiceDto {
         this.rcUserService = rcUserService;
     }
 
-    public List<ComProperties> getComPropertiesList() {
-        return comPropertiesList;
+    public List<ComProperties> getAlarmProperties() {
+        return alarmProperties;
     }
 
-    public void setComPropertiesList(List<ComProperties> comPropertiesList) {
-        this.comPropertiesList = comPropertiesList;
+    public void setAlarmProperties(List<ComProperties> alarmProperties) {
+        this.alarmProperties = alarmProperties;
     }
 }

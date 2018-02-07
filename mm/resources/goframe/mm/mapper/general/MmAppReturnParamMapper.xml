@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hex.bigdata.udsp.mm.dao.ReturnParamMapper" >
+<mapper namespace="com.hex.bigdata.udsp.mm.dao.MmAppReturnParamMapper" >
   <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mm.model.MmAppReturnParam" >
     <id column="PK_ID" property="pkId" jdbcType="VARCHAR" />
     <result column="SEQ" property="seq" jdbcType="DECIMAL" />

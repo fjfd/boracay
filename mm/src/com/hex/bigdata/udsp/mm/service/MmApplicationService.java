@@ -6,9 +6,8 @@ import com.hex.bigdata.udsp.common.model.ComExcelProperties;
 import com.hex.bigdata.udsp.common.model.ComUploadExcelContent;
 import com.hex.bigdata.udsp.common.util.ExcelCopyUtils;
 import com.hex.bigdata.udsp.common.util.ExcelUploadhelper;
-import com.hex.bigdata.udsp.common.util.ExceptionUtil;
 import com.hex.bigdata.udsp.mm.dao.MmApplicationMapper;
-import com.hex.bigdata.udsp.mm.dao.ModelInfoMapper;
+import com.hex.bigdata.udsp.mm.dao.MmModelInfoMapper;
 import com.hex.bigdata.udsp.mm.dto.MmApplicationParamView;
 import com.hex.bigdata.udsp.mm.dto.MmApplicationView;
 import com.hex.bigdata.udsp.mm.dto.MmFullAppInfoView;
@@ -65,17 +64,17 @@ public class MmApplicationService extends BaseService {
     private MmApplicationMapper mmApplicationMapper;
 
     @Autowired
-    private ExecuteParamService executeParamService;
+    private MmAppExecuteParamService executeParamService;
 
     @Autowired
-    private ReturnParamService returnParamService;
+    private MmAppReturnParamService returnParamService;
 
     @Autowired
     private RcServiceService rcServiceService;
 
 
     @Autowired
-    private ModelInfoMapper modelInfoMapper;
+    private MmModelInfoMapper modelInfoMapper;
 
     private static List<ComExcelParam> comExcelParams = new ArrayList<>();
 
@@ -160,8 +159,7 @@ public class MmApplicationService extends BaseService {
      * @return 存在返回true，不存在返回false
      */
     public boolean checekUniqueName(String name) {
-        MmApplication mmApplication = this.mmApplicationMapper.selectByName(name);
-        return mmApplication != null;
+        return mmApplicationMapper.selectByName(name) != null;
     }
 
     /**

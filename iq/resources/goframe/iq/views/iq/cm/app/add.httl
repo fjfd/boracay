@@ -317,7 +317,7 @@ ${extends("/goframe/function_layout.httl")}
     function colNameBeforeShowPopup1(e){
         // --下拉选项变化--
         if(count1 == 0) {
-            e.source.load("${basePath}/iq/md/col/select/" + mdIdObj.value + "/1");
+            e.source.load("${basePath}/iq/md/col/selectQueryColList/" + mdIdObj.value);
             count1++;
         }
     }
@@ -325,7 +325,7 @@ ${extends("/goframe/function_layout.httl")}
     function colNameBeforeShowPopup2(e){
         // --下拉选项变化--
         if(count2 == 0) {
-            e.source.load("${basePath}/iq/md/col/select/" + mdIdObj.value +"/2");
+            e.source.load("${basePath}/iq/md/col/selectReturnColList/" + mdIdObj.value);
             count2++;
         }
     }
@@ -333,7 +333,7 @@ ${extends("/goframe/function_layout.httl")}
     function colNameBeforeShowPopup3(e){
         // --下拉选项变化--
         if(count3 == 0) {
-            e.source.load("${basePath}/iq/md/col/select/" + mdIdObj.value +"/2");
+            e.source.load("${basePath}/iq/md/col/selectReturnColList/" + mdIdObj.value);
             count3++;
         }
     }
@@ -346,7 +346,7 @@ ${extends("/goframe/function_layout.httl")}
         count1 = 0;
         // --字段信息变化--
         grid1.clearRows();
-        $.post("${basePath}/iq/md/col/select/" + mdIdObj.value +"/1", {}, function (result) {
+        $.post("${basePath}/iq/md/col/selectQueryColList/" + mdIdObj.value, {}, function (result) {
             var data = result.data;
             var cols = [];
             if (data.length > 0) {
@@ -371,7 +371,7 @@ ${extends("/goframe/function_layout.httl")}
         count2 = 0;
         // --字段信息变化--
         grid2.clearRows();
-        $.post("${basePath}/iq/md/col/select/" + mdIdObj.value +"/2", {}, function (result) {
+        $.post("${basePath}/iq/md/col/selectReturnColList/" + mdIdObj.value, {}, function (result) {
             var data = result.data;
             var cols = [];
             if (data.length > 0) {

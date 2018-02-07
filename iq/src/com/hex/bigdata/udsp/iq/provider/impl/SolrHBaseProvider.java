@@ -13,7 +13,11 @@ import com.hex.bigdata.udsp.im.provider.impl.util.SolrUtil;
 import com.hex.bigdata.udsp.im.provider.model.MetadataCol;
 import com.hex.bigdata.udsp.iq.provider.Provider;
 import com.hex.bigdata.udsp.iq.provider.impl.factory.HBaseConnectionPoolFactory;
-import com.hex.bigdata.udsp.iq.provider.impl.model.*;
+import com.hex.bigdata.udsp.iq.provider.impl.model.hbase.HBaseDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.hbase.HBasePage;
+import com.hex.bigdata.udsp.iq.provider.impl.model.solr.SolrDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.solrhbase.SolrHBaseDatasource;
+import com.hex.bigdata.udsp.iq.provider.impl.model.solrhbase.SolrHBasePage;
 import com.hex.bigdata.udsp.iq.provider.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -555,11 +559,12 @@ public class SolrHBaseProvider implements Provider {
         for (String solrServer : addresses) {
             String url = "http://" + solrServer + "/solr/" + collectionName + "/schema/fields";
             response = SolrUtil.sendGet(url, "");
-            if (StringUtils.isEmpty(response)) {
-                continue;
-            } else {
+            if (StringUtils.isNotBlank(response)) {
                 break;
             }
+        }
+        if (StringUtils.isBlank(response)) {
+            throw new RuntimeException(collectionName + "表名不存在");
         }
         JSONObject rs = JSONObject.parseObject(response);
         JSONArray fields = (JSONArray) rs.get("fields");

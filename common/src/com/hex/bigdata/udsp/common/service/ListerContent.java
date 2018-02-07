@@ -6,13 +6,18 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Repository;
 
 /**
- * Created by PC on 2017/6/21.
+ * Spring初始化完成时指定执行该类
  */
 @Repository
 public class ListerContent implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private FtpUserManagerService ftpUserManagerService;
 
+    /**
+     * Spring初始化完成时指定执行该方法
+     *
+     * @param contextRefreshedEvent
+     */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         ftpUserManagerService.init();

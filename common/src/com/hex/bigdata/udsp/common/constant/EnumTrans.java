@@ -40,7 +40,9 @@ public class EnumTrans {
     public static Operator transOperator(String operatorStr) {
         Operator operator = Operator.EQ;
         if (StringUtils.isNotBlank(operatorStr)) {
-            if (">".equals(operatorStr)) {
+            if ("!=".equals(operatorStr)) {
+                operator = Operator.NE;
+            } else if (">".equals(operatorStr)) {
                 operator = Operator.GT;
             } else if (">=".equals(operatorStr)) {
                 operator = Operator.GE;

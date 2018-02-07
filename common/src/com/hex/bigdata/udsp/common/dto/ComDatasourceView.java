@@ -8,7 +8,8 @@ public class ComDatasourceView extends ComDatasource {
     private String crtTimeEnd;
     private String uptTimeStart;
     private String uptTimeEnd;
-    private String imDsTypeDictId; //目标 源 实时 批量
+
+    private String imDsTypeDictId;
 
     public String getCrtTimeStart() {
         return crtTimeStart;

@@ -1,18 +1,18 @@
-#########################################################################
-#					ÒÀÀµjar°ü
+ï»¿#########################################################################
+#					ä¾èµ–jaråŒ…
 #########################################################################
 
 
 
 #########################################################################
-#					²âÊÔHive²éÑ¯DBÖĞÊı¾İ£¨³É¹¦£©
+#					æµ‹è¯•HiveæŸ¥è¯¢DBä¸­æ•°æ®ï¼ˆæˆåŠŸï¼‰
 #########################################################################
 beeline -u jdbc:hive2://localhost:10000 -n hive -p 111111
 
 
 drop table if exists jdbc_handler_test1;
 
--- ´´½¨Íâ±í£¨ÏÔÊ¾µÄÖ¸¶¨×Ö¶ÎÓ³Éä£©
+-- åˆ›å»ºå¤–è¡¨ï¼ˆæ˜¾ç¤ºçš„æŒ‡å®šå­—æ®µæ˜ å°„ï¼‰
 CREATE EXTERNAL TABLE jdbc_handler_test1 (
 s_name      string, 
 s_longitude float, 
@@ -34,7 +34,7 @@ tblproperties(
 
 select * from jdbc_handler_test1 limit 10;
 
--- ´´½¨Íâ±í£¨·ÇÏÔÊ¾µÄÖ¸¶¨×Ö¶ÎÓ³Éä£©
+-- åˆ›å»ºå¤–è¡¨ï¼ˆéæ˜¾ç¤ºçš„æŒ‡å®šå­—æ®µæ˜ å°„ï¼‰
 CREATE EXTERNAL TABLE jdbc_handler_test2
 row format serde 'com.hex.hive.jdbc.serde.JdbcSerDe'
 STORED BY 'com.hex.hive.jdbc.JdbcStorageHandler'
@@ -51,7 +51,7 @@ TBLPROPERTIES (
 select * from jdbc_handler_test2 limit 10;
 
 #########################################################################
-#					²âÊÔHive²åÈëÊı¾İµ½DB£¨³É¹¦£©
+#					æµ‹è¯•Hiveæ’å…¥æ•°æ®åˆ°DBï¼ˆæˆåŠŸï¼‰
 #########################################################################
 
 CREATE EXTERNAL TABLE jdbc_handler_test3 (
@@ -79,18 +79,18 @@ SELECT * FROM jdbc_handler_test1;
 select * from jdbc_handler_test3 limit 10;
 
 #########################################################################
-#					²âÊÔHive¸üĞÂÊı¾İµ½DB£¨²»Ö§³Ö£©
+#					æµ‹è¯•Hiveæ›´æ–°æ•°æ®åˆ°DBï¼ˆä¸æ”¯æŒï¼‰
 #########################################################################
 
-UPDATE jdbc_handler_test3 SET s_name = 'ÉÏº£' where s_name = 'ÉÏº£ÊĞ';
+UPDATE jdbc_handler_test3 SET s_name = 'ä¸Šæµ·' where s_name = 'ä¸Šæµ·å¸‚';
 
 #########################################################################
-#					²âÊÔHiveÉ¾³ıÊı¾İµ½DB£¨²»Ö§³Ö£©
+#					æµ‹è¯•Hiveåˆ é™¤æ•°æ®åˆ°DBï¼ˆä¸æ”¯æŒï¼‰
 #########################################################################
 
-DELETE FROM jdbc_handler_test3 where s_name = 'ÉÏº£ÊĞ';
+DELETE FROM jdbc_handler_test3 where s_name = 'ä¸Šæµ·å¸‚';
 
-×¢£º
-1¡¢Ö»Ö§³Öcreate¡¢selectºÍinsert²Ù×÷£»
-2¡¢
-3¡¢
+æ³¨ï¼š
+1ã€åªæ”¯æŒcreateã€selectå’Œinsertæ“ä½œï¼›
+2ã€
+3ã€
