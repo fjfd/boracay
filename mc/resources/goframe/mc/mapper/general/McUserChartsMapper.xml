@@ -88,6 +88,7 @@
                 and loginuser.USER_ID like '%${userId}%'
             </if>
         </where>
+        order by success_count desc
     </select>
 
     <select id="userChart1Second" resultMap="McChartsViewResultMap" parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView" >

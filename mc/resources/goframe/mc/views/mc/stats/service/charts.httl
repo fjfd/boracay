@@ -445,7 +445,7 @@ ${extends("/goframe/function_layout.httl")}
                     xAxis: [
                         {
                             type: 'category',
-                            boundaryGap: true,
+                            boundaryGap: false,
                             axisLine: {onZero: false},
                             data: xData
                         }
