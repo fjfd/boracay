@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-iq-provider-redis">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_iq_provider_redis</output-path>
+    <root id="archive" name="hex-udsp-iq-provider-redis.jar">
+      <element id="module-output" name="iq-provider-redis" />
+    </root>
+  </artifact>
+</component>

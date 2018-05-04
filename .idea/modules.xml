@@ -16,7 +16,6 @@
       <module fileurl="file://$PROJECT_DIR$/iq-provider-redis/iq-provider-redis.iml" filepath="$PROJECT_DIR$/iq-provider-redis/iq-provider-redis.iml" />
       <module fileurl="file://$PROJECT_DIR$/iq-provider-solr/iq-provider-solr.iml" filepath="$PROJECT_DIR$/iq-provider-solr/iq-provider-solr.iml" />
       <module fileurl="file://$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" filepath="$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" />
-      <module fileurl="file://$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" filepath="$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" />
       <module fileurl="file://$PROJECT_DIR$/mc/mc.iml" filepath="$PROJECT_DIR$/mc/mc.iml" />
       <module fileurl="file://$PROJECT_DIR$/md/md.iml" filepath="$PROJECT_DIR$/md/md.iml" />
       <module fileurl="file://$PROJECT_DIR$/mm/mm.iml" filepath="$PROJECT_DIR$/mm/mm.iml" />

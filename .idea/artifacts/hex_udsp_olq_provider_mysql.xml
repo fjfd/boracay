@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-olq-provider-mysql">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_olq_provider_mysql</output-path>
+    <root id="archive" name="hex-udsp-olq-provider-mysql.jar">
+      <element id="module-output" name="olq-provider-mysql" />
+    </root>
+  </artifact>
+</component>

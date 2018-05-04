@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-iq-provider-es">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_iq_provider_es</output-path>
+    <root id="archive" name="hex-udsp-iq-provider-es.jar">
+      <element id="module-output" name="iq-provider-es" />
+    </root>
+  </artifact>
+</component>

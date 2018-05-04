@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-bigdata-metadata">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_bigdata_metadata</output-path>
+    <root id="archive" name="hex-bigdata-metadata.jar">
+      <element id="module-output" name="md" />
+    </root>
+  </artifact>
+</component>

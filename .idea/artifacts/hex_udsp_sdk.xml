@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-sdk">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_sdk</output-path>
+    <root id="archive" name="hex-udsp-sdk.jar">
+      <element id="module-output" name="sdk" />
+    </root>
+  </artifact>
+</component>

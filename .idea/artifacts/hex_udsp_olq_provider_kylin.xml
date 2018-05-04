@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-olq-provider-kylin">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_olq_provider_kylin</output-path>
+    <root id="archive" name="hex-udsp-olq-provider-kylin.jar">
+      <element id="module-output" name="olq-provider-kylin" />
+    </root>
+  </artifact>
+</component>

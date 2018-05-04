@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-iq-provider-solr_hbase">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_iq_provider_solr_hbase</output-path>
+    <root id="archive" name="hex-udsp-iq-provider-solr_hbase.jar">
+      <element id="module-output" name="iq-provider-solr_hbase" />
+    </root>
+  </artifact>
+</component>

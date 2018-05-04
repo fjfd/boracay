@@ -1,77 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="udsp" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="72e5f216-bde4-4813-a9eb-1a4d0f1a67f9" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/Db2Provider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/InceptorProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/KylinProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/model/DB2Datasource.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/model/InceptorDatasource.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/provider/impl/model/KylinDatasource.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/MD5Util.java" afterPath="$PROJECT_DIR$/common-api/src/com/hex/bigdata/udsp/common/util/MD5Util.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/ObjectUtil.java" afterPath="$PROJECT_DIR$/common-api/src/com/hex/bigdata/udsp/common/util/ObjectUtil.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/UdspCommonUtil.java" afterPath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/HostUtil.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/UdspDateUtil.java" afterPath="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/DateUtil.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImProviderService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImConvertorService.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/rts/src/com/hex/bigdata/udsp/rts/service/RtsProviderService.java" afterPath="$PROJECT_DIR$/rts/src/com/hex/bigdata/udsp/rts/service/RtsExecutorService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_bigdata_metadata.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_common_api.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_im_convertor_api.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_im_convertor_impl.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_api.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_es.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_hbase.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_redis.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_solr.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_iq_provider_solr_hbase.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_api.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_db2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_hive.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_impala.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_inceptor.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_kylin.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_mysql.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_oracle.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_olq_provider_pgsql.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_rts_executor_api.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_rts_executor_kafka.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/hex_udsp_sdk.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/udsp.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/udsp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/console.iml" afterPath="$PROJECT_DIR$/console/console.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/controller/HttpController.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/controller/HttpController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/controller/RestfulController.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/controller/RestfulController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/ConsumerService.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/ConsumerService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/DatasourceTestService.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/DatasourceTestService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/HeartbeatService.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/HeartbeatService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/OlqAsyncService.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/OlqAsyncService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/RtsSyncService.java" afterPath="$PROJECT_DIR$/console/src/com/hex/bigdata/udsp/service/RtsSyncService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/console/test/com/hex/bigdata/udsp/controller/BatchHttpControllerTest.java" afterPath="$PROJECT_DIR$/console/test/com/hex/bigdata/udsp/controller/BatchHttpControllerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/im-convertor-impl.iml" afterPath="$PROJECT_DIR$/im-convertor-impl/im-convertor-impl.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/HBaseConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/HBaseConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/HiveConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/HiveConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/KafkaConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/KafkaConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/MysqlConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/MysqlConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/OracleConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/OracleConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/SolrConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/SolrConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/SolrHBaseConvertor.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/SolrHBaseConvertor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/wrapper/Wrapper.java" afterPath="$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/wrapper/Wrapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/BatchJobService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/BatchJobService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImMetadataService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImMetadataService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImModelService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/ImModelService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeJobService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeJobService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeNodeService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeNodeService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeTotalService.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/service/RealtimeTotalService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/task/RealtimeJob.java" afterPath="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/task/RealtimeJob.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-es/iq-provider-es.iml" afterPath="$PROJECT_DIR$/iq-provider-es/iq-provider-es.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-es/src/com/hex/bigdata/udsp/iq/provider/impl/ElasticSearchProvider.java" afterPath="$PROJECT_DIR$/iq-provider-es/src/com/hex/bigdata/udsp/iq/provider/impl/ElasticSearchProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-hbase/iq-provider-hbase.iml" afterPath="$PROJECT_DIR$/iq-provider-hbase/iq-provider-hbase.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-hbase/src/com/hex/bigdata/udsp/iq/provider/impl/HBaseProvider.java" afterPath="$PROJECT_DIR$/iq-provider-hbase/src/com/hex/bigdata/udsp/iq/provider/impl/HBaseProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-redis/iq-provider-redis.iml" afterPath="$PROJECT_DIR$/iq-provider-redis/iq-provider-redis.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-redis/src/com/hex/bigdata/udsp/iq/provider/impl/RedisProvider.java" afterPath="$PROJECT_DIR$/iq-provider-redis/src/com/hex/bigdata/udsp/iq/provider/impl/RedisProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-solr/iq-provider-solr.iml" afterPath="$PROJECT_DIR$/iq-provider-solr/iq-provider-solr.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-solr/src/com/hex/bigdata/udsp/iq/provider/impl/SolrProvider.java" afterPath="$PROJECT_DIR$/iq-provider-solr/src/com/hex/bigdata/udsp/iq/provider/impl/SolrProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" afterPath="$PROJECT_DIR$/iq-provider-solr_hbase/iq-provider-solr_hbase.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq-provider-solr_hbase/src/com/hex/bigdata/udsp/iq/provider/impl/SolrHBaseProvider.java" afterPath="$PROJECT_DIR$/iq-provider-solr_hbase/src/com/hex/bigdata/udsp/iq/provider/impl/SolrHBaseProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iq/src/com/hex/bigdata/udsp/iq/service/IqProviderService.java" afterPath="$PROJECT_DIR$/iq/src/com/hex/bigdata/udsp/iq/service/IqProviderService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mc/src/com/hex/bigdata/udsp/mc/service/CurrentService.java" afterPath="$PROJECT_DIR$/mc/src/com/hex/bigdata/udsp/mc/service/CurrentService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mc/src/com/hex/bigdata/udsp/mc/util/McCommonUtil.java" afterPath="$PROJECT_DIR$/mc/src/com/hex/bigdata/udsp/mc/util/McCommonUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-db2/olq-provider-db2.iml" afterPath="$PROJECT_DIR$/olq-provider-db2/olq-provider-db2.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-db2/src/com/hex/bigdata/udsp/olq/provider/impl/Db2Provider.java" afterPath="$PROJECT_DIR$/olq-provider-db2/src/com/hex/bigdata/udsp/olq/provider/impl/Db2Provider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-hive/olq-provider-hive.iml" afterPath="$PROJECT_DIR$/olq-provider-hive/olq-provider-hive.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-hive/src/com/hex/bigdata/udsp/olq/provider/impl/HiveProvider.java" afterPath="$PROJECT_DIR$/olq-provider-hive/src/com/hex/bigdata/udsp/olq/provider/impl/HiveProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-impala/olq-provider-impala.iml" afterPath="$PROJECT_DIR$/olq-provider-impala/olq-provider-impala.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-impala/src/com/hex/bigdata/udsp/olq/provider/impl/ImpalaProvider.java" afterPath="$PROJECT_DIR$/olq-provider-impala/src/com/hex/bigdata/udsp/olq/provider/impl/ImpalaProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-inceptor/olq-provider-inceptor.iml" afterPath="$PROJECT_DIR$/olq-provider-inceptor/olq-provider-inceptor.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-inceptor/src/com/hex/bigdata/udsp/olq/provider/impl/InceptorProvider.java" afterPath="$PROJECT_DIR$/olq-provider-inceptor/src/com/hex/bigdata/udsp/olq/provider/impl/InceptorProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-kylin/olq-provider-kylin.iml" afterPath="$PROJECT_DIR$/olq-provider-kylin/olq-provider-kylin.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-kylin/src/com/hex/bigdata/udsp/olq/provider/impl/KylinProvider.java" afterPath="$PROJECT_DIR$/olq-provider-kylin/src/com/hex/bigdata/udsp/olq/provider/impl/KylinProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-mysql/olq-provider-mysql.iml" afterPath="$PROJECT_DIR$/olq-provider-mysql/olq-provider-mysql.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-mysql/src/com/hex/bigdata/udsp/olq/provider/impl/MysqlProvider.java" afterPath="$PROJECT_DIR$/olq-provider-mysql/src/com/hex/bigdata/udsp/olq/provider/impl/MysqlProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-oracle/olq-provider-oracle.iml" afterPath="$PROJECT_DIR$/olq-provider-oracle/olq-provider-oracle.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-oracle/src/com/hex/bigdata/udsp/olq/provider/impl/OracleProvider.java" afterPath="$PROJECT_DIR$/olq-provider-oracle/src/com/hex/bigdata/udsp/olq/provider/impl/OracleProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-pgsql/olq-provider-pgsql.iml" afterPath="$PROJECT_DIR$/olq-provider-pgsql/olq-provider-pgsql.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq-provider-pgsql/src/com/hex/bigdata/udsp/olq/provider/impl/PgsqlProvider.java" afterPath="$PROJECT_DIR$/olq-provider-pgsql/src/com/hex/bigdata/udsp/olq/provider/impl/PgsqlProvider.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/service/OlqProviderService.java" afterPath="$PROJECT_DIR$/olq/src/com/hex/bigdata/udsp/olq/service/OlqProviderService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rts-executor-kafka/rts-executor-kafka.iml" afterPath="$PROJECT_DIR$/rts-executor-kafka/rts-executor-kafka.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rts-executor-kafka/src/com/hex/bigdata/udsp/rts/executor/impl/KafkaExecutor.java" afterPath="$PROJECT_DIR$/rts-executor-kafka/src/com/hex/bigdata/udsp/rts/executor/impl/KafkaExecutor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -94,11 +55,11 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="DatasourceUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/DatasourceUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
+            <state relative-caret-position="133">
               <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -117,12 +78,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CacheUtil.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CacheUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/CacheUtil.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="228">
               <caret line="14" column="23" lean-forward="true" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="419">
+                <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -196,7 +170,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/converter/impl/MysqlProvider.java" />
         <option value="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/converter/impl/model/metadata/HiveMetadata.java" />
         <option value="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/converter/impl/model/metadata/SolrHBaseMetadata.java" />
         <option value="$PROJECT_DIR$/im/src/com/hex/bigdata/udsp/im/converter/impl/model/metadata/OracleMetadata.java" />
@@ -247,6 +220,7 @@
         <option value="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/CommonUtil.java" />
         <option value="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/DateUtil.java" />
         <option value="$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/HostUtil.java" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -288,9 +262,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -395,14 +366,17 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="project.structure.side.proportion" value="0.26382488" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/iq-provider-solr_hbase" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
@@ -1083,6 +1057,7 @@
       <workItem from="1525309383963" duration="4573000" />
       <workItem from="1525317009159" duration="5283000" />
       <workItem from="1525397997272" duration="7778000" />
+      <workItem from="1525408173200" duration="1071000" />
     </task>
     <task id="LOCAL-00001" summary="异常捕获处理">
       <created>1505875263874</created>
@@ -1400,7 +1375,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="226199000" />
+    <option name="totallyTimeSpent" value="227270000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1418,7 +1393,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47945204" sideWeight="0.5060514" order="12" side_tool="true" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289689" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -1427,7 +1402,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11649016" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.44517186" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44517186" sideWeight="0.49394855" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32733223" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20458265" sideWeight="0.4969743" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1438,9 +1413,8 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13356164" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27987897" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28441754" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24386252" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1448,6 +1422,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24386252" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1525,19 +1500,10 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sql/oracle/UDSP_META_DATAS.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="1909" column="55" lean-forward="true" selection-start-line="1909" selection-start-column="55" selection-end-line="1909" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sql/mysql/UDSP_META_DATAS.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
           <caret line="1025" column="60" lean-forward="true" selection-start-line="1025" selection-start-column="60" selection-end-line="1025" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1555,7 +1521,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-209">
           <caret line="563" column="30" lean-forward="false" selection-start-line="563" selection-start-column="30" selection-end-line="563" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1563,7 +1528,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
           <caret line="4" column="39" lean-forward="false" selection-start-line="4" selection-start-column="39" selection-end-line="4" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1571,7 +1535,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3732">
           <caret line="53" column="24" lean-forward="false" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1599,7 +1562,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="307">
           <caret line="188" column="75" lean-forward="true" selection-start-line="188" selection-start-column="26" selection-end-line="188" selection-end-column="75" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1607,7 +1569,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
           <caret line="282" column="4" lean-forward="false" selection-start-line="282" selection-start-column="4" selection-end-line="282" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1615,7 +1576,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
           <caret line="92" column="5" lean-forward="true" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1623,9 +1583,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="154" column="88" lean-forward="false" selection-start-line="154" selection-start-column="88" selection-end-line="154" selection-end-column="88" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1633,9 +1590,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="29" column="2" lean-forward="false" selection-start-line="29" selection-start-column="2" selection-end-line="29" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1643,9 +1597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="509">
           <caret line="27" column="34" lean-forward="false" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1653,7 +1604,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
           <caret line="29" column="48" lean-forward="false" selection-start-line="29" selection-start-column="48" selection-end-line="29" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1661,7 +1611,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
           <caret line="36" column="42" lean-forward="false" selection-start-line="36" selection-start-column="42" selection-end-line="36" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1669,25 +1618,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="181" column="38" lean-forward="false" selection-start-line="181" selection-start-column="38" selection-end-line="181" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/ObjectUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="54" column="56" lean-forward="false" selection-start-line="54" selection-start-column="56" selection-end-line="54" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/ObjectUtil.java" />
     <entry file="file://$PROJECT_DIR$/im-convertor-impl/src/com/hex/bigdata/udsp/im/converter/impl/SolrConvertor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="124">
           <caret line="31" column="14" lean-forward="true" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="66" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1695,9 +1633,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
           <caret line="27" column="79" lean-forward="false" selection-start-line="27" selection-start-column="57" selection-end-line="27" selection-end-column="79" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1705,9 +1640,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="124">
           <caret line="23" column="14" lean-forward="false" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="67" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1715,9 +1647,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
           <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1725,9 +1654,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="34" column="32" lean-forward="false" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1735,9 +1661,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="20" column="3" lean-forward="false" selection-start-line="20" selection-start-column="3" selection-end-line="20" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1745,9 +1668,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="34" column="3" lean-forward="false" selection-start-line="34" selection-start-column="3" selection-end-line="34" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1755,7 +1675,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
           <caret line="51" column="0" lean-forward="false" selection-start-line="51" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1771,9 +1690,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1781,9 +1697,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1791,9 +1704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1801,9 +1711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1811,9 +1718,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1821,9 +1725,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1831,9 +1732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1841,9 +1739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="10" column="2" lean-forward="false" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1851,7 +1746,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="27" column="34" lean-forward="false" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1863,21 +1757,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/MD5Util.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/MD5Util.java" />
     <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/PropertyUtil.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
           <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1885,7 +1769,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="76">
           <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1911,7 +1794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="49" column="52" lean-forward="false" selection-start-line="49" selection-start-column="52" selection-end-line="49" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1919,7 +1801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
           <caret line="33" column="52" lean-forward="false" selection-start-line="33" selection-start-column="52" selection-end-line="33" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1938,7 +1819,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="721" column="50" lean-forward="false" selection-start-line="721" selection-start-column="50" selection-end-line="721" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1946,9 +1826,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="113">
           <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1956,15 +1833,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="166">
           <caret line="107" column="53" lean-forward="true" selection-start-line="107" selection-start-column="53" selection-end-line="107" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/src/com/hex/bigdata/udsp/common/util/DatasourceUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
+        <state relative-caret-position="133">
           <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1988,6 +1862,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="419">
+            <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
@@ -1998,7 +1883,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.26382488" />
                 <option value="0.5" />
               </list>
             </option>
@@ -2071,7 +1956,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.26382488" />
               </list>
             </option>
           </splitter-proportions>

@@ -9,31 +9,10 @@
           <element id="module-output" name="im" />
           <element id="module-output" name="iq" />
           <element id="module-output" name="mc" />
-          <element id="module-output" name="md" />
           <element id="module-output" name="mm" />
           <element id="module-output" name="olq" />
           <element id="module-output" name="rc" />
           <element id="module-output" name="rts" />
-          <element id="module-output" name="common-api" />
-          <element id="module-output" name="iq-provider-api" />
-          <element id="module-output" name="iq-provider-es" />
-          <element id="module-output" name="iq-provider-hbase" />
-          <element id="module-output" name="iq-provider-redis" />
-          <element id="module-output" name="iq-provider-solr" />
-          <element id="module-output" name="iq-provider-solr_hbase" />
-          <element id="module-output" name="olq-provider-api" />
-          <element id="module-output" name="olq-provider-db2" />
-          <element id="module-output" name="olq-provider-hive" />
-          <element id="module-output" name="olq-provider-impala" />
-          <element id="module-output" name="olq-provider-inceptor" />
-          <element id="module-output" name="olq-provider-kylin" />
-          <element id="module-output" name="olq-provider-mysql" />
-          <element id="module-output" name="olq-provider-oracle" />
-          <element id="module-output" name="olq-provider-pgsql" />
-          <element id="module-output" name="rts-executor-api" />
-          <element id="module-output" name="rts-executor-kafka" />
-          <element id="module-output" name="im-convertor-api" />
-          <element id="module-output" name="im-convertor-impl" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="common" />
@@ -51,6 +30,27 @@
           <element id="library" level="project" name="kafka" />
           <element id="library" level="project" name="solr" />
           <element id="library" level="project" name="mail" />
+          <element id="artifact" artifact-name="hex-udsp-common-api" />
+          <element id="artifact" artifact-name="hex-udsp-im-convertor-api" />
+          <element id="artifact" artifact-name="hex-udsp-im-convertor-impl" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-api" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-es" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-hbase" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-redis" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-solr" />
+          <element id="artifact" artifact-name="hex-udsp-iq-provider-solr_hbase" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-api" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-db2" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-hive" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-impala" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-inceptor" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-kylin" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-mysql" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-oracle" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-pgsql" />
+          <element id="artifact" artifact-name="hex-udsp-rts-executor-api" />
+          <element id="artifact" artifact-name="hex-udsp-rts-executor-kafka" />
+          <element id="artifact" artifact-name="hex-bigdata-metadata" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="console/web/Web" />

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-rts-executor-api">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_rts_executor_api</output-path>
+    <root id="archive" name="hex-udsp-rts-executor-api.jar">
+      <element id="module-output" name="rts-executor-api" />
+    </root>
+  </artifact>
+</component>

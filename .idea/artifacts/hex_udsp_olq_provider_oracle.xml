@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-olq-provider-oracle">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_olq_provider_oracle</output-path>
+    <root id="archive" name="hex-udsp-olq-provider-oracle.jar">
+      <element id="module-output" name="olq-provider-oracle" />
+    </root>
+  </artifact>
+</component>
