@@ -72,13 +72,12 @@
 
     <select id="selectPage" resultMap="FullResultMap" parameterType="com.hex.bigdata.udsp.mm.dto.MmModelInfoView">
         select app.PK_ID, app.MODEL_ID, app.NAME, app.DESCRIPTION, app.MAX_NUM, app.DEL_FLG, app.CRT_USER, app.CRT_TIME,
-        app.UPT_USER,
-        app.UPT_TIME, app.NOTE,info.NAME AS MODEL_NAME,mc.cn_name AS CONTRACTOR
-        from udsp.MM_APPLICATION app
-        LEFT JOIN udsp.MM_MODEL_INFO info
-        ON info.PK_ID=app.MODEL_ID
-        left join udsp.mm_contractor mc
-        on info.contractor = mc.pk_id
+        app.UPT_USER, app.UPT_TIME, app.NOTE,info.NAME AS MODEL_NAME, mc.cn_name AS CONTRACTOR
+        from MM_APPLICATION app
+        left join MM_MODEL_INFO info
+        on info.PK_ID = app.MODEL_ID
+        left join MM_CONTRACTOR mc
+        on info.CONTRACTOR = mc.PK_ID
         where app.DEL_FLG = '0'
         <if test="name!='' and name!=null ">and app.NAME like '%'||#{name}||'%'</if>
         <if test="describe!='' and describe!=null ">and app.DESCRIPTION like '%'||#{describe}||'%'</if>
@@ -90,7 +89,7 @@
         <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= app.UPT_TIME</if>
         <if test="crtUser!='' and crtUser!=null ">and app.CRT_USER like '%'||#{crtUser}||'%'</if>
         <if test="uptUser!='' and uptUser!=null ">and app.UPT_USER like '%'||#{uptUser}||'%'</if>
-        <if test="contractor!='' and contractor!=null ">and mc.pk_id = #{contractor}</if>
+        <if test="contractor!='' and contractor!=null ">and mc.PK_ID = #{contractor}</if>
         order by app.UPT_TIME desc, app.CRT_TIME desc, app.NAME asc
 
     </select>
@@ -105,7 +104,7 @@
     <select id="selectFullAppInfo" resultMap="FullAppInfoMap" parameterType="java.lang.String">
     select app.PK_ID as APP_ID, app.MAX_NUM, mi.NAME as MODEL_NAME, mi.MODEL_TYPE,
     c.NAME as CONTRACTOR_NAME,c.HTTP_URL
-    from mm_application app
+    from MM_APPLICATION app
     left join MM_MODEL_INFO mi
     on mi.PK_ID = app.MODEL_ID
     left join MM_CONTRACTOR c

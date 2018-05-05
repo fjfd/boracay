@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hex.bigdata.udsp.mc.dao.McServiceChartsMapper">
+    <resultMap id="BaseResultMap" type="com.hex.bigdata.udsp.mc.dto.McServiceChartsView">
+        <id column="PK_ID" property="pkId" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="DESCRIPTION" property="describe" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="type" jdbcType="VARCHAR"/>
+        <result column="APP_ID" property="appId" jdbcType="VARCHAR"/>
+        <result column="DEL_FLG" property="delFlg" jdbcType="CHAR"/>
+        <result column="CRT_USER" property="crtUser" jdbcType="VARCHAR"/>
+        <result column="CRT_TIME" property="crtTime" jdbcType="VARCHAR"/>
+        <result column="UPT_USER" property="uptUser" jdbcType="VARCHAR"/>
+        <result column="UPT_TIME" property="uptTime" jdbcType="VARCHAR"/>
+        <result column="success_count" property="requestSuccessCount" jdbcType="INTEGER"/>
+        <result column="failed_count" property="requestFailedCount" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="McChartsViewResultMap" type="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        <result column="DATETIME" property="datetime" jdbcType="VARCHAR"/>
+        <result column="APP_TYPE" property="appType" jdbcType="VARCHAR"/>
+        <result column="SERVICE_NAME" property="serviceName" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="COUNT_NUM" property="countNum" jdbcType="DECIMAL"/>
+        <result column="STATUS" property="status" jdbcType="CHAR"/>
+    </resultMap>
+    <select id="selectServiceStatis" resultMap="BaseResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McServiceChartsView">
+        select rcservice.PK_ID,
+        rcservice.NAME,
+        rcservice.DESCRIPTION,
+        rcservice.TYPE,
+        rcservice.APP_ID,
+        rcservice.DEL_FLG,
+        rcservice.CRT_USER,
+        rcservice.CRT_TIME,
+        rcservice.UPT_USER,
+        rcservice.UPT_TIME,
+        case
+        when SERVICE_STATIS.failed_count is null then
+        0
+        else
+        SERVICE_STATIS.failed_count
+        end as failed_count,
+        case
+        when SERVICE_STATIS.success_count is null then
+        0
+        else
+        SERVICE_STATIS.success_count
+        end as success_count
+        from RC_SERVICE rcservice
+        left join (select case
+        when mcselect1.SERVICE_NAME is null then
+        mcselect2.SERVICE_NAME
+        else
+        mcselect1.SERVICE_NAME
+        end as service_name,
+        mcselect1.failed_count,
+        mcselect2.success_count
+        from (select distinct mclog.SERVICE_NAME,
+        count(mclog.status) as failed_count
+        from MC_CONSUME_LOG mclog
+        where mclog.status = '1'
+        group by mclog.SERVICE_NAME, mclog.STATUS) mcselect1
+        left join (select distinct SERVICE_NAME,
+        count(status) as success_count
+        from MC_CONSUME_LOG mclog
+        where mclog.status = '0'
+        group by SERVICE_NAME, STATUS) mcselect2
+        on mcselect2.SERVICE_NAME = mcselect1.SERVICE_NAME
+        UNION
+        select case
+        when mcselect1.SERVICE_NAME is null then
+        mcselect2.SERVICE_NAME
+        else
+        mcselect1.SERVICE_NAME
+        end as service_name,
+        mcselect1.failed_count,
+        mcselect2.success_count
+        from (select distinct mclog.SERVICE_NAME,
+        count(mclog.status) as failed_count
+        from MC_CONSUME_LOG mclog
+        where mclog.status = '1'
+        group by mclog.SERVICE_NAME, mclog.STATUS) mcselect1
+        right join (select distinct SERVICE_NAME,
+        count(status) as success_count
+        from MC_CONSUME_LOG mclog
+        where mclog.status = '0'
+        group by SERVICE_NAME, STATUS) mcselect2
+        on mcselect2.SERVICE_NAME = mcselect1.SERVICE_NAME) SERVICE_STATIS
+        ON rcservice.Name = SERVICE_STATIS.SERVICE_NAME
+        where rcservice.DEL_FLG = '0'
+        <if test="type!=null and type!=''">AND rcservice.TYPE = #{type}</if>
+        <if test="name!=null and name!=''">AND rcservice.NAME LIKE '%' || #{name} || '%'</if>
+        <if test="describe!=null and describe!=''">AND rcservice.DESCRIPTION LIKE '%' || #{describe} || '%'</if>
+        order by success_count desc;
+    </select>
+
+    <select id="serviceChart1Second" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,19) as DATETIME, STATUS, COUNT(1) as COUNT_NUM
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,19), STATUS
+        order by substr(REQUEST_END_TIME,0,19) asc, STATUS asc
+    </select>
+    <select id="serviceChart1Minute" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,16) as DATETIME, STATUS, COUNT(1) as COUNT_NUM
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,16), STATUS
+        order by substr(REQUEST_END_TIME,0,16) asc, STATUS asc
+    </select>
+    <select id="serviceChart1Hour" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,13) as DATETIME, STATUS, COUNT(1) as COUNT_NUM
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,13), STATUS
+        order by substr(REQUEST_END_TIME,0,13) asc, STATUS asc
+    </select>
+    <select id="serviceChart1Day" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,10) as DATETIME, STATUS, COUNT(1) as COUNT_NUM
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,10), STATUS
+        order by substr(REQUEST_END_TIME,0,10) asc, STATUS asc
+    </select>
+
+    <select id="serviceChart3" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select USER_NAME, STATUS, COUNT(1) as COUNT_NUM
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by USER_NAME, STATUS
+        order by USER_NAME asc, STATUS asc
+    </select>
+
+    <select id="userTimeSecond" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,19) as DATETIME, STATUS, COUNT(1) as COUNT_NUM,USER_NAME,SERVICE_NAME
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,19), STATUS,USER_NAME,SERVICE_NAME
+        order by substr(REQUEST_END_TIME,0,19) asc, STATUS asc
+    </select>
+    <select id="userTimeMinute" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,16) as DATETIME, STATUS, COUNT(1) as COUNT_NUM,USER_NAME,SERVICE_NAME
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,16), STATUS,USER_NAME,SERVICE_NAME
+        order by substr(REQUEST_END_TIME,0,16) asc, STATUS asc
+    </select>
+    <select id="userTimeHour" resultMap="McChartsViewResultMap"
+            parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,13) as DATETIME, STATUS, COUNT(1) as COUNT_NUM,USER_NAME,SERVICE_NAME
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,13), STATUS,USER_NAME,SERVICE_NAME
+        order by substr(REQUEST_END_TIME,0,13) asc, STATUS asc
+    </select>
+    <select id="userTimeDay" resultMap="McChartsViewResultMap" parameterType="com.hex.bigdata.udsp.mc.dto.McChartsView">
+        select substr(REQUEST_END_TIME,0,10) as DATETIME, STATUS, COUNT(1) as COUNT_NUM,USER_NAME,SERVICE_NAME
+        from MC_CONSUME_LOG
+        where REQUEST_END_TIME >= #{timeStart}
+        and #{timeEnd} >= REQUEST_END_TIME
+        <if test="serviceName!=null and serviceName!=''">AND SERVICE_NAME = #{serviceName}</if>
+        <if test="userName!=null and userName!=''">AND USER_NAME = #{userName}</if>
+        group by substr(REQUEST_END_TIME,0,10), STATUS,USER_NAME,SERVICE_NAME
+        order by substr(REQUEST_END_TIME,0,10) asc, STATUS asc
+    </select>
+
+</mapper>
