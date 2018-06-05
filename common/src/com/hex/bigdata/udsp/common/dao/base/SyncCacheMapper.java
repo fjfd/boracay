@@ -195,7 +195,7 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
      */
     public boolean removeCacheLike(String likeId) {
         String key = MD5Util.MD5_16(clazz) + ":" + likeId;
-        boolean status = getCache().deleteListCache(key);
+        boolean status = getCache().removeCacheLike(key);
         insertLog("3", "Class=" + clazz + " LikeId=" + likeId);
         return status;
     }
