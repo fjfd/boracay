@@ -222,8 +222,30 @@ public class CurrentService extends BaseService {
         return mcCurrentList;
     }
 
+    /**
+     * 清空运行队列
+     *
+     * @return
+     */
+    public boolean emptyCache() {
+        return this.removeCacheLike(MC_RUN_KEY + ":");
+    }
+
+    /**
+     * 清空等待队列
+     *
+     * @return
+     */
+    public boolean emptyCacheWait() {
+        return this.removeCacheLike(MC_WAIT_KEY + ":");
+    }
+
     public List<Current> selectCacheLike(String key) {
         return mcCurrentMapper.selectLike(key);
+    }
+
+    public boolean removeCacheLike(String key) {
+        return mcCurrentMapper.removeCacheLike(key);
     }
 
     /**

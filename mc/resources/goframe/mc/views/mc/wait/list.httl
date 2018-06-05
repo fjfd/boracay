@@ -21,7 +21,9 @@ ${extends("/goframe/function_layout.httl")}
                     <a class="nui-button" id="push" iconCls="icon-search" onclick="moreOption">搜索︾</a>
                 </td>
                 <td style="text-align: right;">
-
+                    #if(hasPermission("MC.wait.list.empty"))
+                    <a class="nui-button" iconCls="icon-remove" plain="true" onclick="empty">清空队列</a>
+                    #end
                 </td>
             </tr>
         </table>
@@ -210,6 +212,32 @@ ${extends("/goframe/function_layout.httl")}
             return "-";
         }
         return nui.getDictText("UDSP_SYNC_TYPE", e.row.syncType);
+    }
+
+    /**
+     * 清空队列
+     */
+    function empty() {
+        nui.confirm("确定清空等待队列？", "系统提示", function (action) {
+            if (action == "ok") {
+                grid1.loading("正在清空等待队列中,请稍等...");
+                $.ajax({
+                    url: "${basePath}/mc/current/emptyWaitCache",
+                    type: 'POST',
+                    cache: false,
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.status == true) {
+                            nui.alert(result.message);
+                            grid1.reload();
+                        } else {
+                            nui.alert(result.message, "错误提示");
+                            grid1.unmask();
+                        }
+                    }
+                });
+            }
+        });
     }
 </script>
 <!--#end-->

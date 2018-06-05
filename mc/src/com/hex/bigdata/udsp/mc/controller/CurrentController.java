@@ -113,6 +113,7 @@ public class CurrentController extends BaseController {
 
     /**
      * 缓冲队列分页查询
+     *
      * @param mcCurrentView
      * @param page
      * @return
@@ -133,6 +134,7 @@ public class CurrentController extends BaseController {
 
     /**
      * 缓冲队列单个任务查询
+     *
      * @param pkId
      * @return
      */
@@ -162,6 +164,38 @@ public class CurrentController extends BaseController {
         return new MessageResult(status, message, mcCurrent);
     }
 
+    /**
+     * 清空运行队列
+     *
+     * @return
+     */
+    @RequestMapping("/emptyRunCache")
+    @ResponseBody
+    public MessageResult emptyRunCache() {
+        boolean status = false;
+        String message = "清空运行队列失败";
+        if (currentService.emptyCache()) {
+            status = true;
+            message = "清空运行队列成功";
+        }
+        return new MessageResult(status, message);
+    }
 
+    /**
+     * 清空等待队列
+     *
+     * @return
+     */
+    @RequestMapping("/emptyWaitCache")
+    @ResponseBody
+    public MessageResult emptyWaitCache() {
+        boolean status = false;
+        String message = "清空等待队列失败";
+        if (currentService.emptyCacheWait()) {
+            status = true;
+            message = "清空等待队列成功";
+        }
+        return new MessageResult(status, message);
+    }
 
 }

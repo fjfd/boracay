@@ -33,8 +33,6 @@ public abstract class SyncMapper<T> extends BaseMapper {
     @Autowired
     private ComOperationLogMapper comOperationLogMapper;
 
-//    protected abstract Cache<T> getCache();
-
     /**
      * 缓存模式（none、local、ehcache、redis）
      */

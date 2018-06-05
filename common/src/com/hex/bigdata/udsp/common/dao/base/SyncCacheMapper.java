@@ -26,8 +26,6 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
 
     private String clazz = this.getClass().getName();
 
-//    protected abstract Cache<T> getCache();
-
     /**
      * 缓存模式（none、local、ehcache、redis）
      */
@@ -186,6 +184,22 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
         logger.debug("批量模糊查询 Class=" + clazz + " FkId=" + likeId);
         return list;
     }
+
+    // ----------------------------removeCacheLike----------------------------------------
+
+    /**
+     * 模糊删除集合
+     *
+     * @param likeId
+     * @return
+     */
+    public boolean removeCacheLike(String likeId) {
+        String key = MD5Util.MD5_16(clazz) + ":" + likeId;
+        boolean status = getCache().deleteListCache(key);
+        insertLog("3", "Class=" + clazz + " LikeId=" + likeId);
+        return status;
+    }
+
 
     // ----------------------------insertTimeout----------------------------------------
 
