@@ -37,6 +37,35 @@ public class RunQueueService {
     @Autowired
     private RedisDistributedLock redisLock;
 
+    public boolean update(String key, RunQueue runQueue) {
+        return this.runQueueMapper.update(key, runQueue);
+    }
+
+    public boolean insert(String key, RunQueue runQueue) {
+        return this.runQueueMapper.insert(key, runQueue);
+    }
+
+    public RunQueue select(String key) {
+        return runQueueMapper.select(key);
+    }
+
+    public boolean delete(String key) {
+        return runQueueMapper.delete(key);
+    }
+
+    public boolean removeCacheLike(String key) {
+        return runQueueMapper.removeCacheLike(key);
+    }
+
+    /**
+     * 清空运行队列
+     *
+     * @return
+     */
+    public boolean emptyCache() {
+        return this.removeCacheLike(MC_RUNQUEUE_KEY + ":");
+    }
+
     /**
      * 增加并发
      *
@@ -99,22 +128,6 @@ public class RunQueueService {
                     redisLock.unlock(key);
             }
         }
-    }
-
-    public boolean update(String key, RunQueue runQueue) {
-        return this.runQueueMapper.update(key, runQueue);
-    }
-
-    public boolean insert(String key, RunQueue runQueue) {
-        return this.runQueueMapper.insert(key, runQueue);
-    }
-
-    public RunQueue select(String key) {
-        return runQueueMapper.select(key);
-    }
-
-    public boolean delete(String key) {
-        return runQueueMapper.delete(key);
     }
 
     private RunQueue initRunQueue(Current mcCurrent) {

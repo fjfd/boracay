@@ -25,7 +25,7 @@ public class WaitQueueService {
     private static final String MC_WAITQUEUE_KEY = "WAITQUEUE";
 
     @Autowired
-    private WaitQueueMapper mcWaitQueueMapper;
+    private WaitQueueMapper waitQueueMapper;
 
     @Autowired
     private CurrentService mcCurrentService;
@@ -41,6 +41,27 @@ public class WaitQueueService {
 
     @Autowired
     private InitParamService initParamService;
+
+    public WaitQueue select(String key) {
+        return waitQueueMapper.select(key);
+    }
+
+    public boolean insert(String key, WaitQueue waitQueue) {
+        return waitQueueMapper.insert(key, waitQueue);
+    }
+
+    public boolean removeCacheLike(String key) {
+        return waitQueueMapper.removeCacheLike(key);
+    }
+
+    /**
+     * 清空等待队列
+     *
+     * @return
+     */
+    public boolean emptyCache() {
+        return this.removeCacheLike(MC_WAITQUEUE_KEY + ":");
+    }
 
     /**
      * 检查等待队列是否满了，未满则添加到等待队列。满了则不做操作，
@@ -58,19 +79,19 @@ public class WaitQueueService {
             if (initParamService.isUseClusterRedisLock())
                 redisLock.lock(key);
             try {
-                WaitQueue mcWaitQueue = this.select(key);
-                if (mcWaitQueue == null) mcWaitQueue = initWaitQueue(mcCurrent);
+                WaitQueue waitQueue = this.select(key);
+                if (waitQueue == null) waitQueue = initWaitQueue(mcCurrent);
                 // 若是等待队列未满，则请求进入
-                if (mcWaitQueue.getCurrentNum() < mcWaitQueue.getMaxNum()) {
+                if (waitQueue.getCurrentNum() < waitQueue.getMaxNum()) {
                     logger.debug(key + "等待队列最大长度：" + maxWaitNum + "，等待队列长度："
-                            + mcWaitQueue.getCurrentNum() + "，" + Thread.currentThread().getName() + "进入等待队列！");
+                            + waitQueue.getCurrentNum() + "，" + Thread.currentThread().getName() + "进入等待队列！");
                     // 本次请求加入队列
                     String pkId = mcCurrent.getPkId();
                     isFullResult.setWaitQueueTaskId(pkId);
                     isFullResult.setWaitQueueIsFull(false);
-                    mcWaitQueue.offerElement(pkId); // 加入队列
+                    waitQueue.offerElement(pkId); // 加入队列
                     // 更新等待队列统计信息
-                    mcWaitQueueMapper.insert(key, mcWaitQueue);
+                    this.insert(key, waitQueue);
                     // 加入统计队列
                     mcCurrentService.insertWait(mcCurrent);
                 }
@@ -96,12 +117,12 @@ public class WaitQueueService {
             if (initParamService.isUseClusterRedisLock())
                 redisLock.lock(key);
             try {
-                WaitQueue mcWaitQueue = this.select(key);
+                WaitQueue waitQueue = this.select(key);
                 // 判断key是不是队列第一个，如果是第一个则移除并返回true，如果不是第一个则返回false
-                if (mcWaitQueue.isFirstElement(waitQueueTaskId)) {
+                if (waitQueue.isFirstElement(waitQueueTaskId)) {
                     // 等待队列信息回写到缓存
                     logger.debug("将" + key + "任务从等待队列中移除：" + Thread.currentThread().getName());
-                    mcWaitQueueMapper.insert(key, mcWaitQueue); // 更新等待队列统计信息
+                    this.insert(key, waitQueue); // 更新等待队列统计信息
                     mcCurrentService.deleteWait(waitQueueTaskId); // 从统计队列中删除
                     runQueueService.addCurrent(mcCurrent); // 增加并发
                     return true;
@@ -114,7 +135,7 @@ public class WaitQueueService {
         }
     }
 
-    private WaitQueue initWaitQueue(Current current){
+    private WaitQueue initWaitQueue(Current current) {
         WaitQueue waitQueue = new WaitQueue();
         waitQueue.setQueueName(getKey(current));
         waitQueue.setMaxNum(current.getMaxCurrentNum());
@@ -124,10 +145,6 @@ public class WaitQueueService {
     private String getKey(Current mcCurrent) {
         return MC_WAITQUEUE_KEY + ":" + mcCurrent.getUserName() + ":" + mcCurrent.getAppId()
                 + ":" + mcCurrent.getAppType().toUpperCase() + ":" + mcCurrent.getSyncType().toUpperCase();
-    }
-
-    private WaitQueue select(String key) {
-        return mcWaitQueueMapper.select(key);
     }
 
 }

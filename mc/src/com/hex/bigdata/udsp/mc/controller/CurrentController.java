@@ -4,6 +4,8 @@ import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.mc.dto.CurrentView;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.service.CurrentService;
+import com.hex.bigdata.udsp.mc.service.RunQueueService;
+import com.hex.bigdata.udsp.mc.service.WaitQueueService;
 import com.hex.goframe.controller.BaseController;
 import com.hex.goframe.model.MessageResult;
 import com.hex.goframe.model.Page;
@@ -29,6 +31,10 @@ public class CurrentController extends BaseController {
 
     @Autowired
     private CurrentService currentService;
+    @Autowired
+    private RunQueueService runQueueService;
+    @Autowired
+    private WaitQueueService waitQueueService;
 
     @RequestMapping({"/page"})
     @ResponseBody
@@ -174,7 +180,7 @@ public class CurrentController extends BaseController {
     public MessageResult emptyRunCache() {
         boolean status = false;
         String message = "清空运行队列失败";
-        if (currentService.emptyCache()) {
+        if (currentService.emptyCache() && runQueueService.emptyCache()) {
             status = true;
             message = "清空运行队列成功";
         }
@@ -191,7 +197,7 @@ public class CurrentController extends BaseController {
     public MessageResult emptyWaitCache() {
         boolean status = false;
         String message = "清空等待队列失败";
-        if (currentService.emptyCacheWait()) {
+        if (currentService.emptyCacheWait() && waitQueueService.emptyCache()) {
             status = true;
             message = "清空等待队列成功";
         }
