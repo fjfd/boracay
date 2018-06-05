@@ -53,8 +53,8 @@ public class RunQueueService {
         return runQueueMapper.delete(key);
     }
 
-    public boolean removeCacheLike(String key) {
-        return runQueueMapper.removeCacheLike(key);
+    public boolean deleteLike(String key) {
+        return runQueueMapper.deleteLike(key);
     }
 
     /**
@@ -63,7 +63,7 @@ public class RunQueueService {
      * @return
      */
     public boolean emptyCache() {
-        return this.removeCacheLike(MC_RUNQUEUE_KEY + ":");
+        return this.deleteLike(MC_RUNQUEUE_KEY + ":");
     }
 
     /**

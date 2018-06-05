@@ -142,7 +142,7 @@ public class EhCache<T> implements Cache<T> {
     }
 
     @Override
-    public boolean removeCacheLike(String likeKey) {
+    public boolean deleteCacheLike(String likeKey) {
         net.sf.ehcache.Cache cache = cacheManager.getCache(UDSP_EHCACHE_NAME);
         cache.acquireWriteLockOnKey(likeKey);
         try {

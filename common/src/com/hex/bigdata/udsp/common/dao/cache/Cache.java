@@ -87,7 +87,7 @@ public interface Cache<T> {
      * @param likeKey
      * @return
      */
-    boolean removeCacheLike(String likeKey);
+    boolean deleteCacheLike(String likeKey);
 
     /**
      * 插入带有过期时间的对象

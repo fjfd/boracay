@@ -170,7 +170,7 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
         return list;
     }
 
-    //-----------------------------------selectListLike---------------------------------------
+    //-----------------------------------selectLike---------------------------------------
 
     /**
      * 模糊查询集合
@@ -185,7 +185,7 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
         return list;
     }
 
-    // ----------------------------removeCacheLike----------------------------------------
+    // ----------------------------deleteLike----------------------------------------
 
     /**
      * 模糊删除集合
@@ -193,9 +193,9 @@ public abstract class SyncCacheMapper<T> extends BaseMapper {
      * @param likeId
      * @return
      */
-    public boolean removeCacheLike(String likeId) {
+    public boolean deleteLike(String likeId) {
         String key = MD5Util.MD5_16(clazz) + ":" + likeId;
-        boolean status = getCache().removeCacheLike(key);
+        boolean status = getCache().deleteCacheLike(key);
         insertLog("3", "Class=" + clazz + " LikeId=" + likeId);
         return status;
     }

@@ -150,7 +150,7 @@ public class LocalCache<T> implements Cache<T> {
 
     @Override
     @Deprecated
-    public boolean removeCacheLike(String likeKey) {
+    public boolean deleteCacheLike(String likeKey) {
         return false;
     }
 

@@ -149,7 +149,7 @@ public class RedisCache<T> implements Cache<T> {
     }
 
     @Override
-    public boolean removeCacheLike(String likeKey) {
+    public boolean deleteCacheLike(String likeKey) {
         redisLock.lock(likeKey);
         try {
             Set<String> keys = redisTemplate.keys(likeKey + "*");
