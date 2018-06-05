@@ -50,8 +50,8 @@ public class WaitQueueService {
         return waitQueueMapper.insert(key, waitQueue);
     }
 
-    public boolean removeCacheLike(String key) {
-        return waitQueueMapper.removeCacheLike(key);
+    public boolean deleteLike(String key) {
+        return waitQueueMapper.deleteLike(key);
     }
 
     /**
@@ -60,7 +60,7 @@ public class WaitQueueService {
      * @return
      */
     public boolean emptyCache() {
-        return this.removeCacheLike(MC_WAITQUEUE_KEY + ":");
+        return this.deleteLike(MC_WAITQUEUE_KEY + ":");
     }
 
     /**

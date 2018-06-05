@@ -228,7 +228,7 @@ public class CurrentService extends BaseService {
      * @return
      */
     public boolean emptyCache() {
-        return this.removeCacheLike(MC_RUN_KEY + ":");
+        return this.deleteLike(MC_RUN_KEY + ":");
     }
 
     /**
@@ -237,15 +237,15 @@ public class CurrentService extends BaseService {
      * @return
      */
     public boolean emptyCacheWait() {
-        return this.removeCacheLike(MC_WAIT_KEY + ":");
+        return this.deleteLike(MC_WAIT_KEY + ":");
     }
 
     public List<Current> selectCacheLike(String key) {
         return mcCurrentMapper.selectLike(key);
     }
 
-    public boolean removeCacheLike(String key) {
-        return mcCurrentMapper.removeCacheLike(key);
+    public boolean deleteLike(String key) {
+        return mcCurrentMapper.deleteLike(key);
     }
 
     /**

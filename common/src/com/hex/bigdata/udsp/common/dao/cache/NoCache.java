@@ -56,7 +56,7 @@ public class NoCache<T> implements Cache<T> {
     }
 
     @Override
-    public boolean removeCacheLike(String likeKey) {
+    public boolean deleteCacheLike(String likeKey) {
         return false;
     }
 
