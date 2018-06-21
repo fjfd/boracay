@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-im-converter-api">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_im_converter_api</output-path>
+    <root id="archive" name="hex-udsp-im-converter-api.jar">
+      <element id="module-output" name="im-converter-api" />
+    </root>
+  </artifact>
+</component>

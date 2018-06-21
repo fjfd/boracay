@@ -31,8 +31,8 @@
           <element id="library" level="project" name="solr" />
           <element id="library" level="project" name="mail" />
           <element id="artifact" artifact-name="hex-udsp-common-api" />
-          <element id="artifact" artifact-name="hex-udsp-im-convertor-api" />
-          <element id="artifact" artifact-name="hex-udsp-im-convertor-impl" />
+          <element id="artifact" artifact-name="hex-udsp-im-converter-api" />
+          <element id="artifact" artifact-name="hex-udsp-im-converter-impl" />
           <element id="artifact" artifact-name="hex-udsp-iq-provider-api" />
           <element id="artifact" artifact-name="hex-udsp-iq-provider-es" />
           <element id="artifact" artifact-name="hex-udsp-iq-provider-hbase" />

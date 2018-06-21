@@ -12,8 +12,10 @@
       <module fileurl="file://$PROJECT_DIR$/consumer-webservice/consumer-webservice.iml" filepath="$PROJECT_DIR$/consumer-webservice/consumer-webservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/doc/doc.iml" filepath="$PROJECT_DIR$/doc/doc.iml" />
       <module fileurl="file://$PROJECT_DIR$/im/im.iml" filepath="$PROJECT_DIR$/im/im.iml" />
-      <module fileurl="file://$PROJECT_DIR$/im-convertor-api/im-convertor-api.iml" filepath="$PROJECT_DIR$/im-convertor-api/im-convertor-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/im-convertor-impl/im-convertor-impl.iml" filepath="$PROJECT_DIR$/im-convertor-impl/im-convertor-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-converter-api/im-converter-api.iml" filepath="$PROJECT_DIR$/im-converter-api/im-converter-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-converter-impl/im-converter-impl.iml" filepath="$PROJECT_DIR$/im-converter-impl/im-converter-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-converter-api/im-convertor-api.iml" filepath="$PROJECT_DIR$/im-converter-api/im-convertor-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-converter-impl/im-convertor-impl.iml" filepath="$PROJECT_DIR$/im-converter-impl/im-convertor-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/iq/iq.iml" filepath="$PROJECT_DIR$/iq/iq.iml" />
       <module fileurl="file://$PROJECT_DIR$/iq-provider-api/iq-provider-api.iml" filepath="$PROJECT_DIR$/iq-provider-api/iq-provider-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/iq-provider-es/iq-provider-es.iml" filepath="$PROJECT_DIR$/iq-provider-es/iq-provider-es.iml" />

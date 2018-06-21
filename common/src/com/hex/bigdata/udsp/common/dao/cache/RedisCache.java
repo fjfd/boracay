@@ -109,14 +109,19 @@ public class RedisCache<T> implements Cache<T> {
     public <T> List<T> selectListCache(String key) {
 //        redisLock.lock(key);
 //        try {
+        List<T> list = null;
         if (StringUtils.isNotBlank(key)) {
             ListOperations<String, T> listOperations = (ListOperations<String, T>) redisTemplate.opsForList();
             Long size = listOperations.size(key);
-            if (size != null && size > 0) {
-                return listOperations.range(key, 0, size - 1);
+            if (size != null) {
+                if (size == 0) {
+                    list = new ArrayList<>();
+                } else {
+                    list = listOperations.range(key, 0, size - 1);
+                }
             }
         }
-        return null;
+        return list;
 //        } finally {
 //            redisLock.unlock(key);
 //        }

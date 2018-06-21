@@ -213,9 +213,9 @@ public abstract class SyncMapper<T> extends BaseMapper {
         String key = MD5Util.MD5_16(clazz) + ":" + id;
         Cache<T> cache = getCache();
         List<T> list = cache.selectListCache(key);
-        if (list == null || list.size() == 0) {
+        if (list == null) {
             list = selectListExe(id);
-            if (list != null && list.size() > 0) {
+            if (list != null) {
                 cache.insertListCache(key, list);
             }
         }

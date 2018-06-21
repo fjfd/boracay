@@ -20,7 +20,7 @@
     <orderEntry type="module" module-name="iq-provider-api" />
     <orderEntry type="module" module-name="olq-provider-api" />
     <orderEntry type="module" module-name="rts" />
-    <orderEntry type="module" module-name="im-convertor-api" />
+    <orderEntry type="module" module-name="im-converter-api" />
     <orderEntry type="module" module-name="im" />
   </component>
 </module>
