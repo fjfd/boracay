@@ -3,11 +3,10 @@ package com.hex.bigdata.udsp.aop;
 import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.constant.Status;
 import com.hex.bigdata.udsp.common.constant.StatusCode;
-import com.hex.bigdata.udsp.common.util.ExceptionUtil;
-import com.hex.bigdata.udsp.constant.ConsumerConstant;
+import com.hex.bigdata.udsp.consumer.constant.ConsumerConstant;
+import com.hex.bigdata.udsp.consumer.model.Request;
+import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.dao.ConsumeStatusMapper;
-import com.hex.bigdata.udsp.model.Request;
-import com.hex.bigdata.udsp.model.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,12 +26,11 @@ public class ConsumeStatusInterceptor {
     @Autowired
     private ConsumeStatusMapper consumeStatusMapper;
 
-    @Pointcut("execution(* com.hex.bigdata.udsp.service.ConsumerService.externalConsume(..))")
+    @Pointcut("execution(* com.hex.bigdata.udsp.consumer.service.ExternalConsumerService.externalConsume(..))")
     private void externalConsume() {
     }
 
-
-    @Pointcut("execution(* com.hex.bigdata.udsp.service.ConsumerService.innerConsume(..))")
+    @Pointcut("execution(* com.hex.bigdata.udsp.service.InnerConsumerService.innerConsume(..))")
     private void innerConsume() {
     }
 

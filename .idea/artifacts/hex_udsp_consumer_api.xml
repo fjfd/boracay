@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-consumer-api">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_consumer_api</output-path>
+    <root id="archive" name="hex-udsp-consumer-api.jar">
+      <element id="module-output" name="consumer-api" />
+    </root>
+  </artifact>
+</component>

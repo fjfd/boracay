@@ -14,7 +14,7 @@ import com.hex.bigdata.udsp.mm.dto.MmResponse;
 import com.hex.bigdata.udsp.mm.dto.MmResponseData;
 import com.hex.bigdata.udsp.mm.model.MmAppExecuteParam;
 import com.hex.bigdata.udsp.mm.model.MmAppReturnParam;
-import com.hex.bigdata.udsp.model.Request;
+import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.goframe.util.DateUtil;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringEscapeUtils;

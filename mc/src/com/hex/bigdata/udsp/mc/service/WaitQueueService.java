@@ -2,7 +2,7 @@ package com.hex.bigdata.udsp.mc.service;
 
 import com.hex.bigdata.udsp.common.lock.RedisDistributedLock;
 import com.hex.bigdata.udsp.common.service.InitParamService;
-import com.hex.bigdata.udsp.dto.QueueIsFullResult;
+import com.hex.bigdata.udsp.consumer.model.QueueIsFullResult;
 import com.hex.bigdata.udsp.mc.dao.WaitQueueMapper;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.model.WaitQueue;

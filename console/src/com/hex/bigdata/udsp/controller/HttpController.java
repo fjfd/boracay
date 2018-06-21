@@ -1,18 +1,17 @@
 package com.hex.bigdata.udsp.controller;
 
-import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.constant.Status;
 import com.hex.bigdata.udsp.common.constant.StatusCode;
 import com.hex.bigdata.udsp.common.dto.ComDatasourcePropsView;
-import com.hex.bigdata.udsp.common.util.*;
-import com.hex.bigdata.udsp.constant.ConsumerConstant;
-import com.hex.bigdata.udsp.dto.ConsumeRequest;
-import com.hex.bigdata.udsp.model.ExternalRequest;
+import com.hex.bigdata.udsp.common.util.FTPClientConfig;
+import com.hex.bigdata.udsp.common.util.FTPHelper;
+import com.hex.bigdata.udsp.common.util.HostUtil;
+import com.hex.bigdata.udsp.common.util.JSONUtil;
+import com.hex.bigdata.udsp.consumer.constant.ConsumerConstant;
+import com.hex.bigdata.udsp.consumer.model.Response;
+import com.hex.bigdata.udsp.consumer.service.DatasourceTestService;
 import com.hex.bigdata.udsp.model.InnerRequest;
-import com.hex.bigdata.udsp.model.Response;
-import com.hex.bigdata.udsp.service.ConsumerService;
-import com.hex.bigdata.udsp.service.DatasourceTestService;
-import com.hex.bigdata.udsp.service.LoggingService;
+import com.hex.bigdata.udsp.service.InnerConsumerService;
 import com.hex.goframe.controller.BaseController;
 import com.hex.goframe.model.GFLoginUser;
 import com.hex.goframe.model.MessageResult;
@@ -27,10 +26,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.security.auth.login.LoginContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
@@ -58,47 +55,10 @@ public class HttpController extends BaseController {
     private Long downloadSleepTimeMs;
 
     @Autowired
-    private ConsumerService consumerService;
-    @Autowired
-    private LoggingService loggingService;
+    private InnerConsumerService consumerService;
 
     @Autowired
-    private DatasourceTestService dataSourseTestService;
-
-    // --------------------------------------------外部请求----------------------------------------------------
-
-    /**
-     * 欢迎信息
-     */
-    @RequestMapping(value = {"/welcome"}, method = {RequestMethod.GET})
-    @ResponseBody
-    public String welcome() {
-        return "Welcome to use UDSP consuming http service!";
-    }
-
-    /**
-     * 外部请求
-     * <p/>
-     * 这里用json字符串作为请求参数是为了自己转换成Request，出错时把信息返回给请求方。
-     */
-    @RequestMapping(value = {"/consume"}, method = {RequestMethod.POST})
-    @ResponseBody
-    public Response consume(@RequestBody String json, HttpServletRequest request) {
-        Response response = new Response();
-        long bef = System.currentTimeMillis();
-        try {
-            ExternalRequest externalRequest = jsonToExternalRequest(json);
-            externalRequest.setRequestIp(HostUtil.getRealRequestIp(request)); // 获取并设置客户端请求的IP
-            response = consumerService.externalConsume(externalRequest);
-        } catch (Exception e) {
-            e.printStackTrace();
-            loggingService.writeResponseLog(response, new ConsumeRequest(), bef, 0,
-                    ErrorCode.ERROR_000005.getValue(), ErrorCode.ERROR_000005.getName() + ":" + e.getMessage(), null);
-        }
-        return response;
-    }
-
-    // --------------------------------------------内部请求----------------------------------------------------
+    private DatasourceTestService dsTestService;
 
     /**
      * 内部请求1
@@ -152,7 +112,7 @@ public class HttpController extends BaseController {
     @RequestMapping({"/inner/consume"})
     @ResponseBody
     public Response innerConsume(@RequestBody String json, HttpServletRequest request) {
-        InnerRequest innerRequest = jsonToInnerRequest(json);
+        InnerRequest innerRequest = jsonToRequest(json);
         //获取并设置客户端请求的IP
         innerRequest.setRequestIp(HostUtil.getRealRequestIp(request));
         return getInnerConsume(innerRequest);
@@ -166,7 +126,7 @@ public class HttpController extends BaseController {
     @RequestMapping({"/inner/async/consume"})
     @ResponseBody
     public MessageResult innerAsyncConsume(@RequestBody String json, HttpServletRequest request) {
-        InnerRequest innerRequest = jsonToInnerRequest(json);
+        InnerRequest innerRequest = jsonToRequest(json);
         boolean status = true;
         String message = "下载成功";
         //获取并设置客户端请求的IP
@@ -249,7 +209,7 @@ public class HttpController extends BaseController {
             message = "请求参数为空";
         } else {
             try {
-                status = dataSourseTestService.testDatasource(comDatasourcePropsView);
+                status = dsTestService.testDatasource(comDatasourcePropsView);
                 if (status) {
                     message = "测试数据源成功！";
                 } else {
@@ -277,15 +237,9 @@ public class HttpController extends BaseController {
         return consumerService.innerConsume(innerRequest, isAdmin);
     }
 
-    private InnerRequest jsonToInnerRequest(String json) {
+    private InnerRequest jsonToRequest(String json) {
         Map<String, Class> classMap = new HashMap<String, Class>();
         classMap.put(ConsumerConstant.CONSUME_RTS_DATASTREAM, Map.class);
         return JSONUtil.parseJSON2Obj(json, InnerRequest.class, classMap);
-    }
-
-    private ExternalRequest jsonToExternalRequest(String json) {
-        Map<String, Class> classMap = new HashMap<String, Class>();
-        classMap.put(ConsumerConstant.CONSUME_RTS_DATASTREAM, Map.class);
-        return JSONUtil.parseJSON2Obj(json, ExternalRequest.class, classMap);
     }
 }

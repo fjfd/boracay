@@ -1,6 +1,7 @@
 package com.hex.bigdata.udsp.model;
 
 import com.hex.bigdata.udsp.common.api.model.Page;
+import com.hex.bigdata.udsp.consumer.model.Request;
 
 import java.io.Serializable;
 import java.util.List;

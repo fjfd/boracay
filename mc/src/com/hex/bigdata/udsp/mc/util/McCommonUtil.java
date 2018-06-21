@@ -1,14 +1,9 @@
 package com.hex.bigdata.udsp.mc.util;
 
-import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.common.util.ObjectUtil;
 import com.hex.bigdata.udsp.common.util.HostUtil;
-import com.hex.bigdata.udsp.constant.ConsumerConstant;
+import com.hex.bigdata.udsp.common.util.JSONUtil;
+import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.mc.model.Current;
-import com.hex.bigdata.udsp.mc.service.RunQueueService;
-import com.hex.bigdata.udsp.model.ExternalRequest;
-import com.hex.bigdata.udsp.model.InnerRequest;
-import com.hex.bigdata.udsp.model.Request;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.util.Date;

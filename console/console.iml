@@ -48,5 +48,10 @@
     <orderEntry type="module" module-name="olq-provider-api" />
     <orderEntry type="module" module-name="rts-executor-api" />
     <orderEntry type="module" module-name="im-convertor-api" />
+    <orderEntry type="module" module-name="consumer-api" />
+    <orderEntry type="module" module-name="consumer-http" />
+    <orderEntry type="module" module-name="consumer-restful" />
+    <orderEntry type="module" module-name="consumer-socket" />
+    <orderEntry type="module" module-name="consumer-webservice" />
   </component>
 </module>

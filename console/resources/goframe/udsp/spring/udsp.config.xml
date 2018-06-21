@@ -93,10 +93,10 @@
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-    <bean id="wsServiceBean" class="com.hex.bigdata.udsp.controller.WebServiceController"/>
+    <bean id="wsServiceBean" class="com.hex.bigdata.udsp.consumer.WebServiceConsumer"/>
     <bean id="inInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
     <bean id="outInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
-    <jaxws:server serviceClass="com.hex.bigdata.udsp.controller.WebServiceInterface" address="/ws">
+    <jaxws:server serviceClass="com.hex.bigdata.udsp.consumer.WebServiceInterface" address="/ws">
         <jaxws:serviceBean>
             <ref bean="wsServiceBean"/>
         </jaxws:serviceBean>

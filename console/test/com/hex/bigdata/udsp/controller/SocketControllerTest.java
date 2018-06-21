@@ -1,7 +1,7 @@
 package com.hex.bigdata.udsp.controller;
 
 import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.model.ExternalRequest;
+import com.hex.bigdata.udsp.consumer.model.ExternalRequest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

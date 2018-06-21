@@ -5,6 +5,11 @@
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/common-api/common-api.iml" filepath="$PROJECT_DIR$/common-api/common-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/console/console.iml" filepath="$PROJECT_DIR$/console/console.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer-api/consumer-api.iml" filepath="$PROJECT_DIR$/consumer-api/consumer-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer-http/consumer-http.iml" filepath="$PROJECT_DIR$/consumer-http/consumer-http.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer-restful/consumer-restful.iml" filepath="$PROJECT_DIR$/consumer-restful/consumer-restful.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer-socket/consumer-socket.iml" filepath="$PROJECT_DIR$/consumer-socket/consumer-socket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer-webservice/consumer-webservice.iml" filepath="$PROJECT_DIR$/consumer-webservice/consumer-webservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/doc/doc.iml" filepath="$PROJECT_DIR$/doc/doc.iml" />
       <module fileurl="file://$PROJECT_DIR$/im/im.iml" filepath="$PROJECT_DIR$/im/im.iml" />
       <module fileurl="file://$PROJECT_DIR$/im-convertor-api/im-convertor-api.iml" filepath="$PROJECT_DIR$/im-convertor-api/im-convertor-api.iml" />

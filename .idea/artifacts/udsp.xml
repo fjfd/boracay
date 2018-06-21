@@ -51,6 +51,11 @@
           <element id="artifact" artifact-name="hex-udsp-rts-executor-api" />
           <element id="artifact" artifact-name="hex-udsp-rts-executor-kafka" />
           <element id="artifact" artifact-name="hex-bigdata-metadata" />
+          <element id="artifact" artifact-name="hex-udsp-consumer-api" />
+          <element id="artifact" artifact-name="hex-udsp-consumer-http" />
+          <element id="artifact" artifact-name="hex-udsp-consumer-restful" />
+          <element id="artifact" artifact-name="hex-udsp-consumer-socket" />
+          <element id="artifact" artifact-name="hex-udsp-consumer-webservice" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="console/web/Web" />
