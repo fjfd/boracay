@@ -1,7 +1,6 @@
 package com.hex.bigdata.udsp.common.dao.cache;
 
 import com.hex.bigdata.udsp.common.lock.RedisDistributedLock;
-import com.hex.bigdata.udsp.common.service.InitParamService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
@@ -29,9 +28,6 @@ public class RedisCache<T> implements Cache<T> {
      */
     @Autowired
     private RedisDistributedLock redisLock;
-
-    @Autowired
-    private InitParamService initParamService;
 
     @Override
     public boolean insertCache(String key, T t) {
@@ -87,7 +83,7 @@ public class RedisCache<T> implements Cache<T> {
                 this.deleteCache(key);
                 ListOperations<String, T> listOperations = redisTemplate.opsForList();
                 //listOperations.leftPushAll(key, list); // 这样查询出来的和插入的正好颠倒
-                listOperations.rightPushAll(key, list);
+                listOperations.rightPushAll(key, list); // Values must not be 'null' or empty
             }
             return true;
         } finally {
@@ -113,12 +109,8 @@ public class RedisCache<T> implements Cache<T> {
         if (StringUtils.isNotBlank(key)) {
             ListOperations<String, T> listOperations = (ListOperations<String, T>) redisTemplate.opsForList();
             Long size = listOperations.size(key);
-            if (size != null) {
-                if (size == 0) {
-                    list = new ArrayList<>();
-                } else {
-                    list = listOperations.range(key, 0, size - 1);
-                }
+            if (size != null && size != 0) {
+                list = listOperations.range(key, 0, size - 1);
             }
         }
         return list;

@@ -131,9 +131,12 @@ public class EhCache<T> implements Cache<T> {
             query = query.includeKeys();
             Results results = query.execute();
             List<Result> resultList = results.all();
-            List<T> list = new ArrayList<>();
-            for (Result result : resultList) {
-                list.add((T) result.getValue());
+            List<T> list = null;
+            if (resultList != null && resultList.size() != 0) {
+                list = new ArrayList<>();
+                for (Result result : resultList) {
+                    list.add((T) result.getValue());
+                }
             }
             return cloneList(list);
         } finally {
