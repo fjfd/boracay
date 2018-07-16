@@ -187,37 +187,37 @@ public class ConsumerService {
         Map<String, String> paraMap = request.getData();
         String udspUser = request.getUdspUser();
 
-        // ------------------------数据缓存处理【START】-----------------------------
-        String isCache = "1";
-        String cacheId = null;
-        long cacheTime = 60;
-        RcService rcService = rcServiceService.selectByAppTypeAndAppId(appType, appId);
-        if (rcService != null) {
-            isCache = rcService.getIsCache();
-            cacheTime = rcService.getTimeout();
-            if ("0".equals(isCache) && ConsumerConstant.CONSUMER_TYPE_SYNC.equalsIgnoreCase(type)
-                    && !ConsumerConstant.CONSUMER_ENTITY_STATUS.equalsIgnoreCase(entity)) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("appType", appType);
-                map.put("appId", appId);
-                map.put("type", type);
-                map.put("entity", entity);
-                map.put("page", page);
-                map.put("sql", sql);
-                map.put("data", paraMap);
-                cacheId = MD5Util.MD5_16(JSONUtil.parseMap2JSON(map));
-                response = responseMapper.select(cacheId);
-                if (response != null) {
-                    response.setConsumeId(consumeId);
-                    loggingService.writeResponseLog(consumeId, bef, runBef, request, response); // 写消费信息到数据库
-                    return response;
+        try {
+            // ------------------------数据缓存处理【START】-----------------------------
+            String isCache = "1";
+            String cacheId = null;
+            long cacheTime = 60;
+            RcService rcService = rcServiceService.selectByAppTypeAndAppId(appType, appId);
+            if (rcService != null) {
+                isCache = rcService.getIsCache();
+                cacheTime = rcService.getTimeout();
+                if ("0".equals(isCache) && ConsumerConstant.CONSUMER_TYPE_SYNC.equalsIgnoreCase(type)
+                        && !ConsumerConstant.CONSUMER_ENTITY_STATUS.equalsIgnoreCase(entity)) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("appType", appType);
+                    map.put("appId", appId);
+                    map.put("type", type);
+                    map.put("entity", entity);
+                    map.put("page", page);
+                    map.put("sql", sql);
+                    map.put("data", paraMap);
+                    cacheId = MD5Util.MD5_16(JSONUtil.parseMap2JSON(map));
+                    response = responseMapper.select(cacheId);
+                    if (response != null) {
+                        response.setConsumeId(consumeId);
+                        loggingService.writeResponseLog(consumeId, bef, runBef, request, response); // 写消费信息到数据库
+                        return response;
+                    }
                 }
             }
-        }
-        // ------------------------数据缓存处理【END】-----------------------------
+            // ------------------------数据缓存处理【END】-----------------------------
 
-        String fileName = CreateFileUtil.getFileName(); // 生成随机的文件名
-        try {
+            String fileName = CreateFileUtil.getFileName(); // 生成随机的文件名
             // 根据类型进入不同的处理逻辑
             if (RcConstant.UDSP_SERVICE_TYPE_IQ.equalsIgnoreCase(appType)) {
                 // 开始iq消费
