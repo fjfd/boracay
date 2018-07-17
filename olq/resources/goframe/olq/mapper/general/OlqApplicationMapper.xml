@@ -50,7 +50,7 @@
       UPT_TIME = #{uptTime,jdbcType=VARCHAR},
       NOTE = #{note,jdbcType=VARCHAR},
       NAME = #{name,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=VARCHAR}
+      DESCRIPTION = #{describe,jdbcType=VARCHAR}
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >

@@ -176,7 +176,7 @@ public class SolrConverter extends SolrWrapper {
         String sql = HiveSqlUtil.createStorageHandlerTable(true, true, tableName,
                 tableColumns, "目标的Hive引擎表", null,
                 HIVE_ENGINE_STORAGE_HANDLER_CLASS, null, tblProperties);
-        JdbcUtil.executeUpdate(eHiveDs, sql);
+        JdbcUtil.createEngineSchema(eHiveDs, HIVE_ENGINE_DATABASE_NAME, sql);
     }
 
     @Override
