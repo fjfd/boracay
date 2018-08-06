@@ -22,13 +22,7 @@ public class GFUserForAppIdAndUserIdMapper extends SyncMapper<GFUser> {
 
     @Override
     protected boolean deleteExe(String id) {
-        String[] strings = id.split("\\|");
-        String appId = strings[0];
-        String userId = strings[1];
-        HashMap map = new HashMap();
-        map.put("appId", appId);
-        map.put("userId", userId);
-        return this.sqlSessionTemplate.delete("com.hex.goframe.dao.GFUserMapper.deleteByUserId", map) == 1;
+        return true;
     }
 
     @Override

@@ -210,7 +210,7 @@ public class ConsumerService {
                     response = responseMapper.select(cacheId);
                     if (response != null) {
                         response.setConsumeId(consumeId);
-                        loggingService.writeResponseLog(consumeId, bef, runBef, request, response); // 写消费信息到数据库
+                        loggingService.writeResponseLog(consumeId, bef, runBef, request, response, true); // 写消费信息到数据库
                         return response;
                     }
                 }
@@ -305,7 +305,7 @@ public class ConsumerService {
                     responseMapper.insertTimeout(cacheId, response, cacheTime * 1000);
                 }
                 // -------------------把获取的数据插入缓存【END】---------------------
-                loggingService.writeResponseLog(consumeId, bef, runBef, request, response); // 写消费信息到数据库
+                loggingService.writeResponseLog(consumeId, bef, runBef, request, response, false); // 写消费信息到数据库
             }
 
             return response;

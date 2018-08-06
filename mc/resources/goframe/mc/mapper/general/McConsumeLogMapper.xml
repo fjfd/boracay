@@ -18,21 +18,21 @@
     <result column="ERROR_CODE" property="errorCode" jdbcType="VARCHAR" />
     <result column="MESSAGE" property="message" jdbcType="VARCHAR" />
     <result column="SYNC_TYPE" property="syncType" jdbcType="VARCHAR" />
+    <result column="IS_CACHE" property="isCache" jdbcType="CHAR" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from MC_CONSUME_LOG
-    where PK_ID = #{pkId,jdbcType=VARCHAR}
+    delete from MC_CONSUME_LOG where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.mc.model.McConsumeLog" >
     insert into MC_CONSUME_LOG (PK_ID, USER_NAME, SERVICE_NAME,
       REQUEST_CONTENT, REQUEST_START_TIME, REQUEST_END_TIME, 
-      RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, 
-      STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME,ERROR_CODE,MESSAGE,SYNC_TYPE)
+      RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE,
+      REQUEST_TYPE, APP_NAME, ERROR_CODE, MESSAGE, SYNC_TYPE, IS_CACHE)
     values (#{pkId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{serviceName,jdbcType=VARCHAR},
       #{requestContent,jdbcType=VARCHAR}, #{requestStartTime,jdbcType=VARCHAR}, #{requestEndTime,jdbcType=VARCHAR}, 
       #{runStartTime,jdbcType=VARCHAR}, #{runEndTime,jdbcType=VARCHAR}, #{responseContent,jdbcType=VARCHAR}, 
-      #{status,jdbcType=CHAR},#{appType,jdbcType=VARCHAR},#{requestType,jdbcType=CHAR}, #{appName,jdbcType=VARCHAR}
-      ,#{errorCode,jdbcType=VARCHAR},#{message,jdbcType=CHAR}, #{syncType,jdbcType=VARCHAR})
+      #{status,jdbcType=CHAR}, #{appType,jdbcType=VARCHAR}, #{requestType,jdbcType=CHAR}, #{appName,jdbcType=VARCHAR},
+      #{errorCode,jdbcType=VARCHAR}, #{message,jdbcType=CHAR}, #{syncType,jdbcType=VARCHAR}, #{isCache,jdbcType=CHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.mc.model.McConsumeLog" >
     update MC_CONSUME_LOG
@@ -50,26 +50,27 @@
       APP_NAME = #{appName,jdbcType=VARCHAR},
       ERROR_CODE = #{errorCode,jdbcType=VARCHAR},
       MESSAGE = #{message,jdbcType=VARCHAR},
-      SYNC_TYPE = #{syncType,jdbcType=VARCHAR}
-
+      SYNC_TYPE = #{syncType,jdbcType=VARCHAR},
+      IS_CACHE = #{isCache,jdbcType=CHAR}
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select PK_ID, USER_NAME, SERVICE_NAME, REQUEST_CONTENT, REQUEST_START_TIME, REQUEST_END_TIME,
-    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME,ERROR_CODE,
-    MESSAGE,SYNC_TYPE
+    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME, ERROR_CODE,
+    MESSAGE, SYNC_TYPE, IS_CACHE
     from MC_CONSUME_LOG
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select PK_ID, USER_NAME, SERVICE_NAME, REQUEST_CONTENT, REQUEST_START_TIME, REQUEST_END_TIME,
-    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME,ERROR_CODE,
-    MESSAGE,SYNC_TYPE
+    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME, ERROR_CODE,
+    MESSAGE, SYNC_TYPE, IS_CACHE
     from MC_CONSUME_LOG
   </select>
   <select id="select" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.mc.dto.McConsumeLogView" >
     select PK_ID, USER_NAME, SERVICE_NAME, REQUEST_CONTENT, REQUEST_START_TIME, REQUEST_END_TIME,
-    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME,ERROR_CODE,MESSAGE,SYNC_TYPE
+    RUN_START_TIME, RUN_END_TIME, RESPONSE_CONTENT, STATUS, APP_TYPE, REQUEST_TYPE, APP_NAME, ERROR_CODE,
+    MESSAGE, SYNC_TYPE, IS_CACHE
     from MC_CONSUME_LOG
     <trim prefix="WHERE" prefixOverrides="AND |OR ">
       <if test="pkId!='' and pkId!=null ">and PK_ID = #{pkId}</if>
@@ -96,7 +97,6 @@
     USER_NAME asc, APP_NAME asc, SERVICE_NAME asc
   </select>
   <delete id="clean" parameterType="java.lang.String" >
-    delete from MC_CONSUME_LOG
-    where #{date,jdbcType=VARCHAR} >= REQUEST_END_TIME
+    delete from MC_CONSUME_LOG where #{date,jdbcType=VARCHAR} >= REQUEST_END_TIME
   </delete>
 </mapper>

@@ -20,22 +20,12 @@ public class GFUserMapper extends SyncMapper<GFUser> {
     private GFUserForAppIdAndUserIdMapper mapper;
 
     public int deleteByPrimaryKey(String id) {
+        GFUser user = select(id);
         try {
             return delete(id) ? 1 : 0;
         } finally {
-            GFUser user = select(id);
             String key = user.getAppId() + "|" + user.getUserId();
             mapper.delete(key);
-        }
-    }
-
-    public int deleteByUserId(String userId, String appId) {
-        String key = appId + "|" + userId;
-        try {
-            return mapper.delete(key) ? 1 : 0;
-        } finally {
-            GFUser user = mapper.select(key);
-            delete(user.getId());
         }
     }
 

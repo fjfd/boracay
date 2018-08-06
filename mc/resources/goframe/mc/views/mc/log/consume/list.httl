@@ -157,6 +157,7 @@ ${extends("/goframe/function_layout.httl")}
             -->
             <div field="runInterval" headerAlign="center"  renderer="renderRunInterval">执行耗时（s）</div>
             <div field="status" headerAlign="center" allowSort="true" renderer="renderStatus">结果状态</div>
+            <div field="isCache" headerAlign="center" allowSort="true" renderer="renderIsCache">是否从缓存获取</div>
             <div field="errorCode" headerAlign="center" allowSort="true" renderer="renderErrorCode">错误类型</div>
             <div field="message" headerAlign="center" allowSort="true" >错误信息</div>
             <!--
@@ -265,6 +266,15 @@ ${extends("/goframe/function_layout.httl")}
      */
     function renderStatus(e) {
         return nui.getDictText("MC_CONSUME_LOG_STATUS", e.row.status);
+    }
+
+    /**
+     * 转换是否从缓存获取
+     * @param e
+     * @returns {*}
+     */
+    function renderIsCache(e) {
+        return nui.getDictText("YES_OR_NO", e.row.isCache);
     }
 
     /**

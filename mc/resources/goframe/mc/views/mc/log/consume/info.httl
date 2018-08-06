@@ -34,6 +34,11 @@ ${extends("/goframe/function_layout.httl")}
                         <input id="requestType" name="requestType" class="nui-dictcombobox" valueField="dictId"
                                textField="dictName" dictTypeId="UDSP_REQUEST_TYPE" style="width:97%" readonly="true"/>
                     </td>
+                    <th class="nui-form-label"><label for="requestType">是否从缓存获取：</label></th>
+                    <td>
+                        <input id="isCache" name="requestType" class="nui-dictcombobox" valueField="dictId"
+                               textField="dictName" dictTypeId="YES_OR_NO" style="width:97%" readonly="true"/>
+                    </td>
                 </tr>
                 <tr>
                     <th class="nui-form-label"><label for="requestContent">请求内容：</label></th>

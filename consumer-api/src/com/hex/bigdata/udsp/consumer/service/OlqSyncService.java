@@ -111,7 +111,7 @@ public class OlqSyncService {
             Future<OlqResponse> olqFutureTask = executorService.submit(new OlqAsyncCallable(consumeId, userName, appId, sql, page, fileName));
             OlqResponse olqResponse = olqFutureTask.get(maxAsyncExecuteTimeout, TimeUnit.SECONDS);
             response.setResponseContent(olqResponse.getFilePath());
-            loggingService.writeResponseLog(consumeId, bef, runBef, request, response);
+            loggingService.writeResponseLog(consumeId, bef, runBef, request, response, false);
         } catch (TimeoutException e) {
             loggingService.writeResponseLog(response, consumeRequest, bef, runBef,
                     ErrorCode.ERROR_000015.getValue(), ErrorCode.ERROR_000015.getName() + ":" + e.toString(), consumeId);

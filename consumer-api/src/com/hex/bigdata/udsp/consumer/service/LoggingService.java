@@ -142,11 +142,24 @@ public class LoggingService {
     /**
      * 向数据库写消费日志
      *
-     * @param request      请求信息
+     * @param request
      * @param mcConsumeLog
-     * @param status       结果状态(0：成功1：失败)
+     * @param status
      */
+    @Deprecated
     public void writeLogToDb(Request request, McConsumeLog mcConsumeLog, String status) {
+        writeLogToDb(request, mcConsumeLog, status, false);
+    }
+
+    /**
+     * 向数据库写消费日志
+     *
+     * @param request
+     * @param mcConsumeLog
+     * @param status
+     * @param isCache
+     */
+    public void writeLogToDb(Request request, McConsumeLog mcConsumeLog, String status, boolean isCache) {
         //同步/异步
         if (StringUtils.isNotBlank(request.getType())) {
             mcConsumeLog.setSyncType(request.getType().toUpperCase());
@@ -171,6 +184,8 @@ public class LoggingService {
         if (StringUtils.isNotBlank(request.getAppName())) {
             mcConsumeLog.setAppName(request.getAppName());
         }
+        //设置是否从缓存获取结果数据
+        mcConsumeLog.setIsCache(isCache ? "0" : "1");
         //设置结果状态(0：成功 1：失败)
         mcConsumeLog.setStatus(status);
         mcConsumeLog.setRequestContent(JSONUtil.parseObj2JSON(request));
@@ -186,7 +201,22 @@ public class LoggingService {
      * @param request
      * @param response
      */
+    @Deprecated
     public void writeResponseLog(String consumeId, long bef, long runBef, Request request, Response response) {
+        writeResponseLog(consumeId, bef, runBef, request, response, false);
+    }
+
+    /**
+     * 写日志
+     *
+     * @param consumeId
+     * @param bef
+     * @param runBef
+     * @param request
+     * @param response
+     * @param isCache
+     */
+    public void writeResponseLog(String consumeId, long bef, long runBef, Request request, Response response, boolean isCache) {
         long now = System.currentTimeMillis();
         McConsumeLog mcConsumeLog = new McConsumeLog();
         mcConsumeLog.setPkId(consumeId);
@@ -218,9 +248,9 @@ public class LoggingService {
         }
         if (Status.SUCCESS.getValue().equals(response.getStatus())
                 || Status.RUNING.getValue().equals(response.getStatus())) {
-            writeLogToDb(request, mcConsumeLog, McConstant.MCLOG_STATUS_SUCCESS);
+            writeLogToDb(request, mcConsumeLog, McConstant.MCLOG_STATUS_SUCCESS, isCache);
         } else {
-            writeLogToDb(request, mcConsumeLog, McConstant.MCLOG_STATUS_FAILED);
+            writeLogToDb(request, mcConsumeLog, McConstant.MCLOG_STATUS_FAILED, isCache);
         }
     }
 }

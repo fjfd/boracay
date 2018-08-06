@@ -114,7 +114,7 @@ public class IqSyncService {
             Future<IqResponse> iqFutureTask = executorService.submit(new IqAsyncCallable(userName, appId, paraMap, page, fileName));
             IqResponse iqResponse = iqFutureTask.get(maxAsyncExecuteTimeout, TimeUnit.SECONDS);
             response.setResponseContent(iqResponse.getFilePath());
-            loggingService.writeResponseLog(consumeId, bef, runBef, request, response);
+            loggingService.writeResponseLog(consumeId, bef, runBef, request, response, false);
         } catch (TimeoutException e) {
             loggingService.writeResponseLog(response, consumeRequest, bef, runBef,
                     ErrorCode.ERROR_000015.getValue(), ErrorCode.ERROR_000015.getName() + ":" + e.toString(), consumeId);

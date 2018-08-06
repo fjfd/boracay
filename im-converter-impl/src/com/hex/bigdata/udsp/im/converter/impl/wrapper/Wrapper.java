@@ -50,6 +50,7 @@ public abstract class Wrapper {
             + DATABASE_AND_TABLE_SEP + "E" + HIVE_ENGINE_TABLE_SEP + "S" + HIVE_ENGINE_TABLE_SEP + "D" + HIVE_ENGINE_TABLE_SEP;
 
     protected String getSourceTableName(String id) {
+        id = id.replace("HBASE" + HIVE_ENGINE_TABLE_SEP, "").replace("SOLR" + HIVE_ENGINE_TABLE_SEP, "");
         return HIVE_ENGINE_SOURCE_TABLE_PREFIX + id;
     }
 

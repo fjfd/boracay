@@ -35,6 +35,8 @@ public class McConsumeLog implements Serializable {
 
     private String syncType;
 
+    private String isCache; // 是否从缓存获取（0：是，1：否）
+
     public String getPkId() {
         return pkId;
     }
@@ -161,5 +163,13 @@ public class McConsumeLog implements Serializable {
 
     public void setSyncType(String syncType) {
         this.syncType = syncType;
+    }
+
+    public String getIsCache() {
+        return isCache;
+    }
+
+    public void setIsCache(String isCache) {
+        this.isCache = isCache;
     }
 }
