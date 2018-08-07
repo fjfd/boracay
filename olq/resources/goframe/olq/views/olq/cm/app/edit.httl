@@ -45,7 +45,7 @@ ${extends("/goframe/function_layout.httl")}
                         <input name="olqSql" id="olqSql" class="nui-textarea" style="height:120px; width:99%;" required="true"
                                emptyText="sql支持使用占位符。
 说明: \${} 表示必填内容，参数名称需要满足字母、数字、下划线，且以字母开头；\#[] 表示选填内容，\#[]内部有且仅有一个\${}。
-示例：SELECT ABC,CBA,\${field1} \#[,\${field2}] FROM TABLE_NAME WHERE 1=1 \#[AND ABC>\${abc}] AND (1=1 \#[OR CBA='\${cba}] \#[OR BAC='\${bac}'])。"
+示例：SELECT ABC,CBA,\${field1} \#[,\${field2}] FROM TABLE_NAME WHERE 1=1 \#[AND ABC>\${abc}] AND (1=0 \#[OR CBA='\${cba}] \#[OR BAC='\${bac}'])。"
                                vtype="maxLength:4000"/>
                     </td>
                 </tr>
