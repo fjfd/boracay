@@ -1,5 +1,6 @@
 package com.hex.bigdata.udsp.iq.service;
 
+import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.common.constant.EnumTrans;
 import com.hex.bigdata.udsp.common.model.ComDatasource;
 import com.hex.bigdata.udsp.common.model.ComProperties;
@@ -16,15 +17,14 @@ import com.hex.goframe.dao.GFDictMapper;
 import com.hex.goframe.model.GFDict;
 import com.hex.goframe.service.BaseService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Created by junjiem on 2017-3-2.
@@ -33,6 +33,11 @@ import java.util.Map;
 public class IqProviderService extends BaseService {
     private static Logger logger = LogManager.getLogger(IqProviderService.class);
     private static final String IQ_IMPL_CLASS = "IQ_IMPL_CLASS";
+
+    private static final FastDateFormat format8 = FastDateFormat.getInstance("yyyyMMdd");
+    private static final FastDateFormat format10 = FastDateFormat.getInstance("yyyy-MM-dd");
+    private static final FastDateFormat format17 = FastDateFormat.getInstance("yyyyMMdd HH:mm:ss");
+    private static final FastDateFormat format19 = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private IqApplicationService iqApplicationService;
@@ -127,20 +132,30 @@ public class IqProviderService extends BaseService {
      */
     private Application getApplication(String appId, Map<String, String> paraMap) {
         Application application = getApplication(appId);
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        for (QueryColumn queryColumn : queryColumns) {
-            if (queryColumn.isNeed()) {
-                if (paraMap == null || StringUtils.isBlank(paraMap.get(queryColumn.getLabel()))) {
-                    throw new IllegalArgumentException(queryColumn.getLabel() + "不能为空");
+//        List<QueryColumn> queryColumns = application.getQueryColumns();
+        for (QueryColumn queryColumn : application.getQueryColumns()) {
+            boolean isNeed = queryColumn.isNeed();
+            DataType type = queryColumn.getType();
+            int length = getLen(queryColumn.getLength());
+            String label = queryColumn.getLabel();
+            String value = (paraMap != null ? paraMap.get(label) : null);
+            if (StringUtils.isNotBlank(value)) {
+                if (DataType.TIMESTAMP.equals(type)) { // 字段类型是TIMESTAMP
+                    value = tarnDateStr(length, value); // 日期格式转换
                 }
-                queryColumn.setValue(paraMap.get(queryColumn.getLabel()));
-            } else {
-                if (paraMap != null && StringUtils.isNotBlank(paraMap.get(queryColumn.getLabel()))) {
-                    queryColumn.setValue(paraMap.get(queryColumn.getLabel()));
+            }
+            if (isNeed) { // 必填
+                if (StringUtils.isBlank(value)) {
+                    throw new IllegalArgumentException(label + "不能为空");
+                }
+                queryColumn.setValue(value);
+            } else { // 选填
+                if (StringUtils.isNotBlank(value)) {
+                    queryColumn.setValue(value);
                 }
             }
         }
-        application.setQueryColumns(queryColumns);
+//        application.setQueryColumns(queryColumns);
         return application;
     }
 
@@ -288,5 +303,49 @@ public class IqProviderService extends BaseService {
             implClass = gfDict.getDictName();
         }
         return implClass;
+    }
+
+    private String tarnDateStr(int length, String value) {
+        if (length == 8 || length == 10 || length == 17 || length == 19) {
+            Date date = strToDate(value);
+            if (date != null) {
+                if (length == 8) {
+                    value = format8.format(date);
+                } else if (length == 10) {
+                    value = format10.format(date);
+                } else if (length == 17) {
+                    value = format17.format(date);
+                } else if (length == 19) {
+                    value = format19.format(date);
+                }
+            }
+        }
+        return value;
+    }
+
+    private Date strToDate(String dataStr) {
+        Date date = null;
+        try {
+            if (dataStr.length() == 8) {
+                date = format8.parse(dataStr);
+            } else if (dataStr.length() == 10) {
+                date = format10.parse(dataStr.replaceAll("/", "-"));
+            } else if (dataStr.length() == 17) {
+                date = format17.parse(dataStr);
+            } else if (dataStr.length() == 19) {
+                date = format19.parse(dataStr.replaceAll("/", "-"));
+            }
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("日期字段传入的不是日期格式字符串参数");
+        }
+        return date;
+    }
+
+    private int getLen(String length) {
+        int len = 0;
+        if (StringUtils.isNotBlank(length) && StringUtils.isNumeric(length)) {
+            len = Integer.valueOf(length);
+        }
+        return len;
     }
 }

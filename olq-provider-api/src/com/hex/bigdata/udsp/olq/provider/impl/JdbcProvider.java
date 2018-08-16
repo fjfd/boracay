@@ -195,6 +195,11 @@ public abstract class JdbcProvider implements Provider {
         while (rs.next()) {
             map = new LinkedHashMap<>();
             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                /*
+                虽然源是Hive时返回字段别名是表名.字段名，但是由于查询SQL是自定义的很可能select中包含了函数而没有起别名，
+                如果简单的获取点后面的字符串作为字段别名，很可能误处理select中包含了函数而没有起别名返回的字段别名，
+                所以这里字段别名索性就保留原样。
+                 */
                 map.put(rsmd.getColumnLabel(i), rs.getString(i) == null ? "" : JSONUtil.encode(rs.getString(i)));
             }
             list.add(map);

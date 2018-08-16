@@ -186,6 +186,7 @@ public class ConsumerService {
         String sql = request.getSql();
         Map<String, String> paraMap = request.getData();
         String udspUser = request.getUdspUser();
+        response.setConsumeId(consumeId);
 
         try {
             // ------------------------数据缓存处理【START】-----------------------------
@@ -209,7 +210,6 @@ public class ConsumerService {
                     cacheId = MD5Util.MD5_16(JSONUtil.parseMap2JSON(map));
                     response = responseMapper.select(cacheId);
                     if (response != null) {
-                        response.setConsumeId(consumeId);
                         loggingService.writeResponseLog(consumeId, bef, runBef, request, response, true); // 写消费信息到数据库
                         return response;
                     }

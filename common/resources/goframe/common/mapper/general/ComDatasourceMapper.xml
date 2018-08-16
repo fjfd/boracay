@@ -36,10 +36,8 @@
     update COM_DATASOURCE set DEL_FLG = '1' where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.common.model.ComDatasource" >
-    insert into COM_DATASOURCE (PK_ID, NAME, DESCRIPTION,
-      TYPE, NOTE, DEL_FLG, CRT_USER, 
-      CRT_TIME, UPT_USER, UPT_TIME, 
-      IMPL_CLASS, MODEL)
+    insert into COM_DATASOURCE (PK_ID, NAME, DESCRIPTION, TYPE, NOTE, DEL_FLG, CRT_USER,
+      CRT_TIME, UPT_USER, UPT_TIME, IMPL_CLASS, MODEL)
     values (#{pkId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
       #{type,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{delFlg,jdbcType=CHAR}, #{crtUser,jdbcType=VARCHAR}, 
       #{crtTime,jdbcType=VARCHAR}, #{uptUser,jdbcType=VARCHAR}, #{uptTime,jdbcType=VARCHAR}, 
@@ -70,6 +68,7 @@
     select PK_ID, NAME, DESCRIPTION, TYPE, NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
     UPT_TIME, IMPL_CLASS, MODEL
     from COM_DATASOURCE
+    order by NAME asc
   </select>
   <select id="select" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.common.dto.ComDatasourceView" >
     select A.PK_ID, A.NAME, A.DESCRIPTION, A.TYPE, A.NOTE, A.DEL_FLG, A.CRT_USER, A.CRT_TIME, A.UPT_USER,
@@ -92,7 +91,7 @@
     <if test="model=='IM' and imDsTypeDictId!='' and imDsTypeDictId!=null">
       and exists (select 1 from t_gf_dict b where b.dict_type_id = #{imDsTypeDictId} and A.type = b.dict_id)
     </if>
-    order by UPT_TIME desc, CRT_TIME desc, NAME asc
+    order by A.NAME asc
   </select>
   <select id="selectByModel" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select A.PK_ID, A.NAME, A.DESCRIPTION, A.TYPE, A.NOTE, A.DEL_FLG, A.CRT_USER, A.CRT_TIME, A.UPT_USER,
@@ -100,6 +99,7 @@
     from COM_DATASOURCE A
     where A.DEL_FLG = '0'
     and A.MODEL = #{model}
+    order by A.NAME asc
   </select>
   <select id="selectByModelAndName" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.common.model.ComDatasource" >
     select A.PK_ID, A.NAME, A.DESCRIPTION, A.TYPE, A.NOTE, A.DEL_FLG, A.CRT_USER, A.CRT_TIME, A.UPT_USER,
@@ -111,17 +111,17 @@
   </select>
 
   <select id="selectParameterBySourceId" parameterType="java.lang.String" resultMap="GFDict">
-    SELECT GFD.*
-	FROM T_GF_DICT GFD
-	LEFT JOIN COM_DATASOURCE CD
-		ON GFD.DICT_TYPE_ID = 'IM_MODEL_PROPS_'||CD.TYPE
-	WHERE CD.PK_ID = #{sourceId}
-    and  EXISTS (
-        select 1
-    from  T_GF_DICT GFD1
-    where (GFD1.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
-    or GFD1.DICT_TYPE_ID =  'IM_DS_SOURCE_BATCH_TYPE')
-    and GFD1.DICT_ID = CD.TYPE
+    select GFD.*
+	from T_GF_DICT GFD
+	left join COM_DATASOURCE CD
+	on GFD.DICT_TYPE_ID = 'IM_MODEL_PROPS_'||CD.TYPE
+	where CD.PK_ID = #{sourceId}
+    and exists (
+    select 1
+    from T_GF_DICT GF
+    where (GF.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
+    or GF.DICT_TYPE_ID =  'IM_DS_SOURCE_BATCH_TYPE')
+    and GF.DICT_ID = CD.TYPE
     )
   </select>
 
@@ -131,22 +131,23 @@
     from COM_DATASOURCE CD
     where CD.DEL_FLG = '0'
     and CD.MODEL = 'IM'
-    and  EXISTS (
+    and exists (
     select 1
-    from  T_GF_DICT GFD1
-    where (GFD1.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
-    or GFD1.DICT_TYPE_ID =  'IM_DS_SOURCE_BATCH_TYPE')
-    and GFD1.DICT_ID = CD.TYPE
+    from  T_GF_DICT GF
+    where (GF.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
+    or GF.DICT_TYPE_ID =  'IM_DS_SOURCE_BATCH_TYPE')
+    and GF.DICT_ID = CD.TYPE
     )
+    order by NAME asc
   </select>
 
 
   <select id="checkSourceType" resultMap="GFDict" parameterType="java.lang.String">
     select *
-    from T_GF_DICT GFD1
+    from T_GF_DICT GF
     left join COM_DATASOURCE CD
-    on CD.TYPE = GFD1.DICT_ID
-    where GFD1.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
+    on CD.TYPE = GF.DICT_ID
+    where GF.DICT_TYPE_ID = 'IM_DS_SOURCE_REALTIME_TYPE'
     and CD.PK_ID = #{sourceId}
   </select>
 
@@ -156,11 +157,12 @@
     from COM_DATASOURCE CD
     where CD.DEL_FLG = '0'
     and CD.MODEL = 'IM'
-    and  EXISTS (
+    and exists (
     select 1
-    from  T_GF_DICT GFD1
-    where GFD1.DICT_TYPE_ID = 'IM_MODEL_ENGINE_TYPE'
-    and GFD1.DICT_ID = CD.TYPE
+    from  T_GF_DICT GF
+    where GF.DICT_TYPE_ID = 'IM_MODEL_ENGINE_TYPE'
+    and GF.DICT_ID = CD.TYPE
     )
+    order by NAME asc
   </select>
 </mapper>

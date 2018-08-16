@@ -23,17 +23,14 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.rts.model.RtsMatedata" >
-    insert into RTS_METADATA (PK_ID, DS_ID, NAME, 
-      DESCRIPTION, NOTE, TOPIC,DEL_FLG, CRT_USER,
-      CRT_TIME, UPT_USER, UPT_TIME)
+    insert into RTS_METADATA (PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, TOPIC, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME)
     values (#{pkId,jdbcType=VARCHAR}, #{dsId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR},
       #{note,jdbcType=VARCHAR}, #{topic,jdbcType=VARCHAR}, #{delFlg,jdbcType=CHAR}, #{crtUser,jdbcType=VARCHAR},
       #{crtTime,jdbcType=VARCHAR}, #{uptUser,jdbcType=VARCHAR}, #{uptTime,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.rts.model.RtsMatedata" >
     update RTS_METADATA
-    SET
-    NAME = #{name,jdbcType=VARCHAR},
+    SET NAME = #{name,jdbcType=VARCHAR},
     DESCRIPTION = #{describe,jdbcType=VARCHAR},
     DS_ID = #{dsId,jdbcType=VARCHAR},
     NOTE = #{note,jdbcType=VARCHAR},
@@ -46,14 +43,12 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, TOPIC,DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+    select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, TOPIC,DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_METADATA
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, TOPIC,DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+    select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, TOPIC,DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_METADATA
     where DEL_FLG = '0'
   </select>
@@ -71,7 +66,7 @@
     md.UPT_TIME,ds.NAME AS  DS_NAME,ds.TYPE AS DS_TYPE
     from RTS_METADATA md
     LEFT JOIN COM_DATASOURCE ds
-    ON md.DS_ID=ds.PK_ID
+    ON md.DS_ID = ds.PK_ID
     where md.DEL_FLG = '0'
     <if test="name!='' and name!=null ">and md.NAME like '%'||#{name}||'%'</if>
     <if test="describe!='' and describe!=null ">and md.DESCRIPTION like '%'||#{describe}||'%'</if>
@@ -85,12 +80,11 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= md.UPT_TIME</if>
     <if test="crtUser!=null and crtUser!='' ">and md.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!=null and uptUser!='' ">and md.UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by md.UPT_TIME desc, md.CRT_TIME desc, md.NAME asc
+    order by md.NAME asc
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
-   select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE,TOPIC, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+   select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE,TOPIC, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_METADATA
     where DEL_FLG = '0'
     and NAME = #{name,jdbcType=VARCHAR}
@@ -101,9 +95,7 @@
       from RTS_CUSTOMER_CONFIG
       where MD_ID = #{pkId,jdbcType=VARCHAR}
       and DEL_FLG = '0'
-
       union all
-
       select PK_ID
       from RTS_PRODUCRER_CONFIG
       where MD_ID =  #{pkId,jdbcType=VARCHAR}
@@ -111,8 +103,7 @@
     </select>
 
     <select id="selectListByDsid" parameterType="java.lang.String" resultMap="BaseResultMap">
-      select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE,TOPIC, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-      UPT_TIME
+      select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE,TOPIC, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
       from RTS_METADATA
       where DEL_FLG = '0'
       and DS_ID = #{dsId,jdbcType=VARCHAR}

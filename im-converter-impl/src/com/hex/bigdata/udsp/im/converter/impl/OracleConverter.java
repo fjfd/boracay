@@ -6,18 +6,11 @@ import com.hex.bigdata.metadata.db.util.AcquireType;
 import com.hex.bigdata.metadata.db.util.DBType;
 import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.im.converter.RealtimeTargetConverter;
-import com.hex.bigdata.udsp.im.converter.impl.model.datasource.JdbcDatasource;
-import com.hex.bigdata.udsp.im.converter.impl.model.datasource.OracleDatasource;
-import com.hex.bigdata.udsp.im.converter.impl.util.JdbcUtil;
 import com.hex.bigdata.udsp.im.converter.impl.util.OracleSqlUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.SqlUtil;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.TableColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.ValueColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.WhereProperty;
 import com.hex.bigdata.udsp.im.converter.impl.wrapper.JdbcWrapper;
-import com.hex.bigdata.udsp.im.converter.model.Metadata;
-import com.hex.bigdata.udsp.im.converter.model.MetadataCol;
-import com.hex.bigdata.udsp.im.converter.model.ModelMapping;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,44 +28,32 @@ public class OracleConverter extends JdbcWrapper implements RealtimeTargetConver
     private static Logger logger = LogManager.getLogger(OracleConverter.class);
 
     @Override
-    public void createSchema(Metadata metadata) throws Exception {
-        OracleDatasource oracleDatasource = new OracleDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String tableComment = metadata.getDescribe();
-        List<TableColumn> columns = SqlUtil.convertToTableColumnList(metadata.getMetadataCols());
+    protected List<String> createSchemaSqls(String tableName, List<TableColumn> columns, String tableComment) {
         List<String> sqls = new ArrayList<>();
-        String createTableSql = OracleSqlUtil.createTable(fullTbName, columns);
+        String createTableSql = OracleSqlUtil.createTable(tableName, columns);
         if (StringUtils.isNotBlank(createTableSql)) sqls.add(createTableSql);
-        String commentTableSql = OracleSqlUtil.commentTable(fullTbName, tableComment);
+        String commentTableSql = OracleSqlUtil.commentTable(tableName, tableComment);
         if (StringUtils.isNotBlank(commentTableSql)) sqls.add(commentTableSql);
-        List<String> commentColumnsSqls = OracleSqlUtil.commentColumns(fullTbName, columns);
+        List<String> commentColumnsSqls = OracleSqlUtil.commentColumns(tableName, columns);
         if (commentColumnsSqls != null && commentColumnsSqls.size() != 0) sqls.addAll(commentColumnsSqls);
-        String createPrimaryKeySql = OracleSqlUtil.createPrimaryKey(fullTbName, columns);
+        String createPrimaryKeySql = OracleSqlUtil.createPrimaryKey(tableName, columns);
         if (StringUtils.isNotBlank(createPrimaryKeySql)) sqls.add(createPrimaryKeySql);
-        JdbcUtil.executeUpdate(oracleDatasource, sqls);
+        return sqls;
     }
 
     @Override
-    public void dropSchema(Metadata metadata) throws Exception {
-        OracleDatasource oracleDatasource = new OracleDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String sql = OracleSqlUtil.dropTable(fullTbName);
-        JdbcUtil.executeUpdate(oracleDatasource, sql);
+    protected String dropSchemaSql(String tableName) {
+        return OracleSqlUtil.dropTable(tableName);
     }
 
     @Override
-    public void addColumns(Metadata metadata, List<MetadataCol> addMetadataCols) throws Exception {
-        if (addMetadataCols != null && addMetadataCols.size() != 0) {
-            OracleDatasource oracleDatasource = new OracleDatasource(metadata.getDatasource());
-            String fullTbName = metadata.getTbName();
-            List<TableColumn> addColumns = SqlUtil.convertToTableColumnList(addMetadataCols);
-            List<String> sqls = new ArrayList<>();
-            List<String> addColumnSqls = OracleSqlUtil.addColumns(fullTbName, addColumns);
-            if (addColumnSqls != null && addColumnSqls.size() != 0) sqls.addAll(addColumnSqls);
-            List<String> commentColumnsSqls = OracleSqlUtil.commentColumns(fullTbName, addColumns);
-            if (commentColumnsSqls != null && commentColumnsSqls.size() != 0) sqls.addAll(commentColumnsSqls);
-            JdbcUtil.executeUpdate(oracleDatasource, sqls);
-        }
+    protected List<String> addColumnSqls(String tableName, List<TableColumn> addColumns) {
+        List<String> sqls = new ArrayList<>();
+        List<String> addColumnSqls = OracleSqlUtil.addColumns(tableName, addColumns);
+        if (addColumnSqls != null && addColumnSqls.size() != 0) sqls.addAll(addColumnSqls);
+        List<String> commentColumnsSqls = OracleSqlUtil.commentColumns(tableName, addColumns);
+        if (commentColumnsSqls != null && commentColumnsSqls.size() != 0) sqls.addAll(commentColumnsSqls);
+        return sqls;
     }
 
     @Override
@@ -131,21 +112,12 @@ public class OracleConverter extends JdbcWrapper implements RealtimeTargetConver
     }
 
     @Override
-    protected void insertInto(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        JdbcUtil.executeUpdate(jdbcDatasource, OracleSqlUtil.insert(metadata.getTbName(), valueColumns));
+    protected String insertSql(String tableName, List<ValueColumn> valueColumns) {
+        return OracleSqlUtil.insert(tableName, valueColumns);
     }
 
     @Override
-    protected void updateInsert(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        if (JdbcUtil.executeUpdate(jdbcDatasource, OracleSqlUtil.update(metadata.getTbName(), valueColumns, whereProperties)) == 0)
-            JdbcUtil.executeUpdate(jdbcDatasource, OracleSqlUtil.insert(metadata.getTbName(), valueColumns));
-    }
-
-    @Override
-    protected void matchingUpdate(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        JdbcUtil.executeUpdate(jdbcDatasource, OracleSqlUtil.update(metadata.getTbName(), valueColumns, whereProperties));
+    protected String updateSql(String tableName, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) {
+        return OracleSqlUtil.update(tableName, valueColumns, whereProperties);
     }
 }

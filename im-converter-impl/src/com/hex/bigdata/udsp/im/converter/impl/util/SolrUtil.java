@@ -185,9 +185,13 @@ public class SolrUtil {
             // 添加Config
             uploadSolrConfig(solrUrl, collectionName, metadataCols);
             // 创建Collection
-            if (!createCollection(metadata)) {
+            try {
+                if (!createCollection(metadata)) {
+                    throw new RuntimeException("创建SOLR表失败，请检查SOLR配置！");
+                }
+            } catch (Exception e) {
                 deleteZnode(solrUrl, collectionName); // 删除Config
-                throw new RuntimeException("创建SOLR表失败，请检查SOLR配置！");
+                throw new RuntimeException(e);
             }
         }
         return true;
@@ -208,7 +212,10 @@ public class SolrUtil {
         SolrDatasource solrDatasource = new SolrDatasource(metadata.getDatasource());
         String solrServers = solrDatasource.getSolrServers();
         String response = "";
-        for (String solrServer : getSolrServerStrings(solrServers)) {
+        String[] solrServerStrings = getSolrServerStrings(solrServers);
+        int count = 0;
+        for (String solrServer : solrServerStrings) {
+            count++;
             String url = getSolrAdminCollectionsUrl(solrServer);
             String param = "action=CREATE" + "&name=" + collectionName + "&replicationFactor=" + replicas +
                     "&numShards=" + shards + "&maxShardsPerNode=" + maxShardsPerNode +
@@ -234,6 +241,10 @@ public class SolrUtil {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
+                if (count == solrServerStrings.length) {
+                    throw new RuntimeException(e);
+                }
                 continue;
             }
         }
@@ -414,9 +425,9 @@ public class SolrUtil {
             // 配置文件目录已存在
             if (zkClient.exists(solrConfigPath, false) != null) {
 //                // 删除原配置目录及文件
-//                delPath(zkClient, solrConfigPath);
-//                zkClient.delete(solrConfigPath, -1);
-                throw new Exception("该名称的配置文件已存在！");
+                delPath(zkClient, solrConfigPath);
+                zkClient.delete(solrConfigPath, -1);
+//                throw new Exception("该名称的配置文件已存在！");
             }
             byte[] bytes = file.getName().getBytes();
             zkClient.create(solrConfigPath, bytes, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);

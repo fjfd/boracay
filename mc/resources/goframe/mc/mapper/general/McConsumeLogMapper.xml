@@ -92,9 +92,7 @@
       <if test="requestType!='' and requestType!=null ">and REQUEST_TYPE = #{requestType}</if>
       <if test="appName!='' and appName!=null ">and APP_NAME like '%'|| #{appName} || '%'</if>
     </trim>
-    order by REQUEST_END_TIME desc, RUN_END_TIME desc,
-    REQUEST_START_TIME desc, RUN_START_TIME desc,
-    USER_NAME asc, APP_NAME asc, SERVICE_NAME asc
+    order by REQUEST_END_TIME desc
   </select>
   <delete id="clean" parameterType="java.lang.String" >
     delete from MC_CONSUME_LOG where #{date,jdbcType=VARCHAR} >= REQUEST_END_TIME

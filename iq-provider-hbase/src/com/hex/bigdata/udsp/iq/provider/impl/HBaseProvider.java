@@ -363,7 +363,7 @@ public class HBaseProvider implements Provider {
         for (QueryColumn queryColumn : queryColumns) {
             Operator operator = queryColumn.getOperator();
             boolean isNeed = queryColumn.isNeed();
-            DataType dataType = queryColumn.getType();
+//            DataType dataType = queryColumn.getType();
             String value = queryColumn.getValue();
             int length = getLen(queryColumn.getLength());
             if (queryColumn.isNeed() && StringUtils.isBlank(value)) {
@@ -372,16 +372,17 @@ public class HBaseProvider implements Provider {
             if (!Operator.EQ.equals(operator) && !Operator.GE.equals(operator) && !Operator.LE.equals(operator)) {
                 throw new IllegalArgumentException("只支持等于、大于等于和小于等于操作");
             }
-            // 只能是等于或大于等于
-            if (Operator.EQ.equals(operator) || Operator.GE.equals(operator)) {
-                if (isNeed && Operator.EQ.equals(operator)) { // 必填且是等于操作
-                    value = realValue(value, length);
-                } else if (Operator.GE.equals(operator)
-                        || (!isNeed && DataType.TIMESTAMP.equals(dataType))) { // 大于等于操作 或者 选填或类型是TIMESTAMP
-                    value = tarnDateStr(length, value);
-                }
-                if (StringUtils.isNotBlank(value)) {
-                    startRow += (StringUtils.isBlank(startRow) ? value : this.rkSep + value);
+            if (StringUtils.isNotBlank(value)) { // 不能为空
+                // 只能是等于或大于等于操作
+                if (Operator.EQ.equals(operator) || Operator.GE.equals(operator)) {
+                    if (isNeed && Operator.EQ.equals(operator)) { // 必填且等于操作
+                        value = realValue(value, length); // 右补齐空格
+                    } else if (Operator.GE.equals(operator)) { // 大于等于操作
+                        value = tarnDateStr(length, value); // 日期格式转换
+                    }
+                    if (StringUtils.isNotBlank(value)) {
+                        startRow += (StringUtils.isBlank(startRow) ? value : this.rkSep + value);
+                    }
                 }
             }
             if (Operator.GE.equals(operator)) break; // 退出
@@ -394,7 +395,7 @@ public class HBaseProvider implements Provider {
         for (QueryColumn queryColumn : queryColumns) {
             Operator operator = queryColumn.getOperator();
             boolean isNeed = queryColumn.isNeed();
-            DataType dataType = queryColumn.getType();
+//            DataType dataType = queryColumn.getType();
             String value = queryColumn.getValue();
             int length = getLen(queryColumn.getLength());
             if (queryColumn.isNeed() && StringUtils.isBlank(value)) {
@@ -403,16 +404,17 @@ public class HBaseProvider implements Provider {
             if (!Operator.EQ.equals(operator) && !Operator.GE.equals(operator) && !Operator.LE.equals(operator)) {
                 throw new IllegalArgumentException("只支持等于、大于等于和小于等于操作");
             }
-            // 只能是等于或小于等于
-            if (Operator.EQ.equals(operator) || Operator.LE.equals(operator)) {
-                if (Operator.EQ.equals(operator)) { // 必填且是等于操作
-                    value = realValue(value, length);
-                } else if (Operator.LE.equals(operator)
-                        || (!isNeed && DataType.TIMESTAMP.equals(dataType))) { // 小于等于操作 或者 选填或类型是TIMESTAMP
-                    value = tarnDateStr(length, value);
-                }
-                if (StringUtils.isNotBlank(value)) {
-                    stopRow += (StringUtils.isBlank(stopRow) ? value : this.rkSep + value);
+            if (StringUtils.isNotBlank(value)) { // 不能为空
+                // 只能是等于或小于等于操作
+                if (Operator.EQ.equals(operator) || Operator.LE.equals(operator)) {
+                    if (isNeed && Operator.EQ.equals(operator)) { // 必填且等于操作
+                        value = realValue(value, length); // 右补齐空格
+                    } else if (Operator.LE.equals(operator)) { // 小于等于操作
+                        value = tarnDateStr(length, value); // 日期格式转换
+                    }
+                    if (StringUtils.isNotBlank(value)) {
+                        stopRow += (StringUtils.isBlank(stopRow) ? value : this.rkSep + value);
+                    }
                 }
             }
             if (Operator.LE.equals(operator)) break; // 退出
@@ -705,7 +707,7 @@ public class HBaseProvider implements Provider {
         return null;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         System.out.println(DigestUtils.md5Hex("9010901228600001").substring(8, 24));
     }
 

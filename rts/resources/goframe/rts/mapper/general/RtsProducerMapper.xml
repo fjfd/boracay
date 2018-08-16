@@ -24,10 +24,7 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.rts.model.RtsProducer" >
-    insert into RTS_PRODUCRER_CONFIG (PK_ID, MD_ID, NAME, 
-      DESCRIPTION, NOTE,
-      DEL_FLG, CRT_USER, CRT_TIME, 
-      UPT_USER, UPT_TIME)
+    insert into RTS_PRODUCRER_CONFIG (PK_ID, MD_ID, NAME, DESCRIPTION, NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME)
     values (#{pkId,jdbcType=VARCHAR}, #{mdId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{describe,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR},
       #{delFlg,jdbcType=CHAR}, #{crtUser,jdbcType=VARCHAR}, #{crtTime,jdbcType=VARCHAR}, 
@@ -47,14 +44,12 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select PK_ID, MD_ID, NAME, DESCRIPTION,  NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+    select PK_ID, MD_ID, NAME, DESCRIPTION,  NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_PRODUCRER_CONFIG
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select PK_ID, MD_ID, NAME, DESCRIPTION,  NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+    select PK_ID, MD_ID, NAME, DESCRIPTION,  NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_PRODUCRER_CONFIG
     where DEL_FLG = '0'
   </select>
@@ -89,12 +84,11 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= pc.UPT_TIME</if>
     <if test="crtUser!='' and crtUser!=null ">and pc.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and pc.UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by pc.UPT_TIME desc, pc.CRT_TIME desc, pc.NAME asc
+    order by pc.NAME asc
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
-     select PK_ID, MD_ID, NAME, DESCRIPTION, NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
-    UPT_TIME
+    select PK_ID, MD_ID, NAME, DESCRIPTION, NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER, UPT_TIME
     from RTS_PRODUCRER_CONFIG
     where DEL_FLG = '0'
     and NAME = #{name,jdbcType=VARCHAR}

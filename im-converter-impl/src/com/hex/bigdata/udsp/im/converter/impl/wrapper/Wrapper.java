@@ -20,6 +20,7 @@ import com.hex.bigdata.udsp.im.converter.model.*;
 import com.hex.bigdata.udsp.im.model.RealtimeNodeInfo;
 import com.hex.bigdata.udsp.im.service.ImConverterService;
 import com.hex.bigdata.udsp.im.service.RealtimeNodeService;
+import com.hex.goframe.util.Util;
 import com.hex.goframe.util.WebApplicationContextUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
@@ -59,7 +60,7 @@ public abstract class Wrapper {
     }
 
     private String getDynamicSourceTableName() {
-        return HIVE_DYNAMIC_ENGINE_SOURCE_TABLE_PREFIX + System.currentTimeMillis();
+        return HIVE_DYNAMIC_ENGINE_SOURCE_TABLE_PREFIX + Util.uuid();
     }
 
     protected String getDataType(DataType type, String length) {

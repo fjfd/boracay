@@ -1,5 +1,6 @@
 package com.hex.bigdata.udsp.im.converter.impl.util;
 
+import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.TableColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.ValueColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.WhereProperty;
@@ -180,13 +181,13 @@ public class OracleSqlUtil {
     }
 
     public static String getColType(String dataType, String length) {
-        if ("VARCHAR".equals(dataType)) {
+        if (DataType.VARCHAR.getValue().equals(dataType)) {
             dataType = "VARCHAR2(" + length + ")";
-        } else if ("CHAR".equals(dataType)) {
+        } else if (DataType.CHAR.getValue().equals(dataType)) {
             dataType = "CHAR(" + length + ")";
-        } else if ("DECIMAL".equals(dataType)) {
+        } else if (DataType.DECIMAL.getValue().equals(dataType)) {
             dataType = "NUMBER(" + length + ")";
-        } else if ("STRING".equals(dataType)) {
+        } else if (DataType.STRING.getValue().equals(dataType)) {
             dataType = "VARCHAR2(4000)";
         }
         return dataType;

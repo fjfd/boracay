@@ -57,7 +57,7 @@ public abstract class SolrWrapper extends Wrapper implements BatchSourceConverte
         tblProperties.add(new TblProperty("solr.url", datasource.getSolrUrl())); // zookeeper地址、端口和目录
         if (StringUtils.isBlank(solrQuery)) solrQuery = "*:*";
         tblProperties.add(new TblProperty("solr.query", solrQuery)); // Solr查询语句
-        tblProperties.add(new TblProperty("solr.cursor.batch.size", "1000")); // 批量大小
+        tblProperties.add(new TblProperty("solr.cursor.batch.size", "1024")); // 批量大小
         tblProperties.add(new TblProperty("solr.primary.key", pkName)); // Solr Collection 主键字段名
         tblProperties.add(new TblProperty("is.solrcloud", "1")); // 0：单机模式，1：集群模式，Default：0
         tblProperties.add(new TblProperty("collection.name", collectionName)); // Solr Collection Name
@@ -83,7 +83,7 @@ public abstract class SolrWrapper extends Wrapper implements BatchSourceConverte
         List<TblProperty> tblProperties = new ArrayList<>();
         tblProperties.add(new TblProperty("solr.url", datasource.getSolrUrl())); // zookeeper地址、端口和目录
         tblProperties.add(new TblProperty("solr.query", "*:*")); // Solr查询语句
-        tblProperties.add(new TblProperty("solr.cursor.batch.size", "1000")); // 批量大小
+        tblProperties.add(new TblProperty("solr.cursor.batch.size", "1024")); // 批量大小
         tblProperties.add(new TblProperty("solr.primary.key", pkName)); // Solr Collection 主键字段名
         tblProperties.add(new TblProperty("is.solrcloud", "1")); // 0：单机模式，1：集群模式，Default：0
         tblProperties.add(new TblProperty("collection.name", collectionName)); // Solr Collection Name

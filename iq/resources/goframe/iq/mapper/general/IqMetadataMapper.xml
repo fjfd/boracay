@@ -81,7 +81,7 @@
     <if test="crtUser!='' and crtUser!=null ">and md.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and md.UPT_USER like '%'||#{uptUser}||'%'</if>
     <if test="tbName!='' and tbName!=null ">and md.TB_NAME = #{tbName}</if>
-    order by md.UPT_TIME desc, md.CRT_TIME desc, md.NAME asc
+    order by md.NAME asc
   </select>
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select PK_ID, DS_ID, NAME, DESCRIPTION, NOTE, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,

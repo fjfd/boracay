@@ -105,9 +105,8 @@
         select rcus.PK_ID, rcus.USER_ID, rcus.SERVICE_ID, rcus.IP_SECTION, rcus.MAX_SYNC_NUM, rcus.MAX_ASYNC_NUM,
         rcus.MAX_SYNC_WAIT_NUM,rcus.MAX_ASYNC_WAIT_NUM, rcus.MAX_SYNC_WAIT_TIMEOUT, rcus.MAX_ASYNC_WAIT_TIMEOUT,
         rcus.MAX_SYNC_EXECUTE_TIMEOUT, rcus.MAX_ASYNC_EXECUTE_TIMEOUT,rcus.DEL_FLG, rcus.CRT_USER, rcus.CRT_TIME,
-        rcus.UPT_USER, rcus.UPT_TIME, rcus.ALARM_TYPE,
-        rcs.NAME AS SERVICE_NAME, rcs.TYPE AS SERVICE_TYPE, gfuser.user_name AS USER_NAME, rcs.DESCRIPTION as
-        SERVICE_DESCRIBE
+        rcus.UPT_USER, rcus.UPT_TIME, rcus.ALARM_TYPE, rcs.NAME AS SERVICE_NAME, rcs.TYPE AS SERVICE_TYPE,
+        gfuser.user_name AS USER_NAME, rcs.DESCRIPTION as SERVICE_DESCRIBE
         from RC_USER_SERVICE rcus
         LEFT JOIN T_GF_LOGINUSER gfuser ON rcus.USER_ID=gfuser.USER_ID
         LEFT JOIN RC_SERVICE rcs ON rcus.SERVICE_ID=rcs.PK_ID
@@ -124,13 +123,13 @@
         <if test="crtUser!='' and crtUser!=null ">and rcus.CRT_USER like '%'||#{crtUser}||'%'</if>
         <if test="uptUser!='' and uptUser!=null ">and rcus.UPT_USER like '%'||#{uptUser}||'%'</if>
         <if test="alarmType!='' and alarmType!=null ">and rcus.ALARM_TYPE = #{alarmType}</if>
-        order by UPT_TIME desc, CRT_TIME desc, NAME asc
+        order by rcs.NAME asc
     </select>
 
     <select id="selectRelation" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.rc.model.RcUserService">
         select PK_ID, USER_ID, SERVICE_ID, IP_SECTION, MAX_SYNC_NUM, MAX_ASYNC_NUM,
-        MAX_SYNC_WAIT_NUM,MAX_ASYNC_WAIT_NUM, MAX_SYNC_WAIT_TIMEOUT,MAX_ASYNC_WAIT_TIMEOUT,
-        MAX_SYNC_EXECUTE_TIMEOUT,MAX_ASYNC_EXECUTE_TIMEOUT,DEL_FLG, CRT_USER, CRT_TIME,UPT_USER, UPT_TIME, ALARM_TYPE
+        MAX_SYNC_WAIT_NUM, MAX_ASYNC_WAIT_NUM, MAX_SYNC_WAIT_TIMEOUT, MAX_ASYNC_WAIT_TIMEOUT,
+        MAX_SYNC_EXECUTE_TIMEOUT, MAX_ASYNC_EXECUTE_TIMEOUT, DEL_FLG, CRT_USER, CRT_TIME,UPT_USER, UPT_TIME, ALARM_TYPE
         from RC_USER_SERVICE
         where DEL_FLG = '0'
         <if test="serviceId!='' and serviceId!=null ">and SERVICE_ID =#{serviceId}</if>
@@ -233,7 +232,6 @@
         from RC_USER_SERVICE rcus
         LEFT JOIN RC_SERVICE rcs ON rcus.SERVICE_ID = rcs.PK_ID
         where rcus.SERVICE_ID = #{serviceId} and rcus.DEL_FLG = '0'
-
     </select>
 
     <select id="selectServicesByUserId" resultMap="FullResultMap"

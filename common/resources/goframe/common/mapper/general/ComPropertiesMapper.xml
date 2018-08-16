@@ -13,8 +13,7 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.common.model.ComProperties" >
-    insert into COM_PROPERTIES (PK_ID, FK_ID, NAME, 
-      VALUE, DESCRIPTION)
+    insert into COM_PROPERTIES (PK_ID, FK_ID, NAME, VALUE, DESCRIPTION)
     values (#{pkId,jdbcType=VARCHAR}, #{fkId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{value,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR})
   </insert>
@@ -39,6 +38,7 @@
     select PK_ID, FK_ID, NAME, VALUE, DESCRIPTION
     from COM_PROPERTIES
     where FK_ID = #{fkId,jdbcType=VARCHAR}
+    order by NAME asc
   </select>
   <delete id="deleteByFkId" parameterType="java.lang.String" >
     delete from COM_PROPERTIES

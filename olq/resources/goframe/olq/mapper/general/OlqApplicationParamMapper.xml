@@ -23,8 +23,9 @@
     select PK_ID, PARAM_NAME, PARAM_DESC, DEFAULT_VALUE, IS_NEED, APP_ID, SEQ
     from OLQ_APPLICATION_PARAM
     <where>
-      <if test="appId!='' and appId!=null ">APP_ID = #{appId} </if>
+      <if test="appId!='' and appId!=null ">APP_ID = #{appId}</if>
     </where>
+    order by SEQ asc
   </select>
 
   <delete id="deleteListByAppId" parameterType="java.lang.String" >

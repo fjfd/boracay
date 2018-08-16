@@ -12,12 +12,8 @@ import com.hex.bigdata.udsp.im.converter.impl.model.datasource.JdbcDatasource;
 import com.hex.bigdata.udsp.im.converter.impl.model.metadata.HiveMetadata;
 import com.hex.bigdata.udsp.im.converter.impl.model.metadata.JdbcMetadata;
 import com.hex.bigdata.udsp.im.converter.impl.model.modeling.JdbcModel;
-import com.hex.bigdata.udsp.im.converter.impl.util.HiveSqlUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.JdbcUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.SqlUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.model.TableColumn;
-import com.hex.bigdata.udsp.im.converter.impl.util.model.TblProperty;
-import com.hex.bigdata.udsp.im.converter.impl.util.model.WhereProperty;
+import com.hex.bigdata.udsp.im.converter.impl.util.*;
+import com.hex.bigdata.udsp.im.converter.impl.util.model.*;
 import com.hex.bigdata.udsp.im.converter.model.Metadata;
 import com.hex.bigdata.udsp.im.converter.model.MetadataCol;
 import com.hex.bigdata.udsp.im.converter.model.Model;
@@ -37,6 +33,38 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
     private static Logger logger = LogManager.getLogger(JdbcWrapper.class);
 
     protected static final String HIVE_ENGINE_STORAGE_HANDLER_CLASS = "com.hex.hive.jdbc.JdbcStorageHandler";
+
+    @Override
+    public void createSchema(Metadata metadata) throws Exception {
+        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+        String fullTbName = metadata.getTbName();
+        String tableComment = metadata.getDescribe();
+        List<TableColumn> columns = SqlUtil.convertToTableColumnList(metadata.getMetadataCols());
+        JdbcUtil.executeUpdate(jdbcDatasource, createSchemaSqls(fullTbName, columns, tableComment));
+    }
+
+    protected abstract List<String> createSchemaSqls(String tableName, List<TableColumn> columns, String tableComment);
+
+    @Override
+    public void dropSchema(Metadata metadata) throws Exception {
+        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+        String fullTbName = metadata.getTbName();
+        JdbcUtil.executeUpdate(jdbcDatasource, dropSchemaSql(fullTbName));
+    }
+
+    protected abstract String dropSchemaSql(String tableName);
+
+    @Override
+    public void addColumns(Metadata metadata, List<MetadataCol> addMetadataCols) throws Exception {
+        if (addMetadataCols != null && addMetadataCols.size() != 0) {
+            JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+            String fullTbName = metadata.getTbName();
+            List<TableColumn> addColumns = SqlUtil.convertToTableColumnList(addMetadataCols);
+            JdbcUtil.executeUpdate(jdbcDatasource, addColumnSqls(fullTbName, addColumns));
+        }
+    }
+
+    protected abstract List<String> addColumnSqls(String tableName, List<TableColumn> addColumns);
 
     @Override
     public List<MetadataCol> columnInfo(Model model) {
@@ -247,10 +275,10 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             HiveMetadata hiveMetadata = new HiveMetadata(metadata);
             String fullTbName = hiveMetadata.getTbName();
             String tableName = getTargetTableName(id);
-            JdbcDatasource jdbcDs = new JdbcDatasource(metadata.getDatasource());
+            JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
             String sql = HiveSqlUtil.createStorageHandlerTable(true, true, tableName,
                     getTargetColumns(model.getModelMappings()), "目标的Hive引擎表", null,
-                    HIVE_ENGINE_STORAGE_HANDLER_CLASS, null, getTblProperties(jdbcDs, fullTbName, null));
+                    HIVE_ENGINE_STORAGE_HANDLER_CLASS, null, getTblProperties(jdbcDatasource, fullTbName, null));
             JdbcUtil.executeUpdate(eHiveDs, sql);
         }
     }
@@ -286,11 +314,12 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             tblProperties.add(new TblProperty("mapred.jdbc.input.table.name", tableName));
         if (StringUtils.isNotBlank(inputQuery)) {
             inputQuery = inputQuery.replaceAll("'", "\\\\'");
-            tblProperties.add(new TblProperty("mapred.jdbc.input.query", inputQuery));
+            tblProperties.add(new TblProperty("mapred.jdbc.input.query", inputQuery)); // SQL查询语句
         }
         if (StringUtils.isNotBlank(tableName))
             tblProperties.add(new TblProperty("mapred.jdbc.output.table.name", tableName));
-        tblProperties.add(new TblProperty("mapred.jdbc.hive.lazy.split", "false"));
+        tblProperties.add(new TblProperty("mapred.jdbc.hive.lazy.split", "false")); // 是否懒分割。false：根据MAP数生成多个查询；true：只生成一个查询。
+        tblProperties.add(new TblProperty("jdbc.storage.handler.input.fetch.size", "1024")); // 批量大小
         return tblProperties;
     }
 
@@ -349,6 +378,8 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
         return mdCol;
     }
 
+    protected abstract DataType getColType(String type);
+
     protected List<MetadataCol> getMetadataCols(Connection conn, String dbName, String tbName) throws SQLException {
         List<Column> columns = getColumns(conn, dbName, tbName);
         if (columns == null) return null;
@@ -368,6 +399,8 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
         }
         return mdCols;
     }
+
+    protected abstract List<Column> getColumns(Connection conn, String dbName, String tbName) throws SQLException;
 
     @Override
     protected List<String> getSelectColumns(List<ModelMapping> modelMappings, Metadata metadata) {
@@ -395,7 +428,8 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             logger.error(ExceptionUtil.getMessage(e));
             if (e.getMessage().indexOf("doesn't exist") != -1
                     || e.getMessage().indexOf("ORA-00942") != -1
-                    || e.getMessage().indexOf("Table not found") != -1) {
+                    || e.getMessage().indexOf("Table not found") != -1
+                    || e.getMessage().indexOf("Could not resolve table reference") != -1) {
                 exists = false;
             }
         } finally {
@@ -414,9 +448,26 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
         JdbcUtil.executeUpdate(jdbcDatasource, updateSql);
     }
 
-    protected abstract DataType getColType(String type);
+    @Override
+    protected void insertInto(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns) throws Exception {
+        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+        JdbcUtil.executeUpdate(jdbcDatasource, insertSql(metadata.getTbName(), valueColumns));
+    }
 
-    protected abstract List<Column> getColumns(Connection conn, String dbName, String tbName) throws SQLException;
+    protected abstract String insertSql(String tableName, List<ValueColumn> valueColumns);
 
+    @Override
+    protected void updateInsert(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
+        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+        if (JdbcUtil.executeUpdate(jdbcDatasource, updateSql(metadata.getTbName(), valueColumns, whereProperties)) == 0)
+            JdbcUtil.executeUpdate(jdbcDatasource, insertSql(metadata.getTbName(), valueColumns));
+    }
 
+    protected abstract String updateSql(String tableName, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties);
+
+    @Override
+    protected void matchingUpdate(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
+        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
+        JdbcUtil.executeUpdate(jdbcDatasource, updateSql(metadata.getTbName(), valueColumns, whereProperties));
+    }
 }

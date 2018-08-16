@@ -10,7 +10,7 @@ ${extends("/goframe/function_layout.httl")}
                     <td colspan="3">
                         <div id="appId" class="nui-combobox" style="width:98%;" popupWidth="400" textField="name"
                              valueField="pkId" dataField="data" name="appId" multiSelect="false"
-                             emptyText="请选择应用" required="true" onvaluechanged="applicationChanged">
+                             emptyText="请选择应用" required="true" allowInput="true" onvaluechanged="applicationChanged">
                             <div property="columns">
                                 <div header="名称" field="name"></div>
                                 <div header="说明" field="describe"></div>

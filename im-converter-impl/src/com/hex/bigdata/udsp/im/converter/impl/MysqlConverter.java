@@ -6,24 +6,17 @@ import com.hex.bigdata.metadata.db.util.AcquireType;
 import com.hex.bigdata.metadata.db.util.DBType;
 import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.im.converter.RealtimeTargetConverter;
-import com.hex.bigdata.udsp.im.converter.impl.model.datasource.JdbcDatasource;
-import com.hex.bigdata.udsp.im.converter.impl.model.datasource.MysqlDatasource;
-import com.hex.bigdata.udsp.im.converter.impl.util.JdbcUtil;
 import com.hex.bigdata.udsp.im.converter.impl.util.MysqlSqlUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.SqlUtil;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.TableColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.ValueColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.WhereProperty;
 import com.hex.bigdata.udsp.im.converter.impl.wrapper.JdbcWrapper;
-import com.hex.bigdata.udsp.im.converter.model.Metadata;
-import com.hex.bigdata.udsp.im.converter.model.MetadataCol;
-import com.hex.bigdata.udsp.im.converter.model.ModelMapping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,32 +27,20 @@ public class MysqlConverter extends JdbcWrapper implements RealtimeTargetConvert
     private static Logger logger = LogManager.getLogger(MysqlConverter.class);
 
     @Override
-    public void createSchema(Metadata metadata) throws Exception {
-        MysqlDatasource mysqlDatasource = new MysqlDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String tableComment = metadata.getDescribe();
-        List<TableColumn> columns = SqlUtil.convertToTableColumnList(metadata.getMetadataCols());
-        String sql = MysqlSqlUtil.createTable(false, fullTbName, columns, tableComment);
-        JdbcUtil.executeUpdate(mysqlDatasource, sql);
+    protected List<String> createSchemaSqls(String tableName, List<TableColumn> columns, String tableComment) {
+        String[] sqls = {MysqlSqlUtil.createTable(false, tableName, columns, tableComment)};
+        return Arrays.asList(sqls);
     }
 
     @Override
-    public void dropSchema(Metadata metadata) throws Exception {
-        MysqlDatasource mysqlDatasource = new MysqlDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String sql = MysqlSqlUtil.dropTable(false, fullTbName);
-        JdbcUtil.executeUpdate(mysqlDatasource, sql);
+    protected String dropSchemaSql(String tableName) {
+        return MysqlSqlUtil.dropTable(true, tableName);
     }
 
     @Override
-    public void addColumns(Metadata metadata, List<MetadataCol> addMetadataCols) throws Exception {
-        if (addMetadataCols != null && addMetadataCols.size() != 0) {
-            MysqlDatasource mysqlDatasource = new MysqlDatasource(metadata.getDatasource());
-            String fullTbName = metadata.getTbName();
-            List<TableColumn> addColumns = SqlUtil.convertToTableColumnList(addMetadataCols);
-            String addColumnSql = MysqlSqlUtil.addColumns(fullTbName, addColumns);
-            JdbcUtil.executeUpdate(mysqlDatasource, addColumnSql);
-        }
+    protected List<String> addColumnSqls(String tableName, List<TableColumn> addColumns) {
+        String[] sqls = {MysqlSqlUtil.addColumns(tableName, addColumns)};
+        return Arrays.asList(sqls);
     }
 
     @Override
@@ -118,21 +99,12 @@ public class MysqlConverter extends JdbcWrapper implements RealtimeTargetConvert
     }
 
     @Override
-    protected void insertInto(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        JdbcUtil.executeUpdate(jdbcDatasource, MysqlSqlUtil.insert(metadata.getTbName(), valueColumns));
+    protected String insertSql(String tableName, List<ValueColumn> valueColumns) {
+        return MysqlSqlUtil.insert(tableName, valueColumns);
     }
 
     @Override
-    protected void updateInsert(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        if (JdbcUtil.executeUpdate(jdbcDatasource, MysqlSqlUtil.update(metadata.getTbName(), valueColumns, whereProperties)) == 0)
-            JdbcUtil.executeUpdate(jdbcDatasource, MysqlSqlUtil.insert(metadata.getTbName(), valueColumns));
-    }
-
-    @Override
-    protected void matchingUpdate(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
-        JdbcUtil.executeUpdate(jdbcDatasource, MysqlSqlUtil.update(metadata.getTbName(), valueColumns, whereProperties));
+    protected String updateSql(String tableName, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) {
+        return MysqlSqlUtil.update(tableName, valueColumns, whereProperties);
     }
 }

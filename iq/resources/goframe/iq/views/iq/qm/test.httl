@@ -26,7 +26,7 @@ ${extends("/goframe/function_layout.httl")}
                     <div id="appId" class="nui-combobox" style="width:98%;" popupWidth="400" textField="name"
                          valueField="pkId"
                          url="${basePath}/iq/app/select" dataField="data" name="appId" multiSelect="false"
-                         emptyText="请选择应用" required="true" onvaluechanged="appIdChanged">
+                         emptyText="请选择应用" required="true" allowInput="true" onvaluechanged="appIdChanged">
                         <div property="columns">
                             <div header="名称" field="name"></div>
                             <div header="说明" field="describe"></div>

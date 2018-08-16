@@ -30,11 +30,8 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.hex.bigdata.udsp.im.model.ImModel">
-    insert into IM_MODEL (PK_ID, NAME, DESCRIPTION,
-      S_DS_ID, T_MD_ID,
-      NOTE, DEL_FLG, CRT_USER, 
-      CRT_TIME, UPT_USER, UPT_TIME, 
-      TYPE, BUILD_MODE, UPDATE_MODE,E_DS_ID,STATUS)
+    insert into IM_MODEL (PK_ID, NAME, DESCRIPTION, S_DS_ID, T_MD_ID, NOTE, DEL_FLG, CRT_USER, CRT_TIME,
+    UPT_USER, UPT_TIME, TYPE, BUILD_MODE, UPDATE_MODE,E_DS_ID,STATUS)
     values (#{pkId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
       #{sourceDsId,jdbcType=VARCHAR}, #{targetMdId,jdbcType=VARCHAR},
       #{note,jdbcType=VARCHAR}, '0', #{crtUser,jdbcType=VARCHAR},
@@ -70,7 +67,7 @@
     CRT_TIME, UPT_USER, UPT_TIME, TYPE, BUILD_MODE, UPDATE_MODE,E_DS_ID,STATUS
     from IM_MODEL
     where DEL_FLG = '0'
-    ORDER BY CRT_TIME desc
+    order by NAME asc
   </select>
 
     <select id="select" resultMap="ImModelView" parameterType="com.hex.bigdata.udsp.im.dto.ImModelView">
@@ -81,7 +78,7 @@
         left join COM_DATASOURCE CD
         on CD.PK_ID = IM.S_DS_ID
         and CD.DEL_FLG = '0'
-        LEFT JOIN IM_METADATA IMM
+        left join IM_METADATA IMM
         on IMM.PK_ID = IM.T_MD_ID
         and IMM.DEL_FLG = '0'
         where IM.DEL_FLG = '0'
@@ -95,7 +92,7 @@
         <if test="uptTimeStart != null and uptTimeStart != ''">and IM.UPT_TIME >= #{uptTimeStart}</if>
         <if test="uptTimeEnd != null and uptTimeEnd != ''">and #{uptTimeEnd} >= IM.UPT_TIME</if>
         <if test="status != null and status != ''">and IM.STATUS = #{status}</if>
-        ORDER BY CRT_TIME desc
+        order by IM.NAME asc
     </select>
 
     <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -121,14 +118,14 @@
   </select>
 
     <update id="updateToDeleted">
-    UPDATE IM_MODEL
+    update IM_MODEL
     SET DEL_FLG = '1'
     where PK_ID = #{id}
   </update>
 
     <update id="updateModelDelStatus">
-    UPDATE IM_MODEL
-    SET DEL_FLG = #{status}
+    update IM_MODEL
+    set DEL_FLG = #{status}
     where PK_ID = #{pkId}
   </update>
 </mapper>

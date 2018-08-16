@@ -5,25 +5,18 @@ import com.hex.bigdata.metadata.db.model.Column;
 import com.hex.bigdata.metadata.db.util.AcquireType;
 import com.hex.bigdata.metadata.db.util.DBType;
 import com.hex.bigdata.udsp.common.constant.DataType;
-import com.hex.bigdata.udsp.im.converter.impl.model.datasource.HiveDatasource;
 import com.hex.bigdata.udsp.im.converter.impl.util.HiveSqlUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.JdbcUtil;
-import com.hex.bigdata.udsp.im.converter.impl.util.SqlUtil;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.FileFormat;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.TableColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.ValueColumn;
 import com.hex.bigdata.udsp.im.converter.impl.util.model.WhereProperty;
 import com.hex.bigdata.udsp.im.converter.impl.wrapper.JdbcWrapper;
-import com.hex.bigdata.udsp.im.converter.model.Metadata;
-import com.hex.bigdata.udsp.im.converter.model.MetadataCol;
-import com.hex.bigdata.udsp.im.converter.model.ModelMapping;
-import org.apache.hive.jdbc.HiveDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,33 +27,21 @@ public class HiveConverter extends JdbcWrapper {
     private static Logger logger = LogManager.getLogger(HiveConverter.class);
 
     @Override
-    public void createSchema(Metadata metadata) throws Exception {
-        HiveDatasource hiveDatasource = new HiveDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String tableComment = metadata.getDescribe();
-        List<TableColumn> columns = SqlUtil.convertToTableColumnList(metadata.getMetadataCols());
-        String sql = HiveSqlUtil.createTable(false, false, fullTbName,
-                columns, tableComment, null, null, FileFormat.HIVE_FILE_FORMAT_PARQUET);
-        JdbcUtil.executeUpdate(hiveDatasource, sql);
+    protected List<String> createSchemaSqls(String tableName, List<TableColumn> columns, String tableComment) {
+        String[] sqls = {HiveSqlUtil.createTable(false, false, tableName,
+                columns, tableComment, null, null, FileFormat.HIVE_FILE_FORMAT_PARQUET)};
+        return Arrays.asList(sqls);
     }
 
     @Override
-    public void dropSchema(Metadata metadata) throws Exception {
-        HiveDatasource hiveDatasource = new HiveDatasource(metadata.getDatasource());
-        String fullTbName = metadata.getTbName();
-        String sql = HiveSqlUtil.dropTable(false, fullTbName);
-        JdbcUtil.executeUpdate(hiveDatasource, sql);
+    protected String dropSchemaSql(String tableName) {
+        return HiveSqlUtil.dropTable(true, tableName);
     }
 
     @Override
-    public void addColumns(Metadata metadata, List<MetadataCol> addMetadataCols) throws Exception {
-        if (addMetadataCols != null && addMetadataCols.size() != 0) {
-            HiveDatasource hiveDatasource = new HiveDatasource(metadata.getDatasource());
-            String fullTbName = metadata.getTbName();
-            List<TableColumn> addColumns = SqlUtil.convertToTableColumnList(addMetadataCols);
-            String addColumnSql = HiveSqlUtil.addColumns(fullTbName, addColumns);
-            JdbcUtil.executeUpdate(hiveDatasource, addColumnSql);
-        }
+    protected List<String> addColumnSqls(String tableName, List<TableColumn> addColumns) {
+        String[] sqls = {HiveSqlUtil.addColumns(tableName, addColumns)};
+        return Arrays.asList(sqls);
     }
 
     @Override
@@ -125,29 +106,22 @@ public class HiveConverter extends JdbcWrapper {
     }
 
     @Override
-    protected void insertInto(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns) throws Exception {
+    protected String insertSql(String tableName, List<ValueColumn> valueColumns) {
         try {
             throw new Exception("不支持该方法");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    protected void updateInsert(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
+    protected String updateSql(String tableName, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) {
         try {
             throw new Exception("不支持该方法");
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void matchingUpdate(Metadata metadata, List<ModelMapping> modelMappings, List<ValueColumn> valueColumns, List<WhereProperty> whereProperties) throws Exception {
-        try {
-            throw new Exception("不支持该方法");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return null;
     }
 }

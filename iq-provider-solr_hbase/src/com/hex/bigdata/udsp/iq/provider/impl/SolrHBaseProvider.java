@@ -230,40 +230,40 @@ public class SolrHBaseProvider implements Provider {
         for (QueryColumn queryColumn : queryColumns) {
             String name = queryColumn.getName();
             String value = queryColumn.getValue();
+            DataType type = queryColumn.getType();
             Operator operator = queryColumn.getOperator();
             if (StringUtils.isNotBlank(value)) {
                 if (Operator.EQ.equals(operator)) {
-                    sb.append(" AND " + name + ":" + value);
+                    sb.append(" AND " + name + ":" + getValue(type, value));
                 } else if (Operator.GT.equals(operator)) {
-                    sb.append(" AND " + name + ":[" + value + " TO *] AND " + name + ":(* NOT " + value + ")");
+                    sb.append(" AND " + name + ":[" + getValue(type, value) + " TO *] AND " + name + ":(* NOT " + getValue(type, value) + ")");
                 } else if (Operator.LT.equals(operator)) {
-                    sb.append(" AND " + name + ":[* TO " + value + "] AND " + name + ":(* NOT " + value + ")");
+                    sb.append(" AND " + name + ":[* TO " + getValue(type, value) + "] AND " + name + ":(* NOT " + getValue(type, value) + ")");
                 } else if (Operator.GE.equals(operator)) {
-                    sb.append(" AND " + name + ":[" + value + " TO *]");
+                    sb.append(" AND " + name + ":[" + getValue(type, value) + " TO *]");
                 } else if (Operator.LE.equals(operator)) {
-                    sb.append(" AND " + name + ":[* TO " + value + "]");
+                    sb.append(" AND " + name + ":[* TO " + getValue(type, value) + "]");
                 } else if (Operator.NE.equals(operator)) {
-                    sb.append(" AND " + name + ":(* NOT " + value + ")");
+                    sb.append(" AND " + name + ":(* NOT " + getValue(type, value) + ")"); // sb.append(" AND " + name + ":(-" + getValue(type, value) + ")");
                 } else if (Operator.LK.equals(operator)) {
-                    sb.append(" AND " + name + ":*" + value + "*");
+                    sb.append(" AND " + name + ":*" + getValue(value) + "*");
+                } else if (Operator.RLIKE.equals(operator)) {
+                    sb.append(" AND " + name + ":" + getValue(value) + "*");
                 } else if (Operator.IN.equals(operator)) {
-                    //条件切分
-                    if (StringUtils.isBlank(value)) {
-                        continue;
-                    }
                     sb.append(" AND " + name + ":(");
-                    String[] stringArray = value.split(",");
-                    for (int i = 0; i < stringArray.length; i++) {
-                        sb.append(stringArray[i]);
-                        if (i < stringArray.length - 1) {
+                    String[] values = value.split(",");
+                    for (int i = 0; i < values.length; i++) {
+                        if (StringUtils.isBlank(values[i])) {
+                            continue;
+                        }
+                        sb.append(getValue(type, values[i]));
+                        if (i < values.length - 1) {
                             sb.append(" or ");
                         }
-                        if (i == stringArray.length - 1) {
+                        if (i == values.length - 1) {
                             sb.append(")");
                         }
                     }
-                } else if (Operator.RLIKE.equals(operator)) {
-                    sb.append(" AND " + name + ":" + value + "*");
                 }
             }
         }
@@ -655,5 +655,21 @@ public class SolrHBaseProvider implements Provider {
             metadataCols.add(mdCol);
         }
         return metadataCols;
+    }
+
+    private String getValue(String value) {
+        if (value.startsWith("-")) {
+            value = "\\" + value;
+        }
+        return value;
+    }
+
+    private String getValue(DataType type, String value) {
+        if (DataType.STRING.equals(type) || DataType.VARCHAR.equals(type) || DataType.CHAR.equals(type)) {
+            value = "\"" + value + "\"";
+        } else {
+            value = getValue(value);
+        }
+        return value;
     }
 }

@@ -86,14 +86,15 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= olq.UPT_TIME</if>
     <if test="crtUser!='' and crtUser!=null ">and olq.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and olq.UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by olq.UPT_TIME desc, olq.CRT_TIME desc, olq.NAME asc
+    order by olq.NAME asc
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select PK_ID, OLQ_SQL, OLQ_DS_ID, MAX_NUM, DEL_FLG, CRT_USER, CRT_TIME,
     UPT_USER, UPT_TIME, NOTE, NAME, DESCRIPTION
     from OLQ_APPLICATION
-    where DEL_FLG = '0' AND NAME = #{name,jdbcType=VARCHAR}
+    where DEL_FLG = '0'
+    and NAME = #{name,jdbcType=VARCHAR}
   </select>
 
 </mapper>

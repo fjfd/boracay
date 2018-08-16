@@ -14,12 +14,9 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.common.model.ComOperationLog" >
-    insert into COM_OPERATION_LOG (PK_ID, ACTION_TYPE, ACTION_URL,
-      ACTION_USER, ACTION_TIME, ACTION_CONTENT
-      )
+    insert into COM_OPERATION_LOG (PK_ID, ACTION_TYPE, ACTION_URL, ACTION_USER, ACTION_TIME, ACTION_CONTENT)
     values (#{pkId,jdbcType=VARCHAR}, #{actionType,jdbcType=CHAR}, #{actionUrl,jdbcType=VARCHAR},
-      #{actionUser,jdbcType=VARCHAR}, #{actionTime,jdbcType=VARCHAR}, #{actionContent,jdbcType=VARCHAR}
-      )
+      #{actionUser,jdbcType=VARCHAR}, #{actionTime,jdbcType=VARCHAR}, #{actionContent,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.hex.bigdata.udsp.common.model.ComOperationLog" >
     update COM_OPERATION_LOG
@@ -51,6 +48,6 @@
       <if test="actionTimeEnd!=null and actionTimeEnd!='' ">and #{actionTimeEnd} >= ACTION_TIME</if>
       <if test="actionContent!='' and actionContent!=null ">and ACTION_CONTENT like '%'|| #{actionContent} || '%'</if>
     </trim>
-    order by ACTION_TIME desc, ACTION_USER asc, ACTION_TYPE asc, ACTION_URL asc
+    order by ACTION_TIME desc
   </select>
 </mapper>

@@ -58,6 +58,7 @@
     UPT_TIME, STATUS, IS_CACHE, TIME_OUT
     from RC_SERVICE
     where DEL_FLG = '0'
+    order by NAME ASC
   </select>
 
   <!-- 逻辑删除-->
@@ -84,7 +85,7 @@
     <if test="uptUser!='' and uptUser!=null ">and UPT_USER like '%'||#{uptUser}||'%'</if>
     <if test="status!='' and status!=null ">and STATUS =#{status}</if>
     <if test="isCache!='' and isCache!=null ">and IS_CACHE =#{isCache}</if>
-    order by UPT_TIME desc, CRT_TIME desc, NAME asc
+    order by NAME asc
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >

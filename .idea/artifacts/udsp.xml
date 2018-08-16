@@ -56,6 +56,8 @@
           <element id="artifact" artifact-name="hex-udsp-consumer-restful" />
           <element id="artifact" artifact-name="hex-udsp-consumer-socket" />
           <element id="artifact" artifact-name="hex-udsp-consumer-webservice" />
+          <element id="library" level="project" name="impala" />
+          <element id="library" level="project" name="kudu" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="console/web/Web" />

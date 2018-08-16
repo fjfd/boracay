@@ -95,7 +95,7 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= UPT_TIME</if>
     <if test="crtUser!='' and crtUser!=null ">and CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by UPT_TIME desc, CRT_TIME desc, NAME asc
+    order by NAME asc
   </select>
 
 </mapper>

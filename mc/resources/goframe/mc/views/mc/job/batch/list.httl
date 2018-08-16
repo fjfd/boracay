@@ -64,9 +64,9 @@ ${extends("/goframe/function_layout.httl")}
             <div id="form1">
                 <table style="width:100%">
                     <tr>
-                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">模型名称：</td>
                         <td class="roleText" style="width: 25%">
-                            <input name="host" class="nui-textbox" style="width:98%;"/>
+                            <input name="modelName" class="nui-textbox" style="width:98%;"/>
                         </td>
                         <td class="tit roleLabel" style="width: 100px;text-align: right">构建状态：</td>
                         <td class="roleText" style="width: 25%">
@@ -86,9 +86,9 @@ ${extends("/goframe/function_layout.httl")}
                         </td>
                     </tr>
                     <tr>
-                        <td class="tit roleLabel" style="width: 100px;text-align: right">模型名称：</td>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
                         <td class="roleText" style="width: 25%">
-                            <input name="modelName" class="nui-textbox" style="width:98%;"/>
+                            <input name="host" class="nui-textbox" style="width:98%;"/>
                         </td>
                         <td style="width: 100px;text-align: right">更新时间：</td>
                         <td style="width: 25%">

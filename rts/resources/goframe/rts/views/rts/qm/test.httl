@@ -10,7 +10,7 @@ ${extends("/goframe/function_layout.httl")}
                     <td colspan="3">
                         <div id="producerId" class="nui-combobox" style="width:98%;" popupWidth="400" textField="name"
                              valueField="pkId" dataField="data" name="producerId" multiSelect="false"
-                             emptyText="请选择生产者" required="true" onvaluechanged="producerChanged">
+                             emptyText="请选择生产者" required="true" allowInput="true" onvaluechanged="producerChanged">
                             <div property="columns">
                                 <div header="名称" field="name"></div>
                                 <div header="说明" field="describe"></div>
@@ -62,7 +62,7 @@ ${extends("/goframe/function_layout.httl")}
                     <td>
                         <div id="consumerId" class="nui-combobox" style="width:98%;" popupWidth="400" textField="name"
                              valueField="pkId" dataField="data" name="consumerId" multiSelect="false"
-                             emptyText="请选择消费者" required="true" onvaluechanged="consumerChanged">
+                             emptyText="请选择消费者" required="true" allowInput="true" onvaluechanged="consumerChanged">
                             <div property="columns">
                                 <div header="名称" field="name"></div>
                                 <div header="说明" field="describe"></div>

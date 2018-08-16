@@ -95,7 +95,7 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= cc.UPT_TIME</if>
     <if test="crtUser!='' and crtUser!=null ">and cc.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and cc.UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by cc.UPT_TIME desc, cc.CRT_TIME desc, cc.NAME asc
+    order by cc.NAME asc
   </select>
 
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >

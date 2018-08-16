@@ -14,8 +14,7 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.hex.bigdata.udsp.rts.model.RtsMatedataCol" >
-    insert into RTS_METADATA_COLUMN (PK_ID, MD_ID, SEQ, 
-      NAME, DESCRIPTION,TYPE)
+    insert into RTS_METADATA_COLUMN (PK_ID, MD_ID, SEQ, NAME, DESCRIPTION, TYPE)
     values (#{pkId,jdbcType=VARCHAR}, #{mdId,jdbcType=VARCHAR}, #{seq,jdbcType=DECIMAL}, 
       #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
   </insert>
@@ -29,16 +28,16 @@
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION,TYPE
+    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION, TYPE
     from RTS_METADATA_COLUMN
     where PK_ID = #{pkId,jdbcType=VARCHAR}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
-    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION,TYPE
+    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION, TYPE
     from RTS_METADATA_COLUMN
   </select>
   <select id="selectPage" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.rts.model.RtsMatedataCol">
-    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION,TYPE
+    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION, TYPE
     from RTS_METADATA_COLUMN
     <where>
       <if test="mdId!='' and mdId!=null ">MD_ID =#{mdId,jdbcType=VARCHAR}</if>
@@ -54,14 +53,14 @@
   </delete>
 
   <select id="selectByMdId" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION,TYPE
+    select PK_ID, MD_ID, SEQ, NAME, DESCRIPTION, TYPE
     from RTS_METADATA_COLUMN
     WHERE MD_ID =#{mdId,jdbcType=VARCHAR}
     order by SEQ asc
   </select>
 
   <select id="selectByProducerPkid" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select m.*
+    select m.PK_ID, m.MD_ID, m.SEQ, m.NAME, m.DESCRIPTION, m.TYPE
     from RTS_PRODUCRER_CONFIG p
     LEFT JOIN RTS_METADATA_COLUMN m
     on m.MD_ID = p.MD_ID

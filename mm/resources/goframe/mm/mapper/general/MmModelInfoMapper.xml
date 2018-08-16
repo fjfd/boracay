@@ -98,14 +98,15 @@
     <if test="crtUser!='' and crtUser!=null ">and mmi.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and mmi.UPT_USER like '%'||#{uptUser}||'%'</if>
     <if test="contractor!='' and contractor!=null ">and mc.pk_id = #{contractor}</if>
-    order by mmi.UPT_TIME desc, mmi.CRT_TIME desc, NAME asc
+    order by mmi.NAME asc
   </select>
 
   <select id="selectByContractorId" resultMap="BaseResultMap" >
     select PK_ID, NAME, DESCRIPTION, VER_NOTE, VER_NUM, STATUS, NOTE, DEL_FLG, CRT_USER,
     CRT_TIME, UPT_USER, UPT_TIME,CONTRACTOR
     from MM_MODEL_INFO
-    where DEL_FLG = '0' AND CONTRACTOR = #{contractorId,jdbcType=VARCHAR}
+    where DEL_FLG = '0'
+    and CONTRACTOR = #{contractorId,jdbcType=VARCHAR}
   </select>
 
 </mapper>

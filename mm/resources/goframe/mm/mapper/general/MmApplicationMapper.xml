@@ -90,8 +90,7 @@
         <if test="crtUser!='' and crtUser!=null ">and app.CRT_USER like '%'||#{crtUser}||'%'</if>
         <if test="uptUser!='' and uptUser!=null ">and app.UPT_USER like '%'||#{uptUser}||'%'</if>
         <if test="contractor!='' and contractor!=null ">and mc.PK_ID = #{contractor}</if>
-        order by app.UPT_TIME desc, app.CRT_TIME desc, app.NAME asc
-
+        order by app.NAME asc
     </select>
     <!--查询名称是否重复-->
     <select id="selectByName" resultMap="BaseResultMap">

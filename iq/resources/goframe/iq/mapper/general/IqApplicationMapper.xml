@@ -79,7 +79,7 @@
     <if test="uptTimeEnd!=null and uptTimeEnd!='' ">and #{uptTimeEnd} >= app.UPT_TIME</if>
     <if test="crtUser!='' and crtUser!=null ">and app.CRT_USER like '%'||#{crtUser}||'%'</if>
     <if test="uptUser!='' and uptUser!=null ">and app.UPT_USER like '%'||#{uptUser}||'%'</if>
-    order by app.UPT_TIME desc, app.CRT_TIME desc, app.NAME asc
+    order by app.NAME asc
   </select>
   <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select PK_ID, MD_ID, NAME, DESCRIPTION, NOTE, MAX_NUM, DEL_FLG, CRT_USER, CRT_TIME,

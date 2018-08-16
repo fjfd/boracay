@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="impala">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/jdbc/impala" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/jdbc/impala" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/jdbc/impala" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/jdbc/impala" recursive="false" type="SOURCES" />
+  </library>
+</component>

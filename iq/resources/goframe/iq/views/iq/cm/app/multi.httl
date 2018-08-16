@@ -80,6 +80,7 @@ ${extends("/goframe/function_layout.httl")}
                     var describe = data[i].describe;
                     var length = data[i].length;
                     var type = data[i].colType;
+                    var note = data[i].note;
                     var isSame = false;
                     if (datas.length > 0) {
                         $.each(datas, function (_index, record) {
@@ -96,6 +97,7 @@ ${extends("/goframe/function_layout.httl")}
                             "length": length,
                             "type": type,
                             "label": name,
+                            "note": note,
                             "stats": "none",
                             "operator": "==",
                             "isNeed": "0",

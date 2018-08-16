@@ -1,21 +1,21 @@
 package com.hex.bigdata.udsp.im.service;
 
+import com.hex.bigdata.udsp.common.api.model.Datasource;
+import com.hex.bigdata.udsp.common.api.model.Property;
 import com.hex.bigdata.udsp.common.constant.ComExcelEnums;
 import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.common.constant.Operator;
 import com.hex.bigdata.udsp.common.dao.ComDatasourceMapper;
 import com.hex.bigdata.udsp.common.model.*;
-import com.hex.bigdata.udsp.common.api.model.Datasource;
-import com.hex.bigdata.udsp.common.api.model.Property;
 import com.hex.bigdata.udsp.common.service.ComPropertiesService;
 import com.hex.bigdata.udsp.common.util.*;
 import com.hex.bigdata.udsp.im.constant.*;
+import com.hex.bigdata.udsp.im.converter.model.*;
 import com.hex.bigdata.udsp.im.dao.*;
 import com.hex.bigdata.udsp.im.dto.ImIndexDto;
 import com.hex.bigdata.udsp.im.dto.ImModelDto;
 import com.hex.bigdata.udsp.im.dto.ImModelView;
 import com.hex.bigdata.udsp.im.model.*;
-import com.hex.bigdata.udsp.im.converter.model.*;
 import com.hex.bigdata.udsp.rc.dto.RcUserServiceView;
 import com.hex.bigdata.udsp.rc.dto.ServiceBaseInfo;
 import com.hex.bigdata.udsp.rc.model.RcService;
@@ -597,17 +597,25 @@ public class ImModelService {
 
     public Model getModel(String pkId, Map<String, String> datas) throws Exception {
         Model model = getModelByImModel(select(pkId));
-        //设置其过滤字段
-        if (datas != null) {
-            for (Map.Entry<String, String> entry : datas.entrySet()) {
-                String value = entry.getValue();
-                for (ModelFilterCol modelFilterCol : model.getModelFilterCols()) {
-                    if (modelFilterCol.getLabel().equals(entry.getKey())) {
-                        if (DataType.TIMESTAMP.equals(modelFilterCol.getType())) { // 字段类型是TIMESTAMP
-                            value = tarnDateStr(getLen(modelFilterCol.getLength()), value);
-                        }
-                        modelFilterCol.setValue(value);
-                    }
+        for (ModelFilterCol modelFilterCol : model.getModelFilterCols()) {
+            boolean isNeed = modelFilterCol.isNeed();
+            DataType type = modelFilterCol.getType();
+            int length = getLen(modelFilterCol.getLength());
+            String label = modelFilterCol.getLabel();
+            String value = (datas != null ? datas.get(label) : null);
+            if (StringUtils.isNotBlank(value)) {
+                if (DataType.TIMESTAMP.equals(type)) { // 字段类型是TIMESTAMP
+                    value = tarnDateStr(length, value); // 日期格式转换
+                }
+            }
+            if (isNeed) { // 必填
+                if (StringUtils.isBlank(value)) {
+                    throw new IllegalArgumentException(label + "不能为空");
+                }
+                modelFilterCol.setValue(value);
+            } else { // 选填
+                if (StringUtils.isNotBlank(value)) {
+                    modelFilterCol.setValue(value);
                 }
             }
         }

@@ -93,7 +93,7 @@ public class MysqlSqlUtil {
      * @return
      */
     public static String addColumns(String tableName, List<TableColumn> columns) {
-        return "ALTER TABLE " + tableName + " ADD " + getColumns(columns);
+        return "ALTER TABLE " + tableName + " ADD" + getColumns(columns);
     }
 
     private static String getValue(DataType dataType, String value) {
@@ -154,11 +154,11 @@ public class MysqlSqlUtil {
     }
 
     private static String getColType(String dataType, String length) {
-        if ("VARCHAR".equals(dataType)) {
+        if (DataType.VARCHAR.getValue().equals(dataType)) {
             dataType = "VARCHAR(" + length + ")";
-        } else if ("CHAR".equals(dataType)) {
+        } else if (DataType.CHAR.getValue().equals(dataType)) {
             dataType = "CHAR(" + length + ")";
-        } else if ("DECIMAL".equals(dataType)) {
+        } else if (DataType.DECIMAL.getValue().equals(dataType)) {
             dataType = "DECIMAL(" + length + ")";
         }
         return dataType;
