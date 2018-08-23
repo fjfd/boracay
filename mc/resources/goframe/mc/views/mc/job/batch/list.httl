@@ -74,6 +74,12 @@ ${extends("/goframe/function_layout.httl")}
                                    emptyText="全部" dictTypeId="IM_BATCH_JOB_STATUS" showNullItem="true" nullItemText="全部"
                                    style="width:98%;"/>
                         </td>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
+                        <td class="roleText" style="width: 25%">
+                            <input name="host" class="nui-textbox" style="width:98%;"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="width: 100px;text-align: right">请求开始时间：</td>
                         <td style="width: 25%">
                             <input name="startTimeStart" class="nui-datepicker" allowInput="true"
@@ -83,12 +89,6 @@ ${extends("/goframe/function_layout.httl")}
                             <input name="startTimeEnd" class="nui-datepicker" allowInput="true"
                                    showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
                                    style="width: 46%"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
-                        <td class="roleText" style="width: 25%">
-                            <input name="host" class="nui-textbox" style="width:98%;"/>
                         </td>
                         <td style="width: 100px;text-align: right">更新时间：</td>
                         <td style="width: 25%">
