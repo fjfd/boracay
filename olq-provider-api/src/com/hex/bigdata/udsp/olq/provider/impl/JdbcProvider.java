@@ -123,17 +123,15 @@ public abstract class JdbcProvider implements Provider {
     public OlqResponse execute(String consumeId, OlqRequest request) {
         logger.debug("request=" + JSONUtil.parseObj2JSON(request));
         long bef = System.currentTimeMillis();
-
         OlqResponse response = new OlqResponse();
         response.setRequest(request);
-
-        Datasource datasource = request.getDatasource();
 
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(datasource.getPropertyMap());
         try {
+            Datasource datasource = request.getDatasource();
+            JdbcDatasource jdbcDatasource = new JdbcDatasource(datasource.getPropertyMap());
             conn = getConnection(jdbcDatasource);
             stmt = conn.createStatement();
 
@@ -157,10 +155,11 @@ public abstract class JdbcProvider implements Provider {
             response.setStatus(Status.SUCCESS);
             response.setStatusCode(StatusCode.SUCCESS);
         } catch (SQLException e) {
-            logger.error(ExceptionUtil.getMessage(e));
+            e.printStackTrace();
             response.setStatus(Status.DEFEAT);
             response.setStatusCode(StatusCode.DEFEAT);
             response.setMessage(e.getMessage());
+            logger.error(ExceptionUtil.getMessage(e));
         } finally {
             close(rs, stmt, conn);
             StatementUtil.removeStatement(consumeId);
@@ -246,46 +245,41 @@ public abstract class JdbcProvider implements Provider {
 
     @Override
     public boolean testDatasource(Datasource datasource) {
-        boolean status = true;
         Connection connection = null;
         try {
             JdbcDatasource jdbcDatasource = new JdbcDatasource(datasource.getPropertyMap());
             connection = getConnection(jdbcDatasource);
-            if (connection == null) {
-                status = false;
-            } else {
-                status = true;
+            if (connection != null && !connection.isClosed()) {
+                return true;
             }
         } catch (Exception e) {
-            status = false;
-            logger.error(ExceptionUtil.getMessage(e));
+            e.printStackTrace();
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    logger.error(ExceptionUtil.getMessage(e));
+                    e.printStackTrace();
                 }
             }
         }
-        return status;
+        return false;
     }
 
     @Override
     public OlqResponseFetch executeFetch(String consumeId, OlqRequest request) {
         logger.debug("request=" + JSONUtil.parseObj2JSON(request));
         long bef = System.currentTimeMillis();
-
         OlqResponseFetch response = new OlqResponseFetch();
         response.setRequest(request);
-
-        Datasource datasource = request.getDatasource();
 
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        JdbcDatasource jdbcDatasource = new JdbcDatasource(datasource.getPropertyMap());
         try {
+            Datasource datasource = request.getDatasource();
+            JdbcDatasource jdbcDatasource = new JdbcDatasource(datasource.getPropertyMap());
+
             conn = getConnection(jdbcDatasource);
             stmt = conn.createStatement();
 
@@ -310,6 +304,7 @@ public abstract class JdbcProvider implements Provider {
             response.setStatus(Status.DEFEAT);
             response.setStatusCode(StatusCode.DEFEAT);
             response.setMessage(e.getMessage());
+            logger.error(ExceptionUtil.getMessage(e));
         }
 
         long now = System.currentTimeMillis();

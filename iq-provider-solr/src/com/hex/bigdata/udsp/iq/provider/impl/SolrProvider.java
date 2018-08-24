@@ -42,21 +42,16 @@ public class SolrProvider implements Provider {
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        String tbName = metadata.getTbName();
-        Datasource datasource = metadata.getDatasource();
-        //获取元数据返回字段
-        List<DataColumn> metaReturnColumns = metadata.getReturnColumns();
-
-        SolrDatasource solrDatasource = new SolrDatasource(datasource.getPropertyMap());
-
-        int maxSize = solrDatasource.getMaxNum();
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            String tbName = metadata.getTbName();
+            Datasource datasource = metadata.getDatasource();
+            SolrDatasource solrDatasource = new SolrDatasource(datasource.getPropertyMap());
+            int maxSize = solrDatasource.getMaxNum();
             SolrQuery query = getSolrQuery(maxSize, queryColumns, orderColumns, returnColumns);
             List<Map<String, Object>> resultList = search(tbName, query, solrDatasource);
             response.setRecords(getRecords(resultList, returnColumns));
@@ -83,22 +78,17 @@ public class SolrProvider implements Provider {
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        String tbName = metadata.getTbName();
-        Datasource datasource = metadata.getDatasource();
-
-        SolrDatasource solrDatasource = new SolrDatasource(datasource.getPropertyMap());
-
-        int maxSize = solrDatasource.getMaxNum();
-        if (pageSize > maxSize) {
-            pageSize = maxSize;
-        }
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            String tbName = metadata.getTbName();
+            Datasource datasource = metadata.getDatasource();
+            SolrDatasource solrDatasource = new SolrDatasource(datasource.getPropertyMap());
+            int maxSize = solrDatasource.getMaxNum();
+            if (pageSize > maxSize) pageSize = maxSize;
             SolrQuery query = getSolrQuery(pageIndex, pageSize, queryColumns, orderColumns, returnColumns);
             SolrPage solrPage = searchPage(tbName, query, pageIndex, pageSize, solrDatasource);
             response.setRecords(getRecords(solrPage.getRecords(), returnColumns));
@@ -129,7 +119,7 @@ public class SolrProvider implements Provider {
     private synchronized SolrConnectionPoolFactory getDataSource(String collectionName, SolrDatasource datasource) {
         String dsId = datasource.getId() + ":" + collectionName;
         if (dataSourcePool == null) {
-            dataSourcePool = new HashMap<String, SolrConnectionPoolFactory>();
+            dataSourcePool = new HashMap<>();
         }
         SolrConnectionPoolFactory factory = dataSourcePool.remove(dsId);
         if (factory == null) {
@@ -158,12 +148,8 @@ public class SolrProvider implements Provider {
         return new LBHttpSolrServer(servers);
     }
 
-    private SolrServer getConnection(String collectionName, SolrDatasource datasource) {
-        try {
-            return getDataSource(collectionName, datasource).getConnection();
-        } catch (Exception e) {
-            return null;
-        }
+    private SolrServer getConnection(String collectionName, SolrDatasource datasource) throws Exception {
+        return getDataSource(collectionName, datasource).getConnection();
     }
 
     private void release(String collectionName, SolrDatasource datasource, SolrServer solrServer) {
@@ -350,7 +336,6 @@ public class SolrProvider implements Provider {
     }
 
     public boolean testDatasource(Datasource datasource) {
-        boolean canConnection = false;
         HttpURLConnection connection = null;
         URL url = null;
         try {
@@ -366,22 +351,21 @@ public class SolrProvider implements Provider {
                     connection.setInstanceFollowRedirects(true);
                     connection.connect();
                     if (connection != null) {
-                        canConnection = true;
-                        break;
+                        return  true;
                     }
                 } catch (Exception e) {
-                    logger.debug("获取solr连接失败的地址为：" + (url == null ? "" : url.toString()));
+                    e.printStackTrace();
+                    logger.warn("获取solr连接失败的地址为：" + (url == null ? "" : url.toString()));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            canConnection = false;
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
-        return canConnection;
+        return false;
     }
 
     @Override

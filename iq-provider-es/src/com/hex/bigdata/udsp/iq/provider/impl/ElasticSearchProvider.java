@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hex.bigdata.udsp.common.api.model.Datasource;
 import com.hex.bigdata.udsp.common.api.model.Page;
 import com.hex.bigdata.udsp.common.api.model.Result;
-import com.hex.bigdata.udsp.common.constant.*;
+import com.hex.bigdata.udsp.common.constant.DataType;
+import com.hex.bigdata.udsp.common.constant.Operator;
+import com.hex.bigdata.udsp.common.constant.Status;
+import com.hex.bigdata.udsp.common.constant.StatusCode;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.iq.provider.Provider;
 import com.hex.bigdata.udsp.iq.provider.impl.factory.ElasticSearchConnectionPoolFactory;
@@ -21,7 +24,6 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 //@Component("com.hex.bigdata.udsp.iq.provider.impl.ElasticSearchProvider")
@@ -37,36 +39,34 @@ public class ElasticSearchProvider implements Provider {
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        //表名，索引名称.类型名称
-        String schemaName = metadata.getTbName();
-
-        //数据源信息
-        Datasource datasource = metadata.getDatasource();
-        ELSearchDatasource elSearchDatasource = new ELSearchDatasource(datasource.getPropertyMap());
-
-        //最大查询数量
-        int maxSize = elSearchDatasource.getMaxNum();
-        Page page = new Page();
-        page.setPageIndex(0);
-        page.setPageSize(maxSize);
-
-        String queryString = getQueryString(queryColumns, orderColumns, returnColumns, page);
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            //表名，索引名称.类型名称
+            String schemaName = metadata.getTbName();
+            //数据源信息
+            Datasource datasource = metadata.getDatasource();
+            ELSearchDatasource elSearchDatasource = new ELSearchDatasource(datasource.getPropertyMap());
+            //最大查询数量
+            int maxSize = elSearchDatasource.getMaxNum();
+            Page page = new Page();
+            page.setPageIndex(0);
+            page.setPageSize(maxSize);
+            String queryString = getQueryString(queryColumns, orderColumns, returnColumns, page);
             ELSearchPage elSearchPage = search(schemaName, elSearchDatasource, queryString, returnColumns);
             response.setRecords(getRecords(elSearchPage.getRecords(), returnColumns));
             response.setStatus(Status.SUCCESS);
             response.setStatusCode(StatusCode.SUCCESS);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(Status.DEFEAT);
             response.setStatusCode(StatusCode.DEFEAT);
             response.setMessage(e.toString());
         }
+
         long now = System.currentTimeMillis();
         long consumeTime = now - bef;
         response.setConsumeTime(consumeTime);
@@ -77,29 +77,23 @@ public class ElasticSearchProvider implements Provider {
 
     @Override
     public IqResponse query(IqRequest request, int pageIndex, int pageSize) {
-
         long bef = System.currentTimeMillis();
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        //表名，索引名称.类型名称
-        String schemaName = metadata.getTbName();
-
-        //数据源信息
-        Datasource datasource = metadata.getDatasource();
-        ELSearchDatasource elSearchDatasource = new ELSearchDatasource(datasource.getPropertyMap());
-
-        int maxSize = elSearchDatasource.getMaxNum();
-        if (pageSize > maxSize) {
-            pageSize = maxSize;
-        }
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            //表名，索引名称.类型名称
+            String schemaName = metadata.getTbName();
+            //数据源信息
+            Datasource datasource = metadata.getDatasource();
+            ELSearchDatasource elSearchDatasource = new ELSearchDatasource(datasource.getPropertyMap());
+            int maxSize = elSearchDatasource.getMaxNum();
+            if (pageSize > maxSize) pageSize = maxSize;
             Page page = new Page();
             page.setPageIndex(pageIndex);
             page.setPageSize(pageSize);
@@ -111,6 +105,7 @@ public class ElasticSearchProvider implements Provider {
             response.setPage(page);
             response.setStatusCode(StatusCode.SUCCESS);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(Status.DEFEAT);
             response.setStatusCode(StatusCode.DEFEAT);
             response.setMessage(e.toString());
@@ -144,7 +139,7 @@ public class ElasticSearchProvider implements Provider {
         return records;
     }
 
-    private ELSearchPage search(String schemaName, ELSearchDatasource datasource, String queryString, List<ReturnColumn> returnColumns) {
+    private ELSearchPage search(String schemaName, ELSearchDatasource datasource, String queryString, List<ReturnColumn> returnColumns) throws Exception {
         ELSearchPage elSearchPage = new ELSearchPage();
         RestClient restClient = null;
         NStringEntity stringEntity = null;
@@ -190,10 +185,6 @@ public class ElasticSearchProvider implements Provider {
             elSearchPage.setRecords(recordes);
             //设置总量
             elSearchPage.setTotalCount(elOuterHits.getTotal());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (restClient != null) {
                 release(datasource, restClient);
@@ -338,13 +329,8 @@ public class ElasticSearchProvider implements Provider {
         getDataSource(datasource).releaseConnection(restClient);
     }
 
-    private RestClient getConnection(ELSearchDatasource datasource) {
-        try {
-            return getDataSource(datasource).getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    private RestClient getConnection(ELSearchDatasource datasource) throws Exception {
+        return getDataSource(datasource).getConnection();
     }
 
     private synchronized ElasticSearchConnectionPoolFactory getDataSource(ELSearchDatasource datasource) {
@@ -384,10 +370,6 @@ public class ElasticSearchProvider implements Provider {
             hosts[i] = new HttpHost(array[0], Integer.valueOf(array[1]), "http");
         }
         return hosts;
-    }
-
-    public static void main(String[] args) {
-        //getQueryString(getQueryColumns(), getOrderColumns());
     }
 
     /**
@@ -512,129 +494,5 @@ public class ElasticSearchProvider implements Provider {
 
         //System.out.println(JSONObject.toJSONString(topObject));
         return JSONObject.toJSONString(topObject);
-    }
-
-    public static List<OrderColumn> getOrderColumns() {
-        List<OrderColumn> orderColumns = new ArrayList<OrderColumn>();
-        OrderColumn orderColumn1 = new OrderColumn();
-        orderColumn1.setSeq(new Short("1"));
-        orderColumn1.setName("acct_no");
-        orderColumn1.setOrder(Order.ASC);
-        orderColumn1.setDescribe("客户账号");
-        orderColumn1.setType(DataType.STRING);
-        orderColumns.add(orderColumn1);
-        OrderColumn orderColumn2 = new OrderColumn();
-        orderColumn2.setSeq(new Short("2"));
-        orderColumn2.setName("age");
-        orderColumn2.setOrder(Order.ASC);
-        orderColumn2.setDescribe("客户年龄");
-        orderColumn2.setType(DataType.INT);
-        orderColumns.add(orderColumn2);
-        return orderColumns;
-    }
-
-    public static List<QueryColumn> getQueryColumns() {
-
-        List<QueryColumn> queryColumns = new ArrayList<QueryColumn>();
-
-        //时间范围查询-开始日期
-        QueryColumn queryColumn1 = new QueryColumn();
-        queryColumn1.setSeq(new Short("1"));
-        queryColumn1.setName("acct_zcrq");
-        queryColumn1.setValue("");
-        queryColumn1.setDescribe("开始日期");
-        queryColumn1.setType(DataType.STRING);
-        queryColumn1.setNeed(true);
-        queryColumn1.setOperator(Operator.GE);
-        queryColumn1.setLabel("start_zcrq");
-        queryColumn1.setValue("2016-05-22");
-        queryColumns.add(queryColumn1);
-
-        //时间范围查询-开始日期
-        QueryColumn queryColumn2 = new QueryColumn();
-        queryColumn2.setSeq(new Short("2"));
-        queryColumn2.setName("acct_zcrq");
-        queryColumn2.setDescribe("开始日期");
-        queryColumn2.setType(DataType.STRING);
-        queryColumn2.setNeed(true);
-        queryColumn2.setOperator(Operator.LE);
-        queryColumn2.setLabel("end_zcrq");
-        queryColumn2.setValue("2017-05-22");
-        queryColumns.add(queryColumn2);
-
-        //等于操作
-        QueryColumn queryColumn3 = new QueryColumn();
-        queryColumn3.setSeq(new Short("3"));
-        queryColumn3.setName("acct_zcrq");
-        queryColumn3.setDescribe("注册日期");
-        queryColumn3.setType(DataType.STRING);
-        queryColumn3.setNeed(true);
-        queryColumn3.setOperator(Operator.EQ);
-        queryColumn3.setLabel("end_zcrq");
-        queryColumn3.setValue("2016-07-22");
-        queryColumns.add(queryColumn3);
-
-        //大于等于操作
-        QueryColumn queryColumn4 = new QueryColumn();
-        queryColumn4.setSeq(new Short("4"));
-        queryColumn4.setName("age");
-        queryColumn4.setDescribe("年龄");
-        queryColumn4.setType(DataType.INT);
-        queryColumn4.setNeed(true);
-        queryColumn4.setOperator(Operator.GE);
-        queryColumn4.setLabel("age");
-        queryColumn4.setValue("25");
-        queryColumns.add(queryColumn4);
-
-        //in查询操作
-        QueryColumn queryColumn5 = new QueryColumn();
-        queryColumn5.setSeq(new Short("5"));
-        queryColumn5.setName("acct_no");
-        queryColumn5.setDescribe("客户账号");
-        queryColumn5.setType(DataType.STRING);
-        queryColumn5.setNeed(true);
-        queryColumn5.setOperator(Operator.IN);
-        queryColumn5.setLabel("acct_no");
-        queryColumn5.setValue("1000008,1000009");
-        queryColumns.add(queryColumn5);
-
-        //模糊匹配 wildcard查询
-        QueryColumn queryColumn6 = new QueryColumn();
-        queryColumn6.setSeq(new Short("6"));
-        queryColumn6.setName("acct_no");
-        queryColumn6.setDescribe("客户账号");
-        queryColumn6.setType(DataType.STRING);
-        queryColumn6.setNeed(true);
-        queryColumn6.setOperator(Operator.LK);
-        queryColumn6.setLabel("acct_no");
-        queryColumn6.setValue("100000");
-        queryColumns.add(queryColumn6);
-
-        //like右查询 prefix查询
-        QueryColumn queryColumn7 = new QueryColumn();
-        queryColumn7.setSeq(new Short("7"));
-        queryColumn7.setName("acct_no");
-        queryColumn7.setDescribe("客户账号");
-        queryColumn7.setType(DataType.STRING);
-        queryColumn7.setNeed(true);
-        queryColumn7.setOperator(Operator.RLIKE);
-        queryColumn7.setLabel("acct_no");
-        queryColumn7.setValue("1000008");
-        queryColumns.add(queryColumn7);
-
-        //不等于
-        QueryColumn queryColumn8 = new QueryColumn();
-        queryColumn8.setSeq(new Short("7"));
-        queryColumn8.setName("acct_no");
-        queryColumn8.setDescribe("客户账号");
-        queryColumn8.setType(DataType.STRING);
-        queryColumn8.setNeed(true);
-        queryColumn8.setOperator(Operator.NE);
-        queryColumn8.setLabel("acct_no");
-        queryColumn8.setValue("1000010");
-        queryColumns.add(queryColumn8);
-
-
-        return queryColumns;
     }
 }

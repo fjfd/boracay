@@ -300,7 +300,7 @@ ${extends("/goframe/function_layout.httl")}
      */
     function showMessage(message) {
         nui.open({
-            url: "${basePath}/goframe/p/udsp.message",
+            url: "${basePath}/goframe/p/com.message",
             title: "提示消息",
             width: 600,
             height: 560,

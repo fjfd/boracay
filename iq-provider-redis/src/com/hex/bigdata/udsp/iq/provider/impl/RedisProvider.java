@@ -77,20 +77,20 @@ public class RedisProvider implements Provider {
         long bef = System.currentTimeMillis();
         IqResponse response = new IqResponse();
         response.setRequest(request);
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        Datasource datasource = metadata.getDatasource();
-        List<DataColumn> metaReturnColumns = metadata.getReturnColumns(); // 获取元数据返回字段
-        RedisDatasource redisDatasource = new RedisDatasource(datasource.getPropertyMap());
-        String tableName = metadata.getTbName();
-        String query = getRedisQuery(metadata.getQueryColumns(), queryColumns, tableName);
-        String fqSep = redisDatasource.getSeprator();
-        int maxSize = redisDatasource.getMaxNum();
 
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            Datasource datasource = metadata.getDatasource();
+            List<DataColumn> metaReturnColumns = metadata.getReturnColumns(); // 获取元数据返回字段
+            RedisDatasource redisDatasource = new RedisDatasource(datasource.getPropertyMap());
+            String tableName = metadata.getTbName();
+            String query = getRedisQuery(metadata.getQueryColumns(), queryColumns, tableName);
+            String fqSep = redisDatasource.getSeprator();
+            int maxSize = redisDatasource.getMaxNum();
             List<Map<String, String>> list = null;
             int startRow = -1;
             int endRow = -1;
@@ -142,11 +142,7 @@ public class RedisProvider implements Provider {
     }
 
     private Jedis getConnection(RedisDatasource datasource) {
-        try {
-            return getDataSource(datasource).getConnection();
-        } catch (Exception e) {
-            return null;
-        }
+        return getDataSource(datasource).getConnection();
     }
 
     // 字段过滤并字段名改别名
@@ -193,9 +189,6 @@ public class RedisProvider implements Provider {
                     break;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("redis查询出错！查询的内容为：" + queryString);
         } finally {
             if (jedis != null) {
                 redisConnectionPoolFactory.release(jedis);
@@ -219,11 +212,9 @@ public class RedisProvider implements Provider {
         }
     }
 
-
     private List<Map<String, String>> search(String fqSep, String queryString, RedisDatasource datasource, List<DataColumn> returnColumns, int maxNum) {
         RedisConnectionPoolFactory redisConnectionPoolFactory = getDataSource(datasource);
         Jedis jedis = redisConnectionPoolFactory.getConnection();
-
 
         List<Map<String, String>> records = new ArrayList<>();
         String[] returnResults;
@@ -245,9 +236,6 @@ public class RedisProvider implements Provider {
                     break;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("redis查询出错！查询的内容为：" + queryString);
         } finally {
             if (jedis != null) {
                 redisConnectionPoolFactory.release(jedis);
@@ -256,23 +244,20 @@ public class RedisProvider implements Provider {
         return records;
     }
 
-
     public boolean testDatasource(Datasource datasource) {
-        boolean canConnection = false;
         Jedis jedis = null;
         RedisDatasource redisDatasource = new RedisDatasource(datasource.getPropertyMap());
         try {
             jedis = getConnection(redisDatasource);
-            canConnection = jedis.isConnected();
+            return jedis.isConnected();
         } catch (Exception e) {
             e.printStackTrace();
-            canConnection = false;
         } finally {
             if (jedis != null) {
                 getDataSource(redisDatasource).release(jedis);
             }
         }
-        return canConnection;
+        return false;
     }
 
     @Override

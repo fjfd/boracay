@@ -818,13 +818,13 @@ ${extends("/goframe/function_layout.httl")}
      */
     function showMessage(message) {
         nui.open({
-            url: "${basePath}/goframe/p/im.cm.message",
+            url: "${basePath}/goframe/p/com.message",
             title: '提示信息',
             width: 600,
             height: 560,
             onload: function () {
                 var iframe = this.getIFrameEl();
-                iframe.contentWindow.setData(message);
+                iframe.contentWindow.SetData(message);
             }
         });
     }

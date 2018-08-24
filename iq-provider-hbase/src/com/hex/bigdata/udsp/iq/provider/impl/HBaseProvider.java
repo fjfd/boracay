@@ -75,31 +75,26 @@ public class HBaseProvider implements Provider {
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        Collections.sort(queryColumns, new Comparator<QueryColumn>() {
-            public int compare(QueryColumn obj1, QueryColumn obj2) {
-                return obj1.getSeq().compareTo(obj2.getSeq());
-            }
-        });
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-        //获取元数据返回字段
-        List<DataColumn> metaReturnColumns = metadata.getReturnColumns();
-
-        String tbName = metadata.getTbName();
-        HBaseMetadata hbaseMetadata = new HBaseMetadata(metadata.getPropertyMap());
-        Datasource datasource = metadata.getDatasource();
-
-        HBaseDatasource hbaseDatasource = new HBaseDatasource(datasource.getPropertyMap());
-
-        String startRow = getStartRow(queryColumns);
-        String stopRow = getStopRow(queryColumns);
-        logger.debug("startRow:" + startRow + ", startRow:" + startRow);
-        Map<Integer, String> colMap = getColMap(metaReturnColumns);
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            Collections.sort(queryColumns, new Comparator<QueryColumn>() {
+                public int compare(QueryColumn obj1, QueryColumn obj2) {
+                    return obj1.getSeq().compareTo(obj2.getSeq());
+                }
+            });
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            List<DataColumn> metaReturnColumns = metadata.getReturnColumns();
+            String tbName = metadata.getTbName();
+            HBaseMetadata hbaseMetadata = new HBaseMetadata(metadata.getPropertyMap());
+            Datasource datasource = metadata.getDatasource();
+            HBaseDatasource hbaseDatasource = new HBaseDatasource(datasource.getPropertyMap());
+            String startRow = getStartRow(queryColumns);
+            String stopRow = getStopRow(queryColumns);
+            logger.debug("startRow:" + startRow + ", startRow:" + startRow);
+            Map<Integer, String> colMap = getColMap(metaReturnColumns);
             List<Map<String, String>> list = scan(hbaseDatasource, tbName, startRow, stopRow, colMap, hbaseMetadata);
             list = orderBy(list, orderColumns); // 排序处理
             response.setRecords(getRecords(list, returnColumns)); // 字段过滤并字段名改别名
@@ -121,70 +116,39 @@ public class HBaseProvider implements Provider {
         return response;
     }
 
-    // 字段过滤并字段名改别名
-    private List<com.hex.bigdata.udsp.common.api.model.Result> getRecords(List<Map<String, String>> list, List<ReturnColumn> returnColumns) {
-        List<com.hex.bigdata.udsp.common.api.model.Result> records = new ArrayList<>();
-        if (list == null || list.size() == 0) {
-            return records;
-        }
-        for (Map<String, String> map : list) {
-            com.hex.bigdata.udsp.common.api.model.Result result = new com.hex.bigdata.udsp.common.api.model.Result();
-            Map<String, String> returnDataMap = new HashMap<String, String>();
-            for (ReturnColumn item : returnColumns) {
-                String colName = item.getName();
-                String label = item.getLabel();
-                returnDataMap.put(label, map.get(colName));
-            }
-            result.putAll(returnDataMap);
-            records.add(result);
-        }
-        return records;
-    }
-
     public IqResponse query(IqRequest request, int pageIndex, int pageSize) {
         logger.debug("request=" + JSONUtil.parseObj2JSON(request) + " pageIndex=" + pageIndex + " pageSize=" + pageSize);
-
         long bef = System.currentTimeMillis();
         IqResponse response = new IqResponse();
         response.setRequest(request);
 
-        Application application = request.getApplication();
-        Metadata metadata = application.getMetadata();
-        List<QueryColumn> queryColumns = application.getQueryColumns();
-        Collections.sort(queryColumns, new Comparator<QueryColumn>() {
-            public int compare(QueryColumn obj1, QueryColumn obj2) {
-                return obj1.getSeq().compareTo(obj2.getSeq());
-            }
-        });
-        List<ReturnColumn> returnColumns = application.getReturnColumns();
-        List<OrderColumn> orderColumns = application.getOrderColumns();
-
-        //获取元数据返回字段
-        List<DataColumn> metaReturnColumns = metadata.getReturnColumns();
-
-        String tbName = metadata.getTbName();
-        HBaseMetadata hbaseMetadata = new HBaseMetadata(metadata.getPropertyMap());
-        Datasource datasource = metadata.getDatasource();
-
-        HBaseDatasource hbaseDatasource = new HBaseDatasource(datasource.getPropertyMap());
-
-        String startRow = getStartRow(queryColumns);
-        String stopRow = getStopRow(queryColumns);
-        logger.debug("startRow:" + startRow + ", startRow:" + startRow);
-        Map<Integer, String> colMap = getColMap(metaReturnColumns);
-
-        int maxSize = hbaseDatasource.getMaxNum();
-        if (pageSize > maxSize) {
-            pageSize = maxSize;
-        }
-
-        HBasePage hbasePage = new HBasePage();
-        hbasePage.setPageIndex(pageIndex);
-        hbasePage.setPageSize(pageSize);
-        hbasePage.setStartRow(startRow);
-        hbasePage.setStopRow(stopRow);
-
         try {
+            Application application = request.getApplication();
+            Metadata metadata = application.getMetadata();
+            List<QueryColumn> queryColumns = application.getQueryColumns();
+            Collections.sort(queryColumns, new Comparator<QueryColumn>() {
+                public int compare(QueryColumn obj1, QueryColumn obj2) {
+                    return obj1.getSeq().compareTo(obj2.getSeq());
+                }
+            });
+            List<ReturnColumn> returnColumns = application.getReturnColumns();
+            List<OrderColumn> orderColumns = application.getOrderColumns();
+            List<DataColumn> metaReturnColumns = metadata.getReturnColumns();
+            String tbName = metadata.getTbName();
+            HBaseMetadata hbaseMetadata = new HBaseMetadata(metadata.getPropertyMap());
+            Datasource datasource = metadata.getDatasource();
+            HBaseDatasource hbaseDatasource = new HBaseDatasource(datasource.getPropertyMap());
+            String startRow = getStartRow(queryColumns);
+            String stopRow = getStopRow(queryColumns);
+            logger.debug("startRow:" + startRow + ", startRow:" + startRow);
+            Map<Integer, String> colMap = getColMap(metaReturnColumns);
+            int maxSize = hbaseDatasource.getMaxNum();
+            if (pageSize > maxSize) pageSize = maxSize;
+            HBasePage hbasePage = new HBasePage();
+            hbasePage.setPageIndex(pageIndex);
+            hbasePage.setPageSize(pageSize);
+            hbasePage.setStartRow(startRow);
+            hbasePage.setStopRow(stopRow);
             hbasePage = scanPage(hbaseDatasource, tbName, hbasePage, colMap, hbaseMetadata);
             List<Map<String, String>> list = hbasePage.getRecords();
             list = orderBy(list, orderColumns); // 排序处理
@@ -236,13 +200,8 @@ public class HBaseProvider implements Provider {
         return factory;
     }
 
-    private HConnection getConnection(HBaseDatasource datasource) {
-        try {
-            return getDataSource(datasource).getConnection();
-        } catch (Exception e) {
-            logger.warn(ExceptionUtil.getMessage(e));
-            return null;
-        }
+    private HConnection getConnection(HBaseDatasource datasource) throws Exception {
+        return getDataSource(datasource).getConnection();
     }
 
     private void release(HBaseDatasource datasource, HConnection conn) {
@@ -272,17 +231,32 @@ public class HBaseProvider implements Provider {
         return factory;
     }
 
-    private AggregationClient getAggregationClient(HBaseDatasource datasource) {
-        try {
-            return getAggregationClientDataSource(datasource).getAggregationClient();
-        } catch (Exception e) {
-            logger.warn(ExceptionUtil.getMessage(e));
-            return null;
-        }
+    private AggregationClient getAggregationClient(HBaseDatasource datasource) throws Exception {
+        return getAggregationClientDataSource(datasource).getAggregationClient();
     }
 
     private void release(HBaseDatasource datasource, AggregationClient client) {
         getAggregationClientDataSource(datasource).releaseAggregationClient(client);
+    }
+
+    // 字段过滤并字段名改别名
+    private List<com.hex.bigdata.udsp.common.api.model.Result> getRecords(List<Map<String, String>> list, List<ReturnColumn> returnColumns) {
+        List<com.hex.bigdata.udsp.common.api.model.Result> records = new ArrayList<>();
+        if (list == null || list.size() == 0) {
+            return records;
+        }
+        for (Map<String, String> map : list) {
+            com.hex.bigdata.udsp.common.api.model.Result result = new com.hex.bigdata.udsp.common.api.model.Result();
+            Map<String, String> returnDataMap = new HashMap<String, String>();
+            for (ReturnColumn item : returnColumns) {
+                String colName = item.getName();
+                String label = item.getLabel();
+                returnDataMap.put(label, map.get(colName));
+            }
+            result.putAll(returnDataMap);
+            records.add(result);
+        }
+        return records;
     }
 
     private List<Map<String, String>> orderBy(List<Map<String, String>> list, final List<OrderColumn> orderColumns) {
@@ -582,7 +556,8 @@ public class HBaseProvider implements Provider {
         return getMapsPage(rs, page, colMap, family, qualifier, separator, dataType);
     }
 
-    private HBasePage scanPage(HBaseDatasource datasource, String tbName, HBasePage page, Map<Integer, String> colMap, HBaseMetadata metadata) throws Exception {
+    private HBasePage scanPage(HBaseDatasource datasource, String tbName, HBasePage page,
+                               Map<Integer, String> colMap, HBaseMetadata metadata) throws Exception {
         HConnection conn = null;
         HTableInterface hTable = null;
         AggregationClient client = null;
@@ -730,7 +705,6 @@ public class HBaseProvider implements Provider {
     }
 
     public boolean testDatasource(Datasource datasource) {
-        boolean canConnection = true;
         HBaseDatasource hBaseDatasource = new HBaseDatasource(datasource.getProperties());
         HConnection hConnection = null;
         try {
@@ -742,14 +716,14 @@ public class HBaseProvider implements Provider {
             conf.set("zookeeper.recovery.retry", "1");
             hConnection = HConnectionManager.createConnection(conf);
             if (hConnection == null || hConnection.isAborted()) {
-                canConnection = false;
+                return false;
             } else {
                 //尝试获取当中的表，如果获取抛异常则获取连接失败
                 hConnection.getAdmin().tableExists(TableName.valueOf("TEST"));
+                return true;
             }
         } catch (Exception e) {
-            //e.printStackTrace();
-            canConnection = false;
+            e.printStackTrace();
         } finally {
             if (hConnection != null) {
                 try {
@@ -759,7 +733,7 @@ public class HBaseProvider implements Provider {
                 }
             }
         }
-        return canConnection;
+        return false;
     }
 
     @Override
