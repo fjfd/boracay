@@ -15,8 +15,8 @@
     <orderEntry type="library" name="redis" level="project" />
     <orderEntry type="library" name="tools" level="project" />
     <orderEntry type="library" name="jdbc" level="project" />
-    <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="library" name="poi" level="project" />
+    <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="module" module-name="common-api" />
   </component>
 </module>

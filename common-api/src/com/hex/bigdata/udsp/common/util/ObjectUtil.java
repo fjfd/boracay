@@ -54,27 +54,10 @@ public class ObjectUtil {
      */
     public static Object newInstance(String implClass) {
         Object obj = null;
-//        try {
-//            obj = WebApplicationContextUtil.getBean(implClass);
-//        } catch (Exception e) {
-//            try {
-//                obj = Class.forName(implClass).newInstance();
-//            } catch (InstantiationException e1) {
-//                e1.printStackTrace();
-//            } catch (IllegalAccessException e1) {
-//                e1.printStackTrace();
-//            } catch (ClassNotFoundException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
         try {
             obj = Class.forName(implClass).newInstance();
-        } catch (InstantiationException e1) {
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return obj;
     }

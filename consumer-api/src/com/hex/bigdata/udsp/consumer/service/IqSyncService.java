@@ -232,10 +232,9 @@ public class IqSyncService {
         String filePath = "";
         IqResponse response = run(appId, paraMap, page);
         if (Status.SUCCESS == response.getStatus()) {
-            List<Result> list = response.getRecords();
             List<Map<String, String>> records = new ArrayList<>();
             Map<String, String> map = null;
-            for (Result result : list) {
+            for (Result result : response.getRecords()) {
                 map = new HashMap<>();
                 for (Map.Entry<String, Object> entry : result.entrySet()) {
                     map.put(entry.getKey(), result.getString(entry.getKey()));

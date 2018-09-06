@@ -12,6 +12,7 @@ import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.service.IqAsyncService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
 import com.hex.bigdata.udsp.consumer.service.OlqAsyncService;
+import com.hex.bigdata.udsp.common.util.HostUtil;
 import com.hex.bigdata.udsp.dao.HeartbeatMapper;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.service.CurrentService;

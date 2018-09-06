@@ -17,7 +17,6 @@
     <orderEntry type="library" name="redis" level="project" />
     <orderEntry type="library" name="hive" level="project" />
     <orderEntry type="module" module-name="common" />
-    <orderEntry type="module" module-name="console" />
     <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="consumer-api" />
   </component>

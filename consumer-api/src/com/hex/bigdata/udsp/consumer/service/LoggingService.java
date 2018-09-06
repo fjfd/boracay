@@ -36,7 +36,6 @@ public class LoggingService {
     @Autowired
     private InitParamService initParamService;
 
-
     /**
      * 请求出错，设置错误码，错误信息
      *

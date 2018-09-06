@@ -64,7 +64,7 @@ public class ConsumerService {
     @Autowired
     private RtsSyncService rtsSyncService;
     @Autowired
-    private MmRequestService mmRequestService;
+    private MmSyncService mmSyncService;
     @Autowired
     private MmApplicationService mmApplicationService;
     @Autowired
@@ -131,7 +131,7 @@ public class ConsumerService {
                 consumeRequest.setError(ErrorCode.ERROR_000006);
                 return consumeRequest;
             }
-            if (!rcUserServiceService.checkIpSuitForSections(request.getRequestIp(), rcUserService.getIpSection())) {
+            if (!IpAddressUtil.isIpAddress(request.getRequestIp(), rcUserService.getIpSection())) {
                 consumeRequest.setError(ErrorCode.ERROR_000006);
                 return consumeRequest;
             }
@@ -268,10 +268,10 @@ public class ConsumerService {
                 if (ConsumerEntity.STATUS.getValue().equalsIgnoreCase(entity)) {
                     logger.debug("execute MM STATUS");
                     request.setConsumeId(mcCurrent.getPkId()); // 设置消费id到request对象，传输给远程的服务
-                    response = mmRequestService.status(request, appId);
+                    response = mmSyncService.status(request, appId);
                 } else if (ConsumerEntity.START.getValue().equalsIgnoreCase(entity)) {
                     logger.debug("execute MM SYNC or ASYNC START");
-                    response = mmRequestService.start(consumeId, appId, request);
+                    response = mmSyncService.start(consumeId, appId, request);
                 }
             } else if (ServiceType.RTS_PRODUCER.getValue().equalsIgnoreCase(appType)) {
                 logger.debug("execute RTS_PRODUCER SYNC START");

@@ -19,7 +19,7 @@ import java.util.Map;
  * 模型请求的服务
  */
 @Service
-public class MmRequestService {
+public class MmSyncService {
     /**
      * 模型调用服务
      */

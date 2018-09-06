@@ -1,6 +1,5 @@
 package com.hex.bigdata.udsp.mc.service;
 
-import com.hex.bigdata.udsp.mc.dao.McChartsMapper;
 import com.hex.bigdata.udsp.mc.dao.McUserChartsMapper;
 import com.hex.bigdata.udsp.mc.dto.McChartsView;
 import com.hex.bigdata.udsp.mc.dto.McUserChartsView;

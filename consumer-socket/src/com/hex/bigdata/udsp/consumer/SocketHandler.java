@@ -8,6 +8,7 @@ import com.hex.bigdata.udsp.consumer.model.ExternalRequest;
 import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
+import com.hex.goframe.util.WebApplicationContextUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -29,9 +30,9 @@ public class SocketHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private ExternalConsumerService consumerService;
     private LoggingService loggingService;
 
-    public SocketHandler(ExternalConsumerService consumerService, LoggingService loggingService) {
-        this.consumerService = consumerService;
-        this.loggingService = loggingService;
+    public SocketHandler() {
+        this.consumerService = (ExternalConsumerService) WebApplicationContextUtil.getBean("externalConsumerService");
+        this.loggingService = (LoggingService) WebApplicationContextUtil.getBean("loggingService");
     }
 
     /**

@@ -18,7 +18,7 @@ import java.io.OutputStream;
 public class ComFileDownLoadController {
 
     @RequestMapping("/download")
-    public void download(String filePath,HttpServletResponse rsp){
+    public void download(String filePath, HttpServletResponse rsp){
         OutputStream os = null;
         FileInputStream stream = null;
         try {

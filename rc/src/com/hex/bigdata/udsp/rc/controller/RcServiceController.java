@@ -1,8 +1,6 @@
 package com.hex.bigdata.udsp.rc.controller;
 
 import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.mc.dto.McChartsView;
-import com.hex.bigdata.udsp.mc.service.McChartsService;
 import com.hex.bigdata.udsp.rc.dto.RcServiceView;
 import com.hex.bigdata.udsp.rc.model.RcService;
 import com.hex.bigdata.udsp.rc.service.RcServiceService;
@@ -12,7 +10,6 @@ import com.hex.goframe.model.Page;
 import com.hex.goframe.model.PageListResult;
 import com.hex.goframe.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

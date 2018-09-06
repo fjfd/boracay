@@ -1,12 +1,7 @@
 package com.hex.bigdata.udsp.mc.service;
 
 import com.hex.bigdata.udsp.mc.dao.McChartsMapper;
-import com.hex.bigdata.udsp.mc.dao.McServiceChartsMapper;
-import com.hex.bigdata.udsp.mc.dao.McUserChartsMapper;
 import com.hex.bigdata.udsp.mc.dto.McChartsView;
-import com.hex.bigdata.udsp.mc.dto.McServiceChartsView;
-import com.hex.bigdata.udsp.mc.dto.McUserChartsView;
-import com.hex.goframe.model.Page;
 import com.hex.goframe.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

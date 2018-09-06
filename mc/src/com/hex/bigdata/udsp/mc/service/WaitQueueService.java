@@ -5,7 +5,6 @@ import com.hex.bigdata.udsp.common.service.InitParamService;
 import com.hex.bigdata.udsp.consumer.model.QueueIsFullResult;
 import com.hex.bigdata.udsp.mc.dao.WaitQueueMapper;
 import com.hex.bigdata.udsp.mc.model.Current;
-import com.hex.bigdata.udsp.mc.model.RunQueue;
 import com.hex.bigdata.udsp.mc.model.WaitQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

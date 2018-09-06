@@ -18,7 +18,6 @@
     <orderEntry type="module" module-name="common" />
     <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="iq" />
-    <orderEntry type="module" module-name="mc" />
     <orderEntry type="module" module-name="mm" />
     <orderEntry type="module" module-name="olq" />
     <orderEntry type="module" module-name="rts" />

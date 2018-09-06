@@ -229,11 +229,6 @@ ${extends("/goframe/function_layout.httl")}
         if (!baseData) {
             return;
         }
-        //检查并发数是否合法
-        if (baseData.maxSyncNum < 0 || baseData.maxAsyncNum < 0) {
-            nui.alert("最大异步/同步并发数不能小于0！");
-            return;
-        }
         //检查用户服务关系唯一性
         var flg = checkExists(baseData.userId, baseData.serviceId);
         if (flg) {

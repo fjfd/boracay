@@ -1,10 +1,7 @@
 package com.hex.bigdata.udsp.consumer;
 
-import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
-import com.hex.bigdata.udsp.consumer.service.LoggingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +17,10 @@ public class SocketConsumer {
     @Value("${socket.port:9089}")
     private int socketPort;
 
-    @Autowired
-    private ExternalConsumerService consumerService;
-    @Autowired
-    private LoggingService loggingService;
-
     @PostConstruct
     public void start() throws Exception {
         logger.debug("启动bocd esb socket线程开始");
-        Thread thread = new Thread(new SocketServer(socketPort, consumerService, loggingService));
+        Thread thread = new Thread(new SocketServer(socketPort));
         thread.start();
         logger.debug("启动bocd esb socket线程成功");
     }

@@ -1,7 +1,5 @@
 package com.hex.bigdata.udsp.consumer;
 
-import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
-import com.hex.bigdata.udsp.consumer.service.LoggingService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -24,20 +22,19 @@ public class SocketServer implements Runnable {
 
     private int socketPort;
 
-    private ExternalConsumerService consumerService;
-    private LoggingService loggingService;
-
-    public SocketServer(int socketPort, ExternalConsumerService consumerService, LoggingService loggingService) {
+    public SocketServer(int socketPort) {
         this.socketPort = socketPort;
-        this.consumerService = consumerService;
-        this.loggingService = loggingService;
     }
 
     @Override
     public void run() {
         logger.info("正在启动socket服务,端口号为：" + socketPort);
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // 通过nio方式来接收连接和处理连接
-        EventLoopGroup workerGroup = new NioEventLoopGroup(); // 通过nio方式来接收连接和处理连接
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // bossGroup设置一个线程，用于处理连接请求和建立连接
+        /**
+         * 如果没有设置线程数，当客户端请求的并发大于2*CPU核数时，内部会堵塞式的同一时间最多生成2*CPU核数的线程数。
+         * 如果设置了线程数，当客户端请求的并发大于设置的线程数时，内部会堵塞式的同一时间最多生成设置的线程数。
+         */
+        EventLoopGroup workerGroup = new NioEventLoopGroup(); // workGroup线程池大小默认值2*CPU核数，在连接建立之后处理IO请求
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup) // 绑定线程池
@@ -49,16 +46,16 @@ public class SocketServer implements Runnable {
                     .childHandler(new ChannelInitializer<SocketChannel>() { // 服务端过滤器
                         @Override
                         public void initChannel(SocketChannel ch) {
-                            ch.pipeline().addLast(new SocketHandler(consumerService, loggingService));
+                            ch.pipeline().addLast(new SocketHandler());
 
 //                            ch.pipeline() //
 //                                    .addLast(new StringEncoder()) //
 //                                    .addLast(new StringDecoder()) //
-//                                    .addLast(new SocketHandler(consumerService, loggingService));
+//                                    .addLast(new SocketHandler());
 
 //                            ch.pipeline() //
 //                                    .addLast(new JsonObjectDecoder()) //
-//                                    .addLast(new SocketHandler(consumerService, loggingService));
+//                                    .addLast(new SocketHandler());
 
                         }
                     });

@@ -1,7 +1,6 @@
 package com.hex.bigdata.udsp.common.util;
 
 import com.hex.goframe.util.Util;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

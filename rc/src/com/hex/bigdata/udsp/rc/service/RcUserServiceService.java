@@ -15,7 +15,6 @@ import com.hex.bigdata.udsp.olq.service.OlqApplicationService;
 import com.hex.bigdata.udsp.olq.service.OlqService;
 import com.hex.bigdata.udsp.rc.dao.RcUserServiceForUserIdAndServiceIdMapper;
 import com.hex.bigdata.udsp.rc.dao.RcUserServiceMapper;
-import com.hex.bigdata.udsp.rc.dto.IpSectionHelper;
 import com.hex.bigdata.udsp.rc.dto.RcUserServiceBatchDto;
 import com.hex.bigdata.udsp.rc.dto.RcUserServiceDto;
 import com.hex.bigdata.udsp.rc.dto.RcUserServiceView;
@@ -43,7 +42,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA
@@ -94,7 +96,7 @@ public class RcUserServiceService extends BaseService {
     public String insert(RcUserService rcUserService) {
         String pkId = Util.uuid();
         rcUserService.setPkId(pkId);
-        if (checkBeforeInsetOrUpdate(rcUserService) && rcUserServiceMapper.insert(pkId, rcUserService)) {
+        if (rcUserServiceMapper.insert(pkId, rcUserService)) {
             /*
             同时按照不同ID保存到内存中
              */
@@ -123,8 +125,7 @@ public class RcUserServiceService extends BaseService {
      */
     @Transactional
     public boolean update(RcUserService rcUserService) {
-        if (checkBeforeInsetOrUpdate(rcUserService)
-                && rcUserServiceMapper.update(rcUserService.getPkId(), rcUserService)) {
+        if (rcUserServiceMapper.update(rcUserService.getPkId(), rcUserService)) {
             /*
             同时按照不同ID在内存中更新
              */
@@ -150,7 +151,6 @@ public class RcUserServiceService extends BaseService {
              */
             String id = rcUserService.getUserId() + "|" + rcUserService.getServiceId();
             rcUserServiceForUserIdAndServiceIdMapper.delete(id);
-
             return true;
         }
         return false;
@@ -188,8 +188,7 @@ public class RcUserServiceService extends BaseService {
         boolean flag = true;
         for (RcUserService rcService : rcServices) {
             String pkId = rcService.getPkId();
-            boolean delFlg = delete(pkId);
-            if (!delFlg) {
+            if (!delete(pkId)) {
                 flag = false;
                 break;
             }
@@ -211,10 +210,6 @@ public class RcUserServiceService extends BaseService {
         String serviceIds = rcUserServiceView.getServiceIds();
         String[] serviceIdArray = serviceIds.split(",");
         String[] userIdArray = userIds.split(",");
-        //插入前检查
-        if (!checkBeforeBatchInset(rcUserServiceView)) {
-            return false;
-        }
         //批量循环插入
         for (String serviceId : serviceIdArray) {
             for (String userId : userIdArray) {
@@ -267,7 +262,7 @@ public class RcUserServiceService extends BaseService {
      */
     public boolean checkExists(String userId, String serviceId) {
         List<RcUserService> rcUserServices = this.rcUserServiceMapper.selectRelation(userId, serviceId);
-        return rcUserServices.size() > 0;
+        return rcUserServices != null && rcUserServices.size() > 0;
     }
 
     /**
@@ -281,38 +276,6 @@ public class RcUserServiceService extends BaseService {
     }
 
     /**
-     * 根据用户id和服务id获取对应的关系信息
-     *
-     * @param userId
-     * @param serviceId
-     * @return
-     */
-    public RcUserService selectRelationByIds(String userId, String serviceId) {
-        List<RcUserService> rcUserServices = this.rcUserServiceMapper.selectRelation(userId, serviceId);
-        if (rcUserServices != null && rcUserServices.size() == 1) {
-            return rcUserServices.get(0);
-        }
-        return null;
-    }
-
-    public RcUserService selectRelation(String userId, String serviceName) {
-        String serviceId = "";
-        RcService rcService = rcServiceService.selectByName(serviceName);
-        if (rcService != null) {
-            serviceId = rcService.getPkId();
-        }
-
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(serviceId)) {
-            return null;
-        }
-        List<RcUserService> rcUserServices = this.rcUserServiceMapper.selectRelation(userId, serviceId);
-        if (rcUserServices != null && rcUserServices.size() == 1) {
-            return rcUserServices.get(0);
-        }
-        return null;
-    }
-
-    /**
      * 通过条件查询用户信息
      * 服务Id、用户姓名、分页参数
      *
@@ -322,8 +285,7 @@ public class RcUserServiceService extends BaseService {
      */
 
     public List<GFUser> selectNotRelationUsers(RcUserServiceView rcUserServiceView, Page page) {
-        List<GFUser> selectedUsers = this.rcUserServiceMapper.selectNotRelationUsers(rcUserServiceView, page);
-        return selectedUsers;
+        return this.rcUserServiceMapper.selectNotRelationUsers(rcUserServiceView, page);
     }
 
     /**
@@ -334,10 +296,8 @@ public class RcUserServiceService extends BaseService {
      * @return
      */
     public List<GFUser> selectRelationUsers(RcUserServiceView rcUserServiceView) {
-        List<GFUser> selectedUsers = this.rcUserServiceMapper.selectRelationUsers(rcUserServiceView);
-        return selectedUsers;
+        return this.rcUserServiceMapper.selectRelationUsers(rcUserServiceView);
     }
-
 
     /**
      * 通过userId和serviceId获取服务信息
@@ -369,265 +329,6 @@ public class RcUserServiceService extends BaseService {
      */
     public List selectRelationByServiceId(String serviceId) {
         return rcUserServiceMapper.selectRelationByServiceId(serviceId);
-    }
-
-    /**
-     * 检查ip段表达式的合法性
-     * 支持以下几种模式：
-     * 1、正常的ip，如10.1.97.1
-     * 2、以星号*代替0-255之间的任意数字，如10.1.97.*
-     * 3、如10.1.97.[10-30]、10.1.97.[1-5,6-20]
-     *
-     * @param ipSections
-     * @return
-     */
-    public boolean checkModels(String ipSections) {
-        //逗号分隔
-        String[] ipSectionArray = ipSections.split(",");
-        boolean flg = true;
-        for (String item : ipSectionArray) {
-            if (!this.checkModel(item)) {
-                flg = false;
-                break;
-            }
-        }
-        return flg;
-    }
-
-    private boolean checkModel(String ipSection) {
-        String[] patternArray = ipSection.split("\\.");
-        if (patternArray.length != 4) {
-            return false;
-        }
-        boolean flg = true;
-        for (String item : patternArray) {
-            if (item.startsWith("[") && item.endsWith("]")) {
-                if (this.isRightModelItem(item)) {
-                    continue;
-                }
-                flg = false;
-                break;
-            } else if (item.equals("*")) {
-                continue;
-            } else if (this.isIpInt(item)) {
-                continue;
-            } else {
-                flg = false;
-                break;
-            }
-        }
-        return flg;
-    }
-
-
-    /**
-     * 检查区间表达式格式如[10-30]、[1-5,6-20]、[0,1-10]是否合法
-     *
-     * @return
-     */
-    private boolean isRightModelItem(String item) {
-        item = item.substring(1, item.length() - 1);
-        if (item.length() == 0) {
-            return false;
-        }
-        String[] itemArray = item.split(",");
-        if (itemArray.length == 0) {
-            return false;
-        }
-        for (String subStr : itemArray) {
-            String[] subArray = subStr.split("-");
-            if (subArray.length > 2 || subArray.length < 1) {
-                return false;
-            } else if (subArray.length == 1 && this.isIpInt(subArray[0])) {
-                continue;
-            } else if (subArray.length == 2) {
-                for (String ipIntStr : subArray) {
-                    if (!this.isIpInt(ipIntStr)) {
-                        return false;
-                    }
-                }
-                //如果[7-5]，则不合法
-                if (Integer.valueOf(subArray[0]) > Integer.valueOf(subArray[1])) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 判断数字是否属于IP整数
-     *
-     * @param number
-     * @return
-     */
-    private boolean isIpInt(String number) {
-        boolean isIpInt = true;
-        Integer ipNumber = null;
-        try {
-            ipNumber = Integer.valueOf(number);
-        } catch (Exception e) {
-            isIpInt = false;
-        }
-        if (isIpInt && ipNumber != null && ipNumber >= 0 && ipNumber <= 255) {
-            return isIpInt;
-        }
-        return false;
-    }
-
-    public static void main(String[] args) {
-
-        RcUserServiceService rcService = new RcUserServiceService();
-        System.out.println("==============================");
-        System.out.println("checkModel start");
-//        System.out.println(rcService.checkModel("*.*.*.*"));
-//        System.out.println(rcService.checkModel("10.1.97.255"));
-//        System.out.println(rcService.checkModel("10.1.97.255.0"));
-//        System.out.println(rcService.checkModel("10.1.97.2589"));
-//        System.out.println(rcService.checkModel("10.1.97.[1-8]"));
-//        System.out.println(rcService.checkModel("10.1.97.[1-8],[9-12]"));
-//        System.out.println(rcService.checkModel("*.*.*.[*,1-5]"));
-        System.out.println(rcService.checkModel("*.*.*.[0,1-5]"));
-        System.out.println(rcService.checkModel("*.*.*.[5]"));
-        System.out.println("checkModel end");
-        System.out.println("=================================");
-        System.out.println(rcService.checkIpSuitForSection("10.1.1.1", "*.*.*.*"));
-        System.out.println(rcService.checkIpSuitForSection("10.1.1.1", "*.*.*.[0,1-5]"));
-        System.out.println(rcService.checkIpSuitForSection("10.1.97.1", "10.1.97.1"));
-        System.out.println(rcService.checkIpSuitForSection("10.1.1.6", "*.*.*.[1-5,7-9]"));
-        System.out.println(rcService.checkIpSuitForSection("10.1.1.6", "*.*.*.[5]"));
-        System.out.println(rcService.checkIpSuitForSection("10.1.1.5", "*.*.*.[5]"));
-    }
-
-    /**
-     * 检查ip地址与多个ip区间表达式是否匹配
-     *
-     * @param ip
-     * @param ipSections
-     * @return
-     */
-    public boolean checkIpSuitForSections(String ip, String ipSections) {
-        if (StringUtils.isBlank(ip) || StringUtils.isBlank(ipSections)) {
-            return false;
-        }
-        String[] ipSectionArray = ipSections.split(",");
-        for (String item : ipSectionArray) {
-            if (checkIpSuitForSection(ip, item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * 检查ip地址与单个ip区间表达式是否匹配
-     *
-     * @param ip
-     * @param ipSection
-     * @return
-     */
-    private boolean checkIpSuitForSection(String ip, String ipSection) {
-        String[] ipItems = ip.split("\\.");
-        String[] ipSectionArray = ipSection.split("\\.");
-        boolean flg = true;
-        for (int i = 0; i < 4; i++) {
-            if (ipSectionArray[i].startsWith("[") && ipSectionArray[i].endsWith("]")) {
-                if (!this.isItemSuitForModel(ipItems[i], ipSectionArray[i])) {
-                    flg = false;
-                    break;
-                }
-            } else if (ipSectionArray[i].equals("*")) {
-                continue;
-            } else if (this.isIpInt(ipSectionArray[i])) {
-                if (ipItems[i].equals(ipSectionArray[i])) {
-                    continue;
-                }
-                flg = false;
-                break;
-            } else {
-                flg = false;
-                break;
-            }
-        }
-        return flg;
-    }
-
-    /**
-     * 检查区间表达式与ip对应的数字是否匹配
-     *
-     * @param ipPart
-     * @param sectionPart
-     * @return
-     */
-    private boolean isItemSuitForModel(String ipPart, String sectionPart) {
-        List<IpSectionHelper> sectionHelpers = this.getIpSectionHelpers(sectionPart);
-        boolean suitFlg = false;
-        int ipPartNum = Integer.valueOf(ipPart);
-        for (IpSectionHelper sectionHelper : sectionHelpers) {
-            if (IpSectionHelper.OPERATE_EQUALS.equals(sectionHelper.getOperate())) {
-                if (sectionHelper.getEqualNum() == ipPartNum) {
-                    suitFlg = true;
-                    break;
-                }
-            } else {
-                if (ipPartNum >= sectionHelper.getLowerNum() && ipPartNum <= sectionHelper.getHigerNum()) {
-                    suitFlg = true;
-                    break;
-                }
-            }
-
-        }
-        return suitFlg;
-    }
-
-    /**
-     * 获取区间表达式对象
-     *
-     * @param sectionPart
-     * @return
-     */
-    private List<IpSectionHelper> getIpSectionHelpers(String sectionPart) {
-        sectionPart = sectionPart.substring(1, sectionPart.length() - 1);
-        if (sectionPart.length() == 0) {
-            return null;
-        }
-        String[] itemArray = sectionPart.split(",");
-        if (itemArray.length == 0) {
-            return null;
-        }
-        List<IpSectionHelper> helpers = new ArrayList<>();
-        for (String subStr : itemArray) {
-            String[] subArray = subStr.split("-");
-            if (subArray.length > 2 || subArray.length < 1) {
-                return null;
-            } else if (subArray.length == 1 && this.isIpInt(subArray[0])) {
-                IpSectionHelper ipSectionHelper = new IpSectionHelper();
-                ipSectionHelper.setOperate(IpSectionHelper.OPERATE_EQUALS);
-                ipSectionHelper.setEqualNum(Integer.valueOf(subArray[0]));
-                helpers.add(ipSectionHelper);
-            } else if (subArray.length == 2 && this.isIpInt(subArray[0]) && this.isIpInt(subArray[1])) {
-                IpSectionHelper ipSectionHelper = new IpSectionHelper();
-                ipSectionHelper.setOperate(IpSectionHelper.OPERATE_SCOPE);
-                ipSectionHelper.setLowerNum(Integer.valueOf(subArray[0]));
-                ipSectionHelper.setHigerNum(Integer.valueOf(subArray[1]));
-                helpers.add(ipSectionHelper);
-            } else {
-                return null;
-            }
-        }
-        return helpers;
-    }
-
-
-    private boolean checkBeforeInsetOrUpdate(RcUserService rcService) {
-        return rcService.getMaxAsyncNum() >= 0 && rcService.getMaxSyncNum() >= 0;
-    }
-
-    private boolean checkBeforeBatchInset(RcUserServiceView view) {
-        return view.getMaxAsyncNum() >= 0 && view.getMaxSyncNum() >= 0;
     }
 
     /**
