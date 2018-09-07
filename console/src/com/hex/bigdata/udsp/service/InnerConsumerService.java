@@ -1,18 +1,16 @@
 package com.hex.bigdata.udsp.service;
 
 import com.hex.bigdata.udsp.common.constant.ConsumerEntity;
-import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.constant.ConsumerType;
+import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.constant.RequestType;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.common.util.ObjectUtil;
 import com.hex.bigdata.udsp.consumer.model.ConsumeRequest;
 import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ConsumerService;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.service.RunQueueService;
-import com.hex.bigdata.udsp.model.InnerRequest;
 import com.hex.bigdata.udsp.rc.model.RcService;
 import com.hex.bigdata.udsp.rc.service.RcServiceService;
 import org.apache.logging.log4j.LogManager;
@@ -50,16 +48,13 @@ public class InnerConsumerService {
     /**
      * 内部请求消费
      *
-     * @param innerRequest 内部请求内容
-     * @param isAdmin      是否是管理员
+     * @param request   内部请求内容
+     * @param isAdmin   是否是管理员
      * @return
      */
-    public Response innerConsume(InnerRequest innerRequest, boolean isAdmin) {
-        logger.debug("InnerRequest=" + JSONUtil.parseObj2JSON(innerRequest));
+    public Response innerConsume(Request request, boolean isAdmin) {
+        logger.debug("Request=" + JSONUtil.parseObj2JSON(request));
         long bef = System.currentTimeMillis();
-
-        Request request = new Request();
-        ObjectUtil.copyObject(innerRequest, request);
 
         ConsumeRequest consumeRequest = checkBeforInnerConsume(request, isAdmin, bef);
         logger.debug("检查耗时：" + (System.currentTimeMillis() - bef) + "ms");

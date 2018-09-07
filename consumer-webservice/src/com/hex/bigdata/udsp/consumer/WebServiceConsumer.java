@@ -3,12 +3,12 @@ package com.hex.bigdata.udsp.consumer;
 import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.common.util.ObjectUtil;
-import com.hex.bigdata.udsp.consumer.constant.ConsumerConstant;
 import com.hex.bigdata.udsp.consumer.model.ConsumeRequest;
-import com.hex.bigdata.udsp.consumer.model.ExternalRequest;
+import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
+import com.hex.bigdata.udsp.consumer.util.RequestUtil;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * WebService Controller
@@ -55,16 +53,12 @@ public class WebServiceConsumer implements WebServiceInterface {
      */
     @Override
     public WSResponse consume(@RequestBody WSRequest wsRequest) {
-        ExternalRequest externalRequest = new ExternalRequest();
-        ObjectUtil.copyObject(wsRequest, externalRequest);
-
-        //获取并设置客户端请求的IP
-        externalRequest.setRequestIp(getClientIp());
-        Response response = consumerService.externalConsume(externalRequest);
-
+        Request request = new Request();
+        ObjectUtil.copyObject(wsRequest, request);
+        request.setRequestIp(getClientIp()); //获取并设置客户端请求的IP
+        Response response = consumerService.externalConsume(request);
         WSResponse wsResponse = new WSResponse();
         ObjectUtil.copyObject(response, wsResponse);
-
         return wsResponse;
     }
 
@@ -77,9 +71,9 @@ public class WebServiceConsumer implements WebServiceInterface {
         Response response = new Response();
         long bef = System.currentTimeMillis();
         try {
-            ExternalRequest externalRequest = jsonToRequest(json);
-            externalRequest.setRequestIp(getClientIp()); //获取并设置客户端请求的IP
-            response = consumerService.externalConsume(externalRequest);
+            Request request = RequestUtil.jsonToRequest(json);
+            request.setRequestIp(getClientIp()); //获取并设置客户端请求的IP
+            response = consumerService.externalConsume(request);
         } catch (Exception e) {
             e.printStackTrace();
             loggingService.writeResponseLog(response, new ConsumeRequest(), bef, 0,
@@ -103,11 +97,4 @@ public class WebServiceConsumer implements WebServiceInterface {
         logger.debug("client IP: " + clientIp);
         return clientIp;
     }
-
-    private ExternalRequest jsonToRequest(String json) {
-        Map<String, Class> classMap = new HashMap<String, Class>();
-        classMap.put(ConsumerConstant.CONSUME_RTS_DATASTREAM, Map.class);
-        return JSONUtil.parseJSON2Obj(json, ExternalRequest.class, classMap);
-    }
-
 }

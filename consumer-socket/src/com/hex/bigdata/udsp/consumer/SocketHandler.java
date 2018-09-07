@@ -2,12 +2,12 @@ package com.hex.bigdata.udsp.consumer;
 
 import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.consumer.constant.ConsumerConstant;
 import com.hex.bigdata.udsp.consumer.model.ConsumeRequest;
-import com.hex.bigdata.udsp.consumer.model.ExternalRequest;
+import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
+import com.hex.bigdata.udsp.consumer.util.RequestUtil;
 import com.hex.goframe.util.WebApplicationContextUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -18,8 +18,6 @@ import io.netty.util.CharsetUtil;
 import org.apache.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Netty Socket Server Handler
@@ -51,12 +49,11 @@ public class SocketHandler extends SimpleChannelInboundHandler<ByteBuf> {
         // 接收数据
         byte[] reqByte = new byte[msg.readableBytes()];
         msg.readBytes(reqByte);
-        String request = new String(reqByte, CharsetUtil.UTF_8);
-//        String request = msg.toString(CharsetUtil.UTF_8);
-        logger.info("接收报文内容:\n" + request);
+        String reqJson = new String(reqByte, CharsetUtil.UTF_8);
+        logger.info("接收报文内容:\n" + reqJson);
 
         // 消费
-        String rsponse = consume(request, clientIp);
+        String rsponse = consume(reqJson, clientIp);
 
         // 响应数据
         logger.info("响应报文内容:\n" + rsponse);
@@ -71,19 +68,17 @@ public class SocketHandler extends SimpleChannelInboundHandler<ByteBuf> {
     /**
      * 执行消费
      *
-     * @param request
+     * @param json
      * @param ip
      * @return
      */
-    private String consume(String request, String ip) {
+    private String consume(String json, String ip) {
         Response response = new Response();
         long bef = System.currentTimeMillis();
         try {
-            Map<String, Class> classMap = new HashMap<String, Class>();
-            classMap.put(ConsumerConstant.CONSUME_RTS_DATASTREAM, Map.class);
-            ExternalRequest externalRequest = JSONUtil.parseJSON2Obj(request, ExternalRequest.class, classMap);
-            externalRequest.setRequestIp(ip);
-            response = consumerService.externalConsume(externalRequest);
+            Request request = RequestUtil.jsonToRequest(json);
+            request.setRequestIp(ip);
+            response = consumerService.externalConsume(request);
         } catch (Exception e) {
             e.printStackTrace();
             loggingService.writeResponseLog(response, new ConsumeRequest(), bef, 0,

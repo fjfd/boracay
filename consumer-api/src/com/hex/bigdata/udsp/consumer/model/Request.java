@@ -15,6 +15,9 @@ public class Request extends BaseRequest implements Serializable{
     private String appName; // 应用名称
     private String appId; // 应用ID
 
+    private String requestType; // 请求类型
+    private String requestIp; // 请求IP
+
     private Page page; // 分页信息
     private String sql; // SQL语句
     private Map<String, String> data; // 请求数据
@@ -23,9 +26,6 @@ public class Request extends BaseRequest implements Serializable{
     private List<Map<String, String>> dataStream; // 数据流集合
 
     private String consumeId; // 消费ID
-
-    private String requestType; // 请求类型
-    private String requestIp; // 请求IP
 
     public String getAppId() {
         return appId;

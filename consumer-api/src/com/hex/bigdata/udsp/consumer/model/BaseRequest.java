@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by JunjieM on 2018-8-31.
  */
 public class BaseRequest implements Serializable {
-    private String serviceName;
+    private String serviceName; // 服务名
 
     private String type; // sync、async
     private String entity; // start、status、stop

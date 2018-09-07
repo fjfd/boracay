@@ -8,10 +8,9 @@ import com.hex.bigdata.udsp.common.dto.ComDatasourcePropsView;
 import com.hex.bigdata.udsp.common.util.FTPClientConfig;
 import com.hex.bigdata.udsp.common.util.FTPHelper;
 import com.hex.bigdata.udsp.common.util.HostUtil;
-import com.hex.bigdata.udsp.common.util.JSONUtil;
-import com.hex.bigdata.udsp.consumer.constant.ConsumerConstant;
+import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
-import com.hex.bigdata.udsp.model.InnerRequest;
+import com.hex.bigdata.udsp.consumer.util.RequestUtil;
 import com.hex.bigdata.udsp.service.DatasourceTestService;
 import com.hex.bigdata.udsp.service.InnerConsumerService;
 import com.hex.goframe.controller.BaseController;
@@ -34,9 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Http Controller
@@ -69,18 +66,18 @@ public class HttpController extends BaseController {
      */
     @RequestMapping({"/datagrid/consume"})
     @ResponseBody
-    public PageListResult datagridConsume(InnerRequest innerRequest, Page page, HttpServletRequest request) {
+    public PageListResult datagridConsume(Request request, Page page, HttpServletRequest httpServletRequest) {
         boolean status = true;
         String message = "执行成功";
         com.hex.bigdata.udsp.common.api.model.Page p = new com.hex.bigdata.udsp.common.api.model.Page();
         p.setPageIndex(page.getPageIndex());
         p.setPageSize(page.getPageSize());
-        innerRequest.setPage(p);
+        request.setPage(p);
         //获取并设置客户端请求的IP
-        innerRequest.setRequestIp(HostUtil.getRealRequestIp(request));
+        request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest));
         PageListResult pageListResult = null;
         try {
-            Response response = getInnerConsume(innerRequest);
+            Response response = getInnerConsume(request);
             if ("SUCCESS".equals(response.getStatus())) {
                 if (response.getPage() != null) {
                     pageListResult = new PageListResult(response.getRecords(), page);
@@ -113,11 +110,10 @@ public class HttpController extends BaseController {
      */
     @RequestMapping({"/inner/consume"})
     @ResponseBody
-    public Response innerConsume(@RequestBody String json, HttpServletRequest request) {
-        InnerRequest innerRequest = jsonToRequest(json);
-        //获取并设置客户端请求的IP
-        innerRequest.setRequestIp(HostUtil.getRealRequestIp(request));
-        return getInnerConsume(innerRequest);
+    public Response innerConsume(@RequestBody String json, HttpServletRequest httpServletRequest) {
+        Request request = RequestUtil.jsonToRequest(json);
+        request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest)); //获取并设置客户端请求的IP
+        return getInnerConsume(request);
     }
 
     /**
@@ -127,31 +123,28 @@ public class HttpController extends BaseController {
      */
     @RequestMapping({"/inner/async/consume"})
     @ResponseBody
-    public MessageResult innerAsyncConsume(@RequestBody String json, HttpServletRequest request) {
-        InnerRequest innerRequest = jsonToRequest(json);
-        boolean status = true;
-        String message = "下载成功";
-        //获取并设置客户端请求的IP
-        innerRequest.setRequestIp(HostUtil.getRealRequestIp(request));
-        if (!ConsumerType.ASYNC.getValue().equalsIgnoreCase(innerRequest.getType())
-                || !ConsumerEntity.START.getValue().equalsIgnoreCase(innerRequest.getEntity())) {
+    public MessageResult innerAsyncConsume(@RequestBody String json, HttpServletRequest httpServletRequest) {
+        Request request = RequestUtil.jsonToRequest(json);
+        request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest)); //获取并设置客户端请求的IP
+        if (!ConsumerType.ASYNC.getValue().equalsIgnoreCase(request.getType())
+                || !ConsumerEntity.START.getValue().equalsIgnoreCase(request.getEntity())) {
             return new MessageResult(false, "不为异步的start请求");
         }
-        Response response = getInnerConsume(innerRequest);
+        Response response = getInnerConsume(request);
         if (response == null || !Status.SUCCESS.getValue().equalsIgnoreCase(response.getStatus())) {
             return new MessageResult(false, "异步的start请求失败");
         }
         String responseContent = response.getResponseContent();
-        innerRequest.setType("async");
-        innerRequest.setEntity("status");
-        innerRequest.setConsumeId(response.getConsumeId());
+        request.setType("async");
+        request.setEntity("status");
+        request.setConsumeId(response.getConsumeId());
         int count = 0;
         int num = (int) (downloadTimeoutMs / downloadSleepTimeMs);
         while (true) {
             if (count >= num) {
                 return new MessageResult(false, "异步下载文件超时");
             }
-            response = getInnerConsume(innerRequest);
+            response = getInnerConsume(request);
             if (response == null) {
                 return new MessageResult(false, "异步的status响应为空");
             }
@@ -231,17 +224,11 @@ public class HttpController extends BaseController {
         return new MessageResult(status, message);
     }
 
-    private Response getInnerConsume(InnerRequest innerRequest) {
+    private Response getInnerConsume(Request request) {
         List<String> roles = getUserRoles();
         boolean isAdmin = roles.contains("ADMIN");
         GFLoginUser loginUser = getLoginUser();
-        innerRequest.setUdspUser(loginUser.getUserId());
-        return consumerService.innerConsume(innerRequest, isAdmin);
-    }
-
-    private InnerRequest jsonToRequest(String json) {
-        Map<String, Class> classMap = new HashMap<>();
-        classMap.put(ConsumerConstant.CONSUME_RTS_DATASTREAM, Map.class);
-        return JSONUtil.parseJSON2Obj(json, InnerRequest.class, classMap);
+        request.setUdspUser(loginUser.getUserId());
+        return consumerService.innerConsume(request, isAdmin);
     }
 }
