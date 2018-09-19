@@ -5,6 +5,7 @@ import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.common.constant.Operator;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.common.util.ObjectUtil;
+import com.hex.bigdata.udsp.common.util.WebApplicationContextUtil;
 import com.hex.bigdata.udsp.im.constant.BuildMode;
 import com.hex.bigdata.udsp.im.constant.DatasourceType;
 import com.hex.bigdata.udsp.im.constant.UpdateMode;
@@ -20,7 +21,6 @@ import com.hex.bigdata.udsp.im.converter.impl.util.KafkaUtil;
 import com.hex.goframe.dao.GFDictMapper;
 import com.hex.goframe.model.GFDict;
 import com.hex.goframe.util.Util;
-import com.hex.goframe.util.WebApplicationContextUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +52,7 @@ public abstract class Wrapper {
     protected static final String HIVE_DYNAMIC_ENGINE_SOURCE_TABLE_PREFIX = HIVE_ENGINE_DATABASE_NAME
             + DATABASE_AND_TABLE_SEP + "E" + HIVE_ENGINE_TABLE_SEP + "S" + HIVE_ENGINE_TABLE_SEP + "D" + HIVE_ENGINE_TABLE_SEP;
 
-    private GFDictMapper gfDictMapper = (GFDictMapper) WebApplicationContextUtil.getBean("gfDictMapper");
+    private GFDictMapper gfDictMapper = (GFDictMapper) WebApplicationContextUtil.getBean(GFDictMapper.class);
 
     protected String getSourceTableName(String id) {
         id = id.replace("HBASE" + HIVE_ENGINE_TABLE_SEP, "").replace("SOLR" + HIVE_ENGINE_TABLE_SEP, "");
