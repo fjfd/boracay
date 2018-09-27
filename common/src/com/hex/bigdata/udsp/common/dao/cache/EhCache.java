@@ -169,7 +169,8 @@ public class EhCache<T> implements Cache<T> {
     @Override
     public boolean insertTimeoutCache(String key, T t, long timeout) {
         Element element = new Element(key, ObjectUtil.cloneObj(t));
-        element.setTimeToIdle((int) timeout / 1000);
+        element.setTimeToLive((int) timeout / 1000); // 以创建时间为基准开始计算的超时时长
+        //element.setTimeToIdle((int) timeout / 1000); // 在创建时间和最近访问时间中取出离现在最近的时间作为基准计算的超时时长
         if (StringUtils.isNotBlank(key) && t != null) {
             net.sf.ehcache.Cache cache = cacheManager.getCache(UDSP_EHCACHE_NAME);
             cache.acquireWriteLockOnKey(key);

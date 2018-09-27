@@ -157,10 +157,12 @@ public class LocalCache<T> implements Cache<T> {
     public boolean insertTimeoutCache(String key, T t, long timeout) {
         com.google.common.cache.Cache<Object, Object> cache = cacheMap.get(timeout);
         if (cache == null) {
-            cache = CacheBuilder.newBuilder()//
-                    .maximumSize(maximumSize)//
-                    .expireAfterWrite(timeout, TimeUnit.MILLISECONDS)//
-                    .ticker(Ticker.systemTicker())//
+            cache = CacheBuilder.newBuilder() //
+                    .maximumSize(maximumSize) //
+                    //.expireAfterWrite(timeout, TimeUnit.MILLISECONDS) // 当缓存项在指定的时间段内没有更新就会被回收
+                    //.expireAfterAccess(timeout, TimeUnit.MICROSECONDS) // 当缓存项在指定的时间段内没有被读或写就会被回收
+                    .refreshAfterWrite(timeout, TimeUnit.MICROSECONDS) // 当缓存项上一次更新操作之后的多久会被刷新
+                    .ticker(Ticker.systemTicker()) //
                     .build();
             cacheMap.put(timeout, cache);
         }
