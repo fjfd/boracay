@@ -17,5 +17,6 @@
     <orderEntry type="module" module-name="consumer-api" />
     <orderEntry type="library" name="antlr4" level="project" />
     <orderEntry type="module" module-name="dsl" />
+    <orderEntry type="library" name="netty" level="project" />
   </component>
 </module>

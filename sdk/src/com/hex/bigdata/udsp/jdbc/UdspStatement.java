@@ -140,9 +140,15 @@ public class UdspStatement implements Statement {
         String reqJson = jsonObject.toJSONString ();
         try {
             String rspJson = client.send (reqJson);
-            SyncResponse response = JSON.parseObject (rspJson, SyncResponse.class);
-            if (response == null) {
-                throw new SQLException ("Response result is empty");
+            SyncResponse response = null;
+            try {
+                response = JSON.parseObject (rspJson, SyncResponse.class);
+            } catch (Exception e) {
+                if (e.toString ().contains ("unclosed")) {
+                    throw new RuntimeException ("The returned result data is too large for the client to parse");
+                } else {
+                    throw new RuntimeException (e);
+                }
             }
             if (!StatusCode.SUCCESS.getValue ().equals (response.getStatusCode ())) {
                 throw new SQLException (response.getMessage ());
