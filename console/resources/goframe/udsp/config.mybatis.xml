@@ -2,7 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <properties>
-        <property name="goframe.schema" value="udsp"/>
+        <property name="goframe.schema" value="udsp2"/>
     </properties>
 
     <settings>
@@ -12,7 +12,6 @@
         <setting name="useColumnLabel" value="true" />
         <setting name="defaultExecutorType" value="REUSE" />
         <setting name="defaultStatementTimeout" value="25000" />
-
         <setting name="callSettersOnNulls" value="true"/>
         <setting name="logImpl" value="LOG4J2"/>
     </settings>
