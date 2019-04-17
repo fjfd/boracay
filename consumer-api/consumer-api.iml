@@ -11,8 +11,8 @@
     <orderEntry type="library" name="goframe" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="jetty" level="project" />
-    <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="common" />
+    <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="rc" />
     <orderEntry type="module" module-name="mc" />
     <orderEntry type="module" module-name="mm" />
@@ -20,9 +20,10 @@
     <orderEntry type="module" module-name="olq" />
     <orderEntry type="module" module-name="rts" />
     <orderEntry type="module" module-name="im" />
-    <orderEntry type="module" module-name="rts-executor-api" />
-    <orderEntry type="module" module-name="olq-provider-api" />
-    <orderEntry type="module" module-name="iq-provider-api" />
     <orderEntry type="module" module-name="im-converter-api" />
+    <orderEntry type="module" module-name="iq-provider-api" />
+    <orderEntry type="module" module-name="olq-provider-api" />
+    <orderEntry type="module" module-name="rts-executor-api" />
+    <orderEntry type="module" module-name="dsl" />
   </component>
 </module>

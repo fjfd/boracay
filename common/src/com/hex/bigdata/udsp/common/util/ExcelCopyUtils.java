@@ -152,8 +152,7 @@ public class ExcelCopyUtils {
         // 设置行高
         targetRow.setHeight(sourceRow.getHeight());
         //遍历 第一行 到 最后一行 的数据
-        for (int i = sourceRow.getFirstCellNum(), l = sourceRow
-                .getLastCellNum(); i <= l; i++) {
+        for (int i = sourceRow.getFirstCellNum(), l = sourceRow.getLastCellNum(); i <= l; i++) {
             HSSFCell sourceCell = sourceRow.getCell(i);
             HSSFCell targetCell = targetRow.getCell(i);
             if (sourceCell != null) {
@@ -224,8 +223,7 @@ public class ExcelCopyUtils {
     public static void copyCell(HSSFCell targetCell, HSSFCell sourceCell, HSSFWorkbook targetWork) throws Exception {
         //参数是否为null
         if (targetCell == null || sourceCell == null) {
-            throw new Exception(
-                    "targetRow、sourceRow都不能为空");
+            throw new Exception("targetRow、sourceRow都不能为空");
         }
         HSSFCellStyle targetCellStyle = targetWork.createCellStyle();
         targetCellStyle.cloneStyleFrom(sourceCell.getCellStyle());
@@ -254,9 +252,7 @@ public class ExcelCopyUtils {
             default:
                 break;
         }
-
     }
-
 
     public static void setCellValue(HSSFSheet sheet, int rowNum, int cellNum, String cellValue) {
         if (cellValue == null) {

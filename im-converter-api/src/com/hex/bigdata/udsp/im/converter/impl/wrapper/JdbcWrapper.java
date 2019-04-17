@@ -32,6 +32,14 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
 
     protected static final String HIVE_ENGINE_STORAGE_HANDLER_CLASS = "com.hex.hive.jdbc.JdbcStorageHandler";
 
+    /**
+     * 注：
+     * 支持JDBC的数据源在创建表时我们不去创建复合主键和复合索引，
+     * 请根据实际情况自行使用SQL语句创建合适的复合主键和复合索引。
+     *
+     * @param metadata
+     * @throws Exception
+     */
     @Override
     public void createSchema(Metadata metadata) throws Exception {
         JdbcDatasource jdbcDatasource = new JdbcDatasource(metadata.getDatasource());
@@ -95,7 +103,11 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             conn = JdbcUtil.getConnection(datasource);
             metadataCols = getMetadataCols(conn, dbName, tbName);
         } catch (SQLException e) {
-            logger.warn(ExceptionUtil.getMessage(e));
+            e.printStackTrace();
+            throw new RuntimeException("获取字段信息失败！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         } finally {
             com.hex.bigdata.metadata.db.util.JdbcUtil.close(conn);
         }
@@ -109,19 +121,12 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
         if (StringUtils.isNotBlank(selectSql)) {
             selectSql = "SELECT * FROM (" + selectSql + ") UDSP_VIEW WHERE 1=0";
             return getMetadataCols(datasource, selectSql);
-        }
-        if (StringUtils.isNotBlank(tbName)) {
-            // Oracle比较特殊，dbName实际上是Oracle用户名称（大写），tbName表名（大写）。
-            if (DatasourceType.ORACLE.getValue().equals(datasource.getType())) {
-                dbName = datasource.getUsername().toUpperCase();
-                tbName = tbName.toUpperCase();
-            }
+        } else {
             return getMetadataCols(datasource, dbName, tbName);
         }
-        return null;
     }
 
-    protected List<MetadataCol> getMetadataCols(JdbcDatasource datasource, String querySql) {
+    private List<MetadataCol> getMetadataCols(JdbcDatasource datasource, String querySql) {
         List<MetadataCol> metadataCols = null;
         Connection conn = null;
         Statement stmt = null;
@@ -390,8 +395,8 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             mdCol.setDescribe(col.getComment());
             mdCol.setType(getColType(col.getType()));
             mdCol.setLength(col.getLength());
-            mdCol.setPrimary(col.getPrimaryKeyN() > 0 ? true : false);
-            mdCol.setIndexed(col.getPrimaryKeyN() > 0 ? true : false);
+            mdCol.setPrimary(col.getPrimaryKeyN() > 0);
+            mdCol.setIndexed(col.getPrimaryKeyN() > 0);
             mdCol.setStored(true);
             mdCols.add(mdCol);
         }
@@ -423,11 +428,14 @@ public abstract class JdbcWrapper extends Wrapper implements BatchTargetConverte
             stmt = conn.createStatement();
             stmt.executeQuery(sql);
         } catch (Exception e) {
-            logger.error(ExceptionUtil.getMessage(e));
-            if (e.getMessage().indexOf("doesn't exist") != -1
-                    || e.getMessage().indexOf("ORA-00942") != -1
-                    || e.getMessage().indexOf("Table not found") != -1
-                    || e.getMessage().indexOf("Could not resolve table reference") != -1) {
+            logger.warn(ExceptionUtil.getMessage(e));
+            if (e.getMessage().indexOf("doesn't exist") != -1 // mysql
+                    || e.getMessage().indexOf("does not exist") != -1 // mysql
+                    || e.getMessage().indexOf("ORA-00942") != -1 // oracle
+                    || e.getMessage().indexOf("Table not found") != -1 // hive
+                    || e.getMessage().indexOf("Could not resolve table reference") != -1 // impala
+                    || e.getMessage().indexOf("Table undefined") != -1 // phoenix
+                    ) {
                 exists = false;
             }
         } finally {

@@ -19,7 +19,6 @@ public abstract class ConsumerClient {
      */
     private String requestUrl;
 
-
     protected ConsumerClient() {
     }
 

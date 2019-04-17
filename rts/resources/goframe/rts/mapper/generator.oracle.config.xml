@@ -27,7 +27,7 @@
         <!--<table tableName="IQ_APPLICATION" domainObjectName="IQApplication"/>-->
         <table tableName="RTS_CUSTOMER_CONFIG" domainObjectName="RtsCustomerConfig"/>
         <table tableName="RTS_DATASOURCE" domainObjectName="RtsDatasource"/>
-        <table tableName="RTS_METADATA" domainObjectName="RtsMatedata"/>
+        <table tableName="RTS_METADATA" domainObjectName="RtsMetadata"/>
         <table tableName="RTS_METADATA_COLUMN" domainObjectName="RtsMetadataCol"/>
         <table tableName="RTS_PRODUCRER_CONFIG" domainObjectName="RtsProducerConfig"/>
   </context>

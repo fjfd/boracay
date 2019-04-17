@@ -10,7 +10,7 @@ import com.hex.bigdata.udsp.common.util.FTPHelper;
 import com.hex.bigdata.udsp.common.util.HostUtil;
 import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
-import com.hex.bigdata.udsp.consumer.util.RequestUtil;
+import com.hex.bigdata.udsp.consumer.util.Util;
 import com.hex.bigdata.udsp.service.DatasourceTestService;
 import com.hex.bigdata.udsp.service.InnerConsumerService;
 import com.hex.goframe.controller.BaseController;
@@ -111,7 +111,7 @@ public class HttpController extends BaseController {
     @RequestMapping({"/inner/consume"})
     @ResponseBody
     public Response innerConsume(@RequestBody String json, HttpServletRequest httpServletRequest) {
-        Request request = RequestUtil.jsonToRequest(json);
+        Request request = Util.jsonToRequest(json);
         request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest)); //获取并设置客户端请求的IP
         return getInnerConsume(request);
     }
@@ -124,7 +124,7 @@ public class HttpController extends BaseController {
     @RequestMapping({"/inner/async/consume"})
     @ResponseBody
     public MessageResult innerAsyncConsume(@RequestBody String json, HttpServletRequest httpServletRequest) {
-        Request request = RequestUtil.jsonToRequest(json);
+        Request request = Util.jsonToRequest(json);
         request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest)); //获取并设置客户端请求的IP
         if (!ConsumerType.ASYNC.getValue().equalsIgnoreCase(request.getType())
                 || !ConsumerEntity.START.getValue().equalsIgnoreCase(request.getEntity())) {

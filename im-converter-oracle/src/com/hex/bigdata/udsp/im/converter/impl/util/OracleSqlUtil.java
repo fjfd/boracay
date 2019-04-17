@@ -159,28 +159,30 @@ public class OracleSqlUtil {
 
     private static String getColumns(List<TableColumn> columns) {
         String sql = "";
+        String colName = "";
+        String dataType = "";
+        String length = "";
+        int count = 0;
         if (columns != null && columns.size() != 0) {
             sql = "\n (";
-            for (int i = 0; i < columns.size(); i++) {
-                TableColumn column = columns.get(i);
-                String colName = column.getColName();
-                String dataType = column.getDataType();
-                String length = column.getLength();
-                if (StringUtils.isNoneBlank(colName) && StringUtils.isNoneBlank(dataType)) {
-                    dataType = getColType(dataType, length);
-                    if (i == 0) {
-                        sql += "\n" + colName + " " + dataType;
-                    } else {
-                        sql += "\n, " + colName + " " + dataType;
-                    }
+            for (TableColumn column : columns) {
+                colName = column.getColName();
+                dataType = column.getDataType();
+                length = column.getLength();
+                if (StringUtils.isBlank(colName) || StringUtils.isBlank(dataType))
+                    continue;
+                sql += (count == 0 ? "\n" : "\n,") + colName + " " + getColType(dataType, length);
+                if (column.isPrimaryKey()) {
+                    sql += " PRIMARY KEY";
                 }
+                count++;
             }
             sql += "\n)";
         }
         return sql;
     }
 
-    public static String getColType(String dataType, String length) {
+    private static String getColType(String dataType, String length) {
         if (DataType.VARCHAR.getValue().equals(dataType)) {
             dataType = "VARCHAR2(" + length + ")";
         } else if (DataType.CHAR.getValue().equals(dataType)) {
@@ -191,30 +193,5 @@ public class OracleSqlUtil {
             dataType = "VARCHAR2(4000)";
         }
         return dataType;
-    }
-
-    /**
-     * 添加主键
-     *
-     * @param tableName
-     * @param columns
-     * @return
-     */
-    public static String createPrimaryKey(String tableName, List<TableColumn> columns) {
-        if (StringUtils.isEmpty(tableName)) {
-            return "";
-        }
-        List<String> list = new ArrayList<>();
-        for (TableColumn col : columns) {
-            if (col.isPrimaryKey() && !"STRING".equals(col.getDataType())) {
-                list.add(col.getColName());
-            }
-        }
-        if (list.size() <= 0) {
-            return "";
-        } else {
-            return "ALTER TABLE " + tableName + " ADD CONSTRAINT PRIMARYKEY PRIMARY KEY ("
-                    + list.toString().replaceAll("(\\[|\\])", "") + ")";
-        }
     }
 }

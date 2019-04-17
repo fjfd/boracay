@@ -5,11 +5,11 @@ package com.hex.bigdata.udsp.common.constant;
  */
 public enum Stats {
     NONE("无", "NONE"),
+    SUM("合计", "SUM"),
+    MIN("最小", "MIN"),
+    MAX("最大", "MAX"),
+    AVG("平均", "AVG"),
     COUNT("计数", "COUNT"),
-    SUM("合计", "DESC"),
-    MIN("最小", "ASC"),
-    MAX("最大", "DESC"),
-    AVG("平均", "ASC"),
     CONCAT("合并", "CONCAT");
 
     private String value;

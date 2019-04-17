@@ -11,7 +11,7 @@ import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.service.IqAsyncService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
 import com.hex.bigdata.udsp.consumer.service.OlqAsyncService;
-import com.hex.bigdata.udsp.consumer.util.RequestUtil;
+import com.hex.bigdata.udsp.consumer.util.Util;
 import com.hex.bigdata.udsp.common.dao.HeartbeatMapper;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.service.CurrentService;
@@ -106,11 +106,13 @@ public class HeartbeatCheckService {
                         logger.debug("检测到本服务心跳！");
                         count = i;
                         if (i == 0) {
-                            if (list.get(list.size() - 1).getTime() >= compareTime)
+                            if (list.get(list.size() - 1).getTime() >= compareTime) {
                                 break;
+                            }
                         } else {
-                            if (list.get(i - 1).getTime() >= compareTime)
+                            if (list.get(i - 1).getTime() >= compareTime) {
                                 break;
+                            }
                         }
                     }
                     //如果小于规定时间则认为该机器已经宕机了,如果单台机器就不做判断循环了
@@ -172,7 +174,7 @@ public class HeartbeatCheckService {
         for (Current mcCurrent : newCurrents) {
             String type = mcCurrent.getAppType();
             String appId = mcCurrent.getAppId();
-            Request request = RequestUtil.jsonToRequest(mcCurrent.getRequestContent());
+            Request request = Util.jsonToRequest(mcCurrent.getRequestContent());
             request.setRequestType(mcCurrent.getRequestType());
             request.setAppType(type);
             request.setAppName(mcCurrent.getAppName());
@@ -184,8 +186,9 @@ public class HeartbeatCheckService {
             if (!runQueueService.addCurrent(mcCurrent)) { // 队列已满
                 ConsumeRequest consumeRequest = new ConsumeRequest();
                 consumeRequest.setRequest(request);
-                loggingService.writeResponseLog(null, consumeRequest, DateUtil.getDataTimestamp(mcCurrent.getStartTime()), 0,
-                        ErrorCode.ERROR_000003.getValue(), ErrorCode.ERROR_000003.getName());
+                loggingService.writeResponseLog(null, consumeRequest,
+                        DateUtil.getDataTimestamp(mcCurrent.getStartTime()), 0,
+                        ErrorCode.ERROR_000003, ErrorCode.ERROR_000003.getName());
             }
 
             //根据不同的APP类型、重新建任务

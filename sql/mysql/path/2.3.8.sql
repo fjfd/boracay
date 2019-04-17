@@ -15,7 +15,7 @@ values ('IM_DS_PROPS_IMPALA', 'driver.class', '驱动类', null, 1, null, null, 
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'initial.size', '初始连接数', null, 5, null, null, 'default', '1');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
-values ('IM_DS_PROPS_IMPALA', 'jdbc.url', 'JDBC URL，如：无密码dbc:impala://${ip}:${port}/${database}  有密码jdbc:impala://${ip}:${port}/${database};AuthMech=3', null, 2, null, null, 'default', null);
+values ('IM_DS_PROPS_IMPALA', 'jdbc.url', 'JDBC URL，如：无密码jdbc:impala://${ip}:${port}/${database}  有密码jdbc:impala://${ip}:${port}/${database};AuthMech=3', null, 2, null, null, 'default', null);
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'username', '用户名', null, 3, null, null, 'default', null);
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
@@ -42,8 +42,6 @@ insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent
 values ('IM_DS_PROPS_IMPALA', 'test.while.idle', '是否被无效链接销毁器进行检验', null, 14, null, null, 'default', 'true');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'time.between.eviction.runs.millis', 'N毫秒检测一次是否有死掉的线程', null, 12, null, null, 'default', '30000');
-insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
-values ('IM_DS_PROPS_IMPALA', 'user.information.schema', '是否允许获取表、字段注释', null, 19, null, null, 'default', 'true');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'validation.query', '验证链接的SQL语句，必须能返回一行及以上数据', null, 10, null, null, 'default', 'select 1');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)

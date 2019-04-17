@@ -19,6 +19,7 @@ public class Constant {
     public final static String DB_TYPE_HIVE_FOR_MYSQL = "hive_for_mysql";
     public final static String DB_TYPE_HIVE_FOR_ORACLE = "hive_for_oracle";
     public final static String DB_TYPE_HIVE_FOR_PGSQL = "hive_for_pgsql";
+    public final static String DB_TYPE_PHOENIX = "phoenix";
 
     /**
      * MetaData

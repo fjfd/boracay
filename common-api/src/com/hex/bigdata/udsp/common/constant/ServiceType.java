@@ -10,7 +10,8 @@ public enum ServiceType {
     MM("模型管理", "MM"),
     RTS_PRODUCER("实时流-生产者服务", "RTS_PRODUCER"),
     RTS_CONSUMER("实时流-消费者服务", "RTS_CONSUMER"),
-    IM("交互建模", "IM");
+    IM("交互建模", "IM"),
+    IQ_DSL("交互查询自定义SQL", "IQ_DSL");
 
     private String value;
     private String name;

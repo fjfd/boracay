@@ -27,58 +27,53 @@ import java.util.Map;
 @Service
 public class OlqService extends BaseService {
 
-    private static Logger logger = LogManager.getLogger(OlqApplicationService.class);
+    private static Logger logger = LogManager.getLogger (OlqApplicationService.class);
 
-    /**
-     * 设置信息到workbook
-     *
-     */
-    public void setWorkbooksheet(HSSFWorkbook workbook, Map<String,String> map) {
-        HSSFWorkbook sourceWork;
-        HSSFSheet sourceSheet = null;
-        String seprator = FileUtil.getFileSeparator();
-        String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_allServiceInfo.xls";
-
+    public HSSFWorkbook setWorkbookSheet(HSSFWorkbook workbook, Map<String, String> map) {
+        String templateFile = ExcelCopyUtils.templatePath + FileUtil.getFileSeparator () + "downLoadTemplate_allServiceInfo.xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
+        HSSFWorkbook sourceWork = null;
+        HSSFSheet sourceSheet = null;
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
-            sourceWork = new HSSFWorkbook(sourceFile);
-            //联机查询模板时第二个sheet
-            sourceSheet = sourceWork.getSheetAt(1);
-            //创建表格
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            // 联机查询模板为第2个sheet
+            sourceSheet = sourceWork.getSheetAt (1);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
-        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam>();
-        comExcelParams.add(new ComExcelParam(2, 1, "serviceName"));
-        comExcelParams.add(new ComExcelParam(2, 3, "serviceDescribe"));
-        comExcelParams.add(new ComExcelParam(3, 1, "maxSyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 3, "maxAsyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 5, "maxSyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(3, 7, "maxAsyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(4, 1, "userId"));
-        comExcelParams.add(new ComExcelParam(4, 3, "userName"));
+        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam> ();
+        comExcelParams.add (new ComExcelParam (2, 1, "serviceName"));
+        comExcelParams.add (new ComExcelParam (2, 3, "serviceDescribe"));
+        comExcelParams.add (new ComExcelParam (3, 1, "maxSyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 3, "maxAsyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 5, "maxSyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (3, 7, "maxAsyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (4, 1, "userId"));
+        comExcelParams.add (new ComExcelParam (4, 3, "userName"));
 
-        HSSFSheet sheet = workbook.createSheet();
+        HSSFSheet sheet = workbook.createSheet (map.get ("serviceName"));
+
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 11; i++) {
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
         for (ComExcelParam comExcelParam : comExcelParams) {
             try {
-                ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), map.get(comExcelParam.getName()));
+                ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (), map.get (comExcelParam.getName ()));
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
+        return workbook;
     }
 }

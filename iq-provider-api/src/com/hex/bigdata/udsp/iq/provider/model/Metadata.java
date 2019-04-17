@@ -3,7 +3,7 @@ package com.hex.bigdata.udsp.iq.provider.model;
 import com.hex.bigdata.udsp.common.api.model.Base;
 import com.hex.bigdata.udsp.common.api.model.Datasource;
 import com.hex.bigdata.udsp.common.api.model.Property;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Map;

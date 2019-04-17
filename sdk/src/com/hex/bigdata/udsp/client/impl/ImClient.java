@@ -40,11 +40,11 @@ public class ImClient extends ConsumerClient {
      * 检查start业务参数
      */
     protected void checkStartBusinessParams(BaseRequest baseRequest) {
-        ImRequest request = (ImRequest) baseRequest;
-        Map<String, String> data = request.getData();
-        if (data == null || data.size() == 0) {
-            throw new IllegalArgumentException("参数data不能为空!");
-        }
+//        ImRequest request = (ImRequest) baseRequest;
+//        Map<String, String> data = request.getData();
+//        if (data == null || data.size() == 0) {
+//            throw new IllegalArgumentException("参数data不能为空!");
+//        }
     }
 
 }

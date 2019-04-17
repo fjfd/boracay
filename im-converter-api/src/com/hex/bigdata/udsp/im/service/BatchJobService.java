@@ -185,21 +185,23 @@ public class BatchJobService {
      * 清空过时的批量作业信息
      */
     public void cleanOutmodedBatch() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1 * keepBatchTaskPeriod);
-        Date date = calendar.getTime();
         List<BatchInfo> batchInfos = selectList();
-        for (BatchInfo batchInfo : batchInfos) {
-            String id = batchInfo.getId();
-            BatchStatus status = batchInfo.getStatus();
-            String host = batchInfo.getHost();
-            if ((BatchStatus.BUILD_SUCCESS == status || BatchStatus.BUILD_FAIL == status)
-                    && HOST_KEY.equals(host)) {
-                Date endDate = batchInfo.getEndTime();
-                // 结束时间小于等于当前N天前的时间
-                if (endDate != null && endDate.compareTo(date) <= 0) {
-                    logger.debug("删除失败或成功且过时的批量作业信息,ID:" + id);
-                    delete(id);
+        if (batchInfos != null && batchInfos.size() > 0) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, -1 * keepBatchTaskPeriod);
+            Date date = calendar.getTime();
+            for (BatchInfo batchInfo : batchInfos) {
+                String id = batchInfo.getId();
+                BatchStatus status = batchInfo.getStatus();
+                String host = batchInfo.getHost();
+                if ((BatchStatus.BUILD_SUCCESS == status || BatchStatus.BUILD_FAIL == status)
+                        && HOST_KEY.equals(host)) {
+                    Date endDate = batchInfo.getEndTime();
+                    // 结束时间小于等于当前N天前的时间
+                    if (endDate != null && endDate.compareTo(date) <= 0) {
+                        logger.debug("删除失败或成功且过时的批量作业信息,ID:" + id);
+                        delete(id);
+                    }
                 }
             }
         }
@@ -244,6 +246,7 @@ public class BatchJobService {
      * @return
      */
     public List<BatchInfoDto> selectAll(BatchInfoView batchInfoView) {
+        String id = batchInfoView.getId();
         String modelName = batchInfoView.getModelName();
         String message = batchInfoView.getMessage();
         String host = batchInfoView.getHost();
@@ -267,10 +270,12 @@ public class BatchJobService {
         // 判断查询条件，过滤数据
         List<BatchInfoDto> batchInfoList = new ArrayList<>();
         for (BatchInfoDto dto : list) {
+            if (StringUtils.isNotBlank(id) && !dto.getId().contains(id)) {
+                continue;
+            }
             if (StringUtils.isNotBlank(modelName) && !dto.getModelName().contains(modelName)) {
                 continue;
             }
-            // 查询时，将原数据为空的先去除，以下字段也类似
             if (StringUtils.isNotBlank(message) && StringUtils.isBlank(dto.getMessage())) {
                 continue;
             }

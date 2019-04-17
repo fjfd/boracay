@@ -35,7 +35,7 @@ import java.io.InputStreamReader;
 @Service
 public class MmProviderService {
 
-    private static Logger logger = LogManager.getLogger(MmProviderService.class);
+    private static Logger logger = LogManager.getLogger (MmProviderService.class);
 
     private static final String APPLICATION_JSON = "application/json";
 
@@ -48,24 +48,24 @@ public class MmProviderService {
      * @param url
      */
     public MmResponse request(MmRequest mmRequest, String url) throws Exception {
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(mmRequest);
-        logger.info("请求地址：" + url);
-        logger.info("请求参数：" + jsonObject.toJSONString());
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.addHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-        StringEntity entity = new StringEntity(jsonObject.toJSONString());
-        entity.setContentType(CONTEXT_TYPE_TEXT_JSON);
-        entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON));
-        httpPost.setEntity(entity);
-        HttpResponse response = httpClient.execute(httpPost);
-        String returnString = analysis(response);
-        logger.info("模型返回信息：" + returnString);
-        MmResponse mmResponse = JSONUtil.parseJSON2Obj(returnString, MmResponse.class);
-        JSONObject dataObject = JSON.parseObject(returnString).getJSONObject("data");
+        JSONObject jsonObject = (JSONObject) JSON.toJSON (mmRequest);
+        logger.info ("请求地址：" + url);
+        logger.info ("请求参数：" + jsonObject.toJSONString ());
+        DefaultHttpClient httpClient = new DefaultHttpClient ();
+        HttpPost httpPost = new HttpPost (url);
+        httpPost.addHeader (HTTP.CONTENT_TYPE, APPLICATION_JSON);
+        StringEntity entity = new StringEntity (jsonObject.toJSONString ());
+        entity.setContentType (CONTEXT_TYPE_TEXT_JSON);
+        entity.setContentEncoding (new BasicHeader (HTTP.CONTENT_TYPE, APPLICATION_JSON));
+        httpPost.setEntity (entity);
+        HttpResponse response = httpClient.execute (httpPost);
+        String returnString = analysis (response);
+        logger.info ("模型返回信息：" + returnString);
+        MmResponse mmResponse = JSONUtil.parseJSON2Obj (returnString, MmResponse.class);
+        JSONObject dataObject = JSON.parseObject (returnString).getJSONObject ("data");
         if (dataObject != null) {
-            MmResponseData mmResponseData = JSONUtil.parseJSON2Obj(dataObject.toJSONString(), MmResponseData.class);
-            mmResponse.setData(mmResponseData);
+            MmResponseData mmResponseData = JSONUtil.parseJSON2Obj (dataObject.toJSONString (), MmResponseData.class);
+            mmResponse.setData (mmResponseData);
         }
         return mmResponse;
     }
@@ -78,41 +78,41 @@ public class MmProviderService {
      */
     private String analysis(HttpResponse httpResponse) throws Exception {
         if (httpResponse == null) {
-            throw new Exception("httpResponse为空");
+            throw new Exception ("httpResponse为空");
         }
-        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        int statusCode = httpResponse.getStatusLine ().getStatusCode ();
         if (HttpStatus.SC_OK != statusCode) {
-            throw new Exception(httpResponse.toString());
+            throw new Exception (httpResponse.toString ());
         }
         InputStream is = null;
         BufferedReader br = null;
-        StringBuilder buffer = new StringBuilder();
-        HttpEntity entity = httpResponse.getEntity();
+        StringBuilder buffer = new StringBuilder ();
+        HttpEntity entity = httpResponse.getEntity ();
         String returnString = "";
         try {
-            is = entity.getContent();
-            br = new BufferedReader(new InputStreamReader(is));
+            is = entity.getContent ();
+            br = new BufferedReader (new InputStreamReader (is));
             String line = null;
-            while ((line = br.readLine()) != null) {
-                buffer.append(line);
+            while ((line = br.readLine ()) != null) {
+                buffer.append (line);
             }
-            returnString = buffer.toString();
-            returnString = StringEscapeUtils.unescapeJava(returnString);
+            returnString = buffer.toString ();
+            returnString = StringEscapeUtils.unescapeJava (returnString);
         } catch (Exception e) {
-            throw new Exception("解析返回结果失败!" + e.toString());
+            throw new Exception ("解析返回结果失败!" + e.toString ());
         } finally {
             if (is != null) {
                 try {
-                    is.close();
+                    is.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
             if (br != null) {
                 try {
-                    br.close();
+                    br.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
         }
@@ -128,12 +128,12 @@ public class MmProviderService {
                 "        \"file\":\"/rootPath/CORE/BJ/20170411/mode1_XXXXXX.txt\"\n" +
                 "    }\n" +
                 "}";
-        MmResponse mmResponse = JSONUtil.parseJSON2Obj(json, MmResponse.class);
-        JSONObject dataObject = JSON.parseObject(json).getJSONObject("data");
+        MmResponse mmResponse = JSONUtil.parseJSON2Obj (json, MmResponse.class);
+        JSONObject dataObject = JSON.parseObject (json).getJSONObject ("data");
         if (dataObject != null) {
-            MmResponseData mmResponseData = JSONUtil.parseJSON2Obj(dataObject.toJSONString(), MmResponseData.class);
-            mmResponse.setData(mmResponseData);
+            MmResponseData mmResponseData = JSONUtil.parseJSON2Obj (dataObject.toJSONString (), MmResponseData.class);
+            mmResponse.setData (mmResponseData);
         }
-        System.out.println(JSONUtil.parseObj2JSON(mmResponse));
+        System.out.println (JSONUtil.parseObj2JSON (mmResponse));
     }
 }

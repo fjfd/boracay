@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by PC on 2018/8/20.
  */
-public class HBaseMetadata extends Metadata{
+public class HBaseMetadata extends Metadata {
 
     public HBaseMetadata() {
     }

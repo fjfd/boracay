@@ -27,6 +27,8 @@ insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent
 values ('IQ_DS_PROPS_REDIS', 'redis.seprator', '结果数据分隔符', null, 10, null, null, 'default', '\007');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IQ_DS_PROPS_REDIS', 'max.data.size', '最大返回数', null, 11, null, null, 'default', '65535');
+insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
+values ('IQ_DS_PROPS_REDIS', 'max.data.size.alarm', '超过最大返回数是否告警', null, 12, null, null, 'default', 'true');
 
 -- 添加IQ的接口实现类
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)

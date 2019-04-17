@@ -7,10 +7,17 @@ values ('IM_DS_SOURCE_BATCH_TYPE', 'IMPALA', 'IMPALA', null, 6, null, null, 'def
 -- 添加IM的数据源配置
 insert into T_GF_DICT_TYPE (dict_type_id, dict_type_name, appid)
 values ('IM_DS_PROPS_IMPALA', '交互建模-数据源配置-IMPALA', 'default');
+/*
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'driver.class', '驱动类', null, 1, null, null, 'default', 'com.cloudera.impala.jdbc41.Driver');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
-values ('IM_DS_PROPS_IMPALA', 'jdbc.url', 'JDBC URL，如：无密码dbc:impala://${ip}:${port}/${database}  有密码jdbc:impala://${ip}:${port}/${database};AuthMech=3', null, 2, null, null, 'default', null);
+values ('IM_DS_PROPS_IMPALA', 'jdbc.url', 'JDBC URL，如：无密码jdbc:impala://${ip}:${port}/${database}，有密码jdbc:impala://${ip}:${port}/${database};AuthMech=3', null, 2, null, null, 'default', null);
+*/
+insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
+values ('IM_DS_PROPS_IMPALA', 'driver.class', '驱动类', null, 1, null, null, 'default', 'org.apache.hive.jdbc.HiveDriver');
+insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
+values ('IM_DS_PROPS_IMPALA', 'jdbc.url', 'JDBC URL，如：无密码jdbc:hive2://${ip}:${port}/${database};auth=noSasl，有密码jdbc:hive2://${ip}:${port}/${database}', null, 2, null, null, 'default', null);
+
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'username', '用户名', null, 3, null, null, 'default', null);
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
@@ -43,8 +50,6 @@ insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent
 values ('IM_DS_PROPS_IMPALA', 'remove.abandoned.timeout', '回收没用的连接超时时间', null, 17, null, null, 'default', '180000');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('IM_DS_PROPS_IMPALA', 'remove.abandoned', '是否进行没用连接的回收', null, 18, null, null, 'default', 'true');
-insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
-values ('IM_DS_PROPS_IMPALA', 'user.information.schema', '是否允许获取表、字段注释', null, 19, null, null, 'default', 'true');
 
 -- 添加IM的（源）模型配置
 insert into T_GF_DICT_TYPE (dict_type_id, dict_type_name, appid)

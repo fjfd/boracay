@@ -46,7 +46,7 @@ import java.util.*;
 @Service
 public class RtsConsumerService extends BaseService {
 
-    private static Logger logger = LogManager.getLogger(RtsConsumerService.class);
+    private static Logger logger = LogManager.getLogger (RtsConsumerService.class);
 
     @Autowired
     private ComPropertiesService comPropertiesService;
@@ -60,19 +60,19 @@ public class RtsConsumerService extends BaseService {
     private static List<ComExcelParam> comExcelParams;
 
     static {
-        comExcelParams = new ArrayList<>();
-        comExcelParams.add(new ComExcelParam(1, 1, "name"));
-        comExcelParams.add(new ComExcelParam(1, 3, "mdId"));
-        comExcelParams.add(new ComExcelParam(2, 1, "describe"));
-        comExcelParams.add(new ComExcelParam(3, 1, "note"));
+        comExcelParams = new ArrayList<> ();
+        comExcelParams.add (new ComExcelParam (1, 1, "name"));
+        comExcelParams.add (new ComExcelParam (1, 3, "mdId"));
+        comExcelParams.add (new ComExcelParam (2, 1, "describe"));
+        comExcelParams.add (new ComExcelParam (3, 1, "note"));
     }
 
 
     @Transactional
     public String insert(RtsConsumer rtsConsumer) {
-        String pkId = Util.uuid();
-        rtsConsumer.setPkId(pkId);
-        if (rtsConsumerMapper.insert(pkId, rtsConsumer)) {
+        String pkId = Util.uuid ();
+        rtsConsumer.setPkId (pkId);
+        if (rtsConsumerMapper.insert (pkId, rtsConsumer)) {
             return pkId;
         }
         return "";
@@ -86,7 +86,7 @@ public class RtsConsumerService extends BaseService {
      */
     @Transactional
     public boolean update(RtsConsumer rtsConsumer) {
-        return rtsConsumerMapper.update(rtsConsumer.getPkId(), rtsConsumer);
+        return rtsConsumerMapper.update (rtsConsumer.getPkId (), rtsConsumer);
     }
 
     /**
@@ -97,7 +97,7 @@ public class RtsConsumerService extends BaseService {
      */
     @Transactional
     public boolean delete(String pkId) {
-        return rtsConsumerMapper.delete(pkId);
+        return rtsConsumerMapper.delete (pkId);
     }
 
     /**
@@ -107,7 +107,7 @@ public class RtsConsumerService extends BaseService {
      * @return
      */
     public RtsConsumer select(String pkId) {
-        return rtsConsumerMapper.select(pkId);
+        return rtsConsumerMapper.select (pkId);
     }
 
     /**
@@ -119,7 +119,7 @@ public class RtsConsumerService extends BaseService {
      */
 
     public List<RtsConsumerView> select(RtsConsumerView rtsConsumerView, Page page) {
-        return rtsConsumerMapper.selectPage(rtsConsumerView, page);
+        return rtsConsumerMapper.selectPage (rtsConsumerView, page);
     }
 
     /**
@@ -129,11 +129,11 @@ public class RtsConsumerService extends BaseService {
      * @return
      */
     public List<RtsConsumerView> select(RtsConsumerView rtsConsumerView) {
-        return rtsConsumerMapper.select(rtsConsumerView);
+        return rtsConsumerMapper.select (rtsConsumerView);
     }
 
     public List<RtsConsumer> selectAll() {
-        return rtsConsumerMapper.selectAll();
+        return rtsConsumerMapper.selectAll ();
     }
 
     /**
@@ -144,11 +144,11 @@ public class RtsConsumerService extends BaseService {
      */
     @Transactional
     public String insert(RtsConsumerProsView rtsConsumerProsView) {
-        RtsConsumer rtsDatasource = rtsConsumerProsView.getRtsConsumer();
-        String pkId = this.insert(rtsDatasource);
-        if (StringUtils.isNotBlank(pkId)) {
-            List<ComProperties> comPropertiesList = rtsConsumerProsView.getComPropertiesList();
-            comPropertiesService.insertList(pkId, comPropertiesList);
+        RtsConsumer rtsDatasource = rtsConsumerProsView.getRtsConsumer ();
+        String pkId = this.insert (rtsDatasource);
+        if (StringUtils.isNotBlank (pkId)) {
+            List<ComProperties> comPropertiesList = rtsConsumerProsView.getComPropertiesList ();
+            comPropertiesService.insertList (pkId, comPropertiesList);
             return pkId;
         }
         return "";
@@ -162,7 +162,7 @@ public class RtsConsumerService extends BaseService {
      * @return 存在返回true，不存在返回fals
      */
     public boolean checekUniqueName(String name) {
-        RtsConsumer rtsConsumer = this.rtsConsumerMapper.selectByName(name);
+        RtsConsumer rtsConsumer = this.rtsConsumerMapper.selectByName (name);
         return rtsConsumer != null;
     }
 
@@ -174,16 +174,16 @@ public class RtsConsumerService extends BaseService {
      */
     @Transactional
     public boolean update(RtsConsumerProsView rtsConsumerProsView) {
-        RtsConsumer rtsConsumer = rtsConsumerProsView.getRtsConsumer();
-        String pkId = rtsConsumer.getPkId();
+        RtsConsumer rtsConsumer = rtsConsumerProsView.getRtsConsumer ();
+        String pkId = rtsConsumer.getPkId ();
         //更新基础信息
-        boolean updateFlg = this.rtsConsumerMapper.update(pkId, rtsConsumer);
+        boolean updateFlg = this.rtsConsumerMapper.update (pkId, rtsConsumer);
         //删除旧的的配置参数信息
-        boolean delFlg = comPropertiesService.deleteList(pkId);
+        boolean delFlg = comPropertiesService.deleteList (pkId);
         if (delFlg) {
             //插入新的配置参数信息
-            List<ComProperties> comPropertiesList = rtsConsumerProsView.getComPropertiesList();
-            comPropertiesService.insertList(pkId, comPropertiesList);
+            List<ComProperties> comPropertiesList = rtsConsumerProsView.getComPropertiesList ();
+            comPropertiesService.insertList (pkId, comPropertiesList);
         }
         return true;
     }
@@ -198,8 +198,8 @@ public class RtsConsumerService extends BaseService {
     public boolean delete(RtsConsumer[] rtsConsumers) {
         boolean flag = true;
         for (RtsConsumer rtsDatasource : rtsConsumers) {
-            String pkId = rtsDatasource.getPkId();
-            boolean delFlg = delete(pkId);
+            String pkId = rtsDatasource.getPkId ();
+            boolean delFlg = delete (pkId);
             //删除旧的的配置参数信息
             //boolean comProDelflg = comPropertiesService.deleteByFkId(pkId);
             if (!delFlg) {
@@ -211,10 +211,10 @@ public class RtsConsumerService extends BaseService {
     }
 
     public List<RtsMetadataCol> selectConsumerColumns(String consumerId) {
-        RtsConsumer rtsProducer = this.select(consumerId);
+        RtsConsumer rtsProducer = this.select (consumerId);
         List<RtsMetadataCol> colList = null;
         if (rtsProducer != null) {
-            colList = rtsMetadataColService.selectByMdId(rtsProducer.getMdId());
+            colList = rtsMetadataColService.selectByMdId (rtsProducer.getMdId ());
         }
         return colList;
     }
@@ -227,64 +227,64 @@ public class RtsConsumerService extends BaseService {
      * @return
      */
     public Map<String, String> uploadExcel(String uploadFilePath) {
-        Map resultMap = new HashMap<String, String>(2);
-        File uploadFile = new File(uploadFilePath);
+        Map resultMap = new HashMap<String, String> (2);
+        File uploadFile = new File (uploadFilePath);
         FileInputStream in = null;
         try {
-            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent();
-            dataSourceContent.setClassName("com.hex.bigdata.udsp.rts.model.RtsConsumer");
+            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent ();
+            dataSourceContent.setClassName ("com.hex.bigdata.udsp.rts.model.RtsConsumer");
 
-            dataSourceContent.setComExcelParams(comExcelParams);
-            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<>();
+            dataSourceContent.setComExcelParams (comExcelParams);
+            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<> ();
             //添加对应的配置栏内容
-            comExcelPropertiesList.add(new ComExcelProperties("数据源配置",
+            comExcelPropertiesList.add (new ComExcelProperties ("数据源配置",
                     "com.hex.bigdata.udsp.common.model.ComProperties",
-                    10, 0, 1, ComExcelEnums.Comproperties.getAllNums()));
+                    10, 0, 1, ComExcelEnums.Comproperties.getAllNums ()));
 
-            dataSourceContent.setComExcelPropertiesList(comExcelPropertiesList);
-            dataSourceContent.setType("fixed");
+            dataSourceContent.setComExcelPropertiesList (comExcelPropertiesList);
+            dataSourceContent.setType ("fixed");
 
-            in = new FileInputStream(uploadFile);
-            HSSFWorkbook hfb = new HSSFWorkbook(in);
+            in = new FileInputStream (uploadFile);
+            HSSFWorkbook hfb = new HSSFWorkbook (in);
             HSSFSheet sheet;
-            for (int i = 0, activeIndex = hfb.getNumberOfSheets(); i < activeIndex; i++) {
-                sheet = hfb.getSheetAt(i);
-                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel(sheet, dataSourceContent);
-                List<RtsConsumer> rtsConsumers = (List<RtsConsumer>) uploadExcelModel.get("com.hex.bigdata.udsp.rts.model.RtsConsumer");
-                RtsConsumer rtsConsume = rtsConsumers.get(0);
-                if (rtsConsumerMapper.selectByName(rtsConsume.getName()) != null) {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个名称重复！");
+            for (int i = 0, activeIndex = hfb.getNumberOfSheets (); i < activeIndex; i++) {
+                sheet = hfb.getSheetAt (i);
+                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel (sheet, dataSourceContent);
+                List<RtsConsumer> rtsConsumers = (List<RtsConsumer>) uploadExcelModel.get ("com.hex.bigdata.udsp.rts.model.RtsConsumer");
+                RtsConsumer rtsConsume = rtsConsumers.get (0);
+                if (rtsConsumerMapper.selectByName (rtsConsume.getName ()) != null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个名称重复！");
                     break;
                 }
-                if (rtsMetadataMapper.selectByName(rtsConsume.getMdId()) == null) {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个对应元数据不存在！");
+                if (rtsMetadataMapper.selectByName (rtsConsume.getMdId ()) == null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个对应元数据不存在！");
                     break;
                 }
                 //更新元数据
-                rtsConsume.setMdId(rtsMetadataMapper.selectByName(rtsConsume.getMdId()).getPkId());
-                String pkId = insert(rtsConsume);
-                List<ComProperties> comPropertiesList = (List<ComProperties>) uploadExcelModel.get("com.hex.bigdata.udsp.common.model.ComProperties");
-                boolean insert = comPropertiesService.insertList(pkId, comPropertiesList);
+                rtsConsume.setMdId (rtsMetadataMapper.selectByName (rtsConsume.getMdId ()).getPkId ());
+                String pkId = insert (rtsConsume);
+                List<ComProperties> comPropertiesList = (List<ComProperties>) uploadExcelModel.get ("com.hex.bigdata.udsp.common.model.ComProperties");
+                boolean insert = comPropertiesService.insertList (pkId, comPropertiesList);
                 if (insert) {
-                    resultMap.put("status", "true");
+                    resultMap.put ("status", "true");
                 } else {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个保存失败！");
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个保存失败！");
                     break;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.put("status", "false");
-            resultMap.put("message", "程序内部异常：" + e.getMessage());
+            e.printStackTrace ();
+            resultMap.put ("status", "false");
+            resultMap.put ("message", "程序内部异常：" + e.getMessage ());
         } finally {
             if (in != null) {
                 try {
-                    in.close();
+                    in.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
         }
@@ -292,157 +292,145 @@ public class RtsConsumerService extends BaseService {
     }
 
     public String createExcel(RtsConsumer[] rtsConsumers) {
-        HSSFWorkbook workbook = null;
+        HSSFWorkbook workbook = new HSSFWorkbook ();
         HSSFWorkbook sourceWork;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
-        String seprator = FileUtil.getFileSeparator();
+        String seprator = FileUtil.getFileSeparator ();
         //模板文件位置
         String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_rtsConsumer.xls";
         // 下载地址
-        String dirPath = CreateFileUtil.getLocalDirPath();
-        dirPath += seprator + "download_rtsConsumer_excel_" + DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".xls";
+        String dirPath = CreateFileUtil.getLocalDirPath ();
+        dirPath += seprator + "download_rtsConsumer_excel_" + DateUtil.format (new Date (), "yyyyMMddHHmmss") + ".xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(
-                    templateFile));
-
-            sourceWork = new HSSFWorkbook(sourceFile);
-            sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            sourceSheet = sourceWork.getSheetAt (0);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
         for (RtsConsumer rtsConsumer : rtsConsumers) {
-            this.setWorkbookSheet(workbook, sourceSheet, comExcelParams, rtsConsumer);
+            this.setWorkbookSheet (workbook, sourceSheet, comExcelParams, rtsConsumer);
         }
 
         if (workbook != null) {
             try {
-                FileOutputStream stream = new FileOutputStream(dirPath);
-                workbook.write(new FileOutputStream(dirPath));
-                stream.close();
+                FileOutputStream stream = new FileOutputStream (dirPath);
+                workbook.write (new FileOutputStream (dirPath));
+                stream.close ();
                 return dirPath;
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
         return null;
     }
 
-    public void setWorkbooksheet(HSSFWorkbook workbook, Map<String,String> map, String appId) {
-        HSSFWorkbook sourceWork;
-        HSSFSheet sourceSheet = null;
-        String seprator = FileUtil.getFileSeparator();
+    public HSSFWorkbook setWorkbookSheet(HSSFWorkbook workbook, Map<String, String> map, String appId) {
+        String seprator = FileUtil.getFileSeparator ();
         String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_allServiceInfo.xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
-
+        HSSFWorkbook sourceWork = null;
+        HSSFSheet sourceSheet = null;
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
-            sourceWork = new HSSFWorkbook(sourceFile);
-            sourceSheet = sourceWork.getSheetAt(5);
-            //创建表格
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            // 实时流-消费者为第6个sheet
+            sourceSheet = sourceWork.getSheetAt (5);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
-        RtsConsumer rtsConsumer = this.select(appId);
+        RtsConsumer rtsConsumer = this.select (appId);
 
-        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam>();
-        comExcelParams.add(new ComExcelParam(2, 1, "serviceName"));
-        comExcelParams.add(new ComExcelParam(2, 3, "serviceDescribe"));
-        comExcelParams.add(new ComExcelParam(3, 1, "maxSyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 3, "maxAsyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 5, "maxSyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(3, 7, "maxAsyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(4, 1, "userId"));
-        comExcelParams.add(new ComExcelParam(4, 3, "userName"));
+        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam> ();
+        comExcelParams.add (new ComExcelParam (2, 1, "serviceName"));
+        comExcelParams.add (new ComExcelParam (2, 3, "serviceDescribe"));
+        comExcelParams.add (new ComExcelParam (3, 1, "maxSyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 3, "maxAsyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 5, "maxSyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (3, 7, "maxAsyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (4, 1, "userId"));
+        comExcelParams.add (new ComExcelParam (4, 3, "userName"));
 
-        HSSFSheet sheet = workbook.createSheet();
+        HSSFSheet sheet = workbook.createSheet (map.get ("serviceName"));
+
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 10; i++) {
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
         for (ComExcelParam comExcelParam : comExcelParams) {
             try {
-                ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), map.get(comExcelParam.getName()));
+                ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (), map.get (comExcelParam.getName ()));
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
-        this.setWorkbookSheetPart(sheet, rtsConsumer, sourceSheet, workbook, new RtsIndexDto(i));
+        this.setWorkbookSheetPart (sheet, rtsConsumer, sourceSheet, workbook, new RtsIndexDto (i));
+
+        return workbook;
     }
 
-    /**
-     * 设置信息到workbook
-     *
-     * @param workbook
-     * @param sourceSheet
-     * @param comExcelParams
-     * @param rtsConsumer
-     */
-    public void setWorkbookSheet(HSSFWorkbook workbook, HSSFSheet sourceSheet, List<ComExcelParam> comExcelParams, RtsConsumer rtsConsumer) {
+    private void setWorkbookSheet(HSSFWorkbook workbook, HSSFSheet sourceSheet, List<ComExcelParam> comExcelParams, RtsConsumer rtsConsumer) {
+        rtsConsumer = rtsConsumerMapper.select (rtsConsumer.getPkId ());
+        HSSFSheet sheet = workbook.createSheet (rtsConsumer.getName ());
 
-        HSSFSheet sheet;
-//        sheet = workbook.createSheet();
-
-        sheet = workbook.createSheet();
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 10; i++) {
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
-        //设置内容
-        RtsConsumer rtsConsumer1 = rtsConsumerMapper.select(rtsConsumer.getPkId());
         //设置元数据名字
-        rtsConsumer1.setMdId(rtsMetadataMapper.select(rtsConsumer1.getMdId()).getName());
+        rtsConsumer.setMdId (rtsMetadataMapper.select (rtsConsumer.getMdId ()).getName ());
         for (ComExcelParam comExcelParam : comExcelParams) {
             try {
-                Field field = rtsConsumer1.getClass().getDeclaredField(comExcelParam.getName());
-                field.setAccessible(true);
-                ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), field.get(rtsConsumer1) == null ? "" : field.get(rtsConsumer1).toString());
+                Field field = rtsConsumer.getClass ().getDeclaredField (comExcelParam.getName ());
+                field.setAccessible (true);
+                ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (),
+                        field.get (rtsConsumer) == null ? "" : field.get (rtsConsumer).toString ());
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
-        this.setWorkbookSheetPart(sheet, rtsConsumer, sourceSheet, workbook, new RtsIndexDto(i));
+
+        this.setWorkbookSheetPart (sheet, rtsConsumer, sourceSheet, workbook, new RtsIndexDto (i));
     }
 
-    public void setWorkbookSheetPart(HSSFSheet sheet, RtsConsumer rtsConsumer, HSSFSheet sourceSheet, HSSFWorkbook workbook, RtsIndexDto rtsIndexDto) {
+    private void setWorkbookSheetPart(HSSFSheet sheet, RtsConsumer rtsConsumer, HSSFSheet sourceSheet, HSSFWorkbook workbook, RtsIndexDto rtsIndexDto) {
         HSSFRow row;
         HSSFCell cell;
-        int rowIndex = rtsIndexDto.getRowIndex();
-        List<RtsMetadataCol> colList = rtsMetadataColService.selectByMdId(rtsConsumer.getMdId());
-        if (colList != null && colList.size() != 0) {
+        int rowIndex = rtsIndexDto.getRowIndex ();
+        List<RtsMetadataCol> colList = rtsMetadataColService.selectByMdId (rtsConsumer.getMdId ());
+        if (colList != null && colList.size () != 0) {
             int k = 1;
             for (RtsMetadataCol col : colList) {
-                row = sheet.createRow(rowIndex);
-                cell = row.createCell(0);
-                cell.setCellValue(k);
-                cell = row.createCell(1);
-                cell.setCellValue(col.getName());
-                cell = row.createCell(2);
-                cell.setCellValue(col.getType());
-                cell = row.createCell(3);
-                cell.setCellValue(col.getDescribe());
+                row = sheet.createRow (rowIndex);
+                cell = row.createCell (0);
+                cell.setCellValue (k);
+                cell = row.createCell (1);
+                cell.setCellValue (col.getName ());
+                cell = row.createCell (2);
+                cell.setCellValue (col.getType ());
+                cell = row.createCell (3);
+                cell.setCellValue (col.getDescribe ());
                 rowIndex++;
                 k++;
             }

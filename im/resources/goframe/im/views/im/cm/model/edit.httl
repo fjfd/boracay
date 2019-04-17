@@ -211,7 +211,7 @@ ${extends("/goframe/function_layout.httl")}
                         <div field="name" headerAlign="center" allowSort="true" width="30">目标名称<font color="#FF0000">（必填）</font>
                             <input property="editor" class="nui-combobox"
                                    textField="name" valueField="name" allowInput="true" dataField="data"
-                                   onbeforeshowpopup="targetMateColumn" vtype="maxLength:64" required="true"
+                                   onbeforeshowpopup="targetMetadataColumn" vtype="maxLength:64" required="true"
                                    onvaluechanged="mappingTargetColChange"/>
                         </div>
                         <div field="type" headerAlign="center" width="25" readonly="true">类型</div>
@@ -393,7 +393,7 @@ ${extends("/goframe/function_layout.httl")}
                     srcSourceType = "1";
                 }
                 //加载目标元数据可选内容
-                getTargetMates();
+                getTargetMetadata();
                 targetDsModel.setValue(targetSourceId);
                 form1.setData(data);
                 form1.setChanged(false);
@@ -425,10 +425,10 @@ ${extends("/goframe/function_layout.httl")}
     }
 
     //获取目标元数据可选内容
-    function getTargetMates(){
+    function getTargetMetadata(){
         //加载目标元数据可选内容
         $.ajax({
-            url: "${basePath}/im/md/getTargetMateData/" + srcSourceType,
+            url: "${basePath}/im/md/getTargetMetadata/" + srcSourceType,
             type: 'POST',
             cache: false,
             async:false,
@@ -492,7 +492,7 @@ ${extends("/goframe/function_layout.httl")}
         });
 
         //目标元数据可选择项修改
-        getTargetMates();
+        getTargetMetadata();
     }
 
     //加载字段映射
@@ -558,17 +558,19 @@ ${extends("/goframe/function_layout.httl")}
                     var data = result.data;
                     for (var i = 0, len = data.length; i < len; i++) {
                         filterCols.push({
-                            "name": data[i].name,
                             "colId": "",
-                            "note": data[i].note,
+                            "name": data[i].name,
+                            "type": data[i].type ? "STRING" : data[i].type,
+                            "length": data[i].type == "STRING" ? "" : data[i].length,
                             "describe": data[i].describe ? data[i].describe : data[i].name,
-                            "length": data[i].length,
-                            "type": data[i].type,
                             "indexed":data[i].indexed ? 0 : 1,
                             "primary":data[i].primary ? 0 : 1,
-                            "stored":data[i].stored ? 0 : 1
+                            "stored":data[i].stored ? 0 : 1,
+                            "note": data[i].note
                         });
                     }
+                } else {
+                    nui.alert(result.message);
                 }
             }
         });
@@ -878,7 +880,7 @@ ${extends("/goframe/function_layout.httl")}
             },
             ondestroy: function (action) {
                 //重新加载下
-                getTargetMates();
+                getTargetMetadata();
                 var k = 0;
                 for(;k < targetDsModel.data.length ;k++){
                     if(targetDsModel.data[k].pkId == action){
@@ -963,7 +965,7 @@ ${extends("/goframe/function_layout.httl")}
     }
 
     //获取目标元数据字段
-    function targetMateColumn(e){
+    function targetMetadataColumn(e){
         if(!targetSelectedCols || targetSelectedCols == null){
             getTargetCols();
             autoMapping();
@@ -976,10 +978,10 @@ ${extends("/goframe/function_layout.httl")}
         // --同一行的说明、长度和别名变化--
         var selected = e.selected;
         var row = grid4.getSelected();
-        row.describe = selected.describe?selected.describe:selected.name;
-        row.length = selected.length;
+        row.type = (selected.type == "" ? "STRING" : selected.type);
+        row.length = (selected.type == "STRING" ? "" : selected.length);
+        row.describe = (selected.describe ? selected.describe : selected.name);
         row.label = selected.name;
-        row.type = selected.type;
         row.operator = "==";
         row.isNeed = "1";
         row.defaultValue = "";
@@ -1202,9 +1204,9 @@ ${extends("/goframe/function_layout.httl")}
         var selected = e.selected;
         var row = grid3.getSelected();
         //row.colId = selected.colId == undefined?"":selected.colId;
-        row.type = selected.type == ""?"STRING":selected.type;
-        row.length = selected.length;
-        row.describe = selected.describe;
+        row.type = (selected.type == "" ? "STRING" : selected.type);
+        row.length = (selected.type == "STRING" ? "" : selected.length);
+        row.describe = (selected.describe ? selected.describe : selected.name);
         row.note = selected.note;
         row.indexed = selected.indexed;
         row.primary = selected.primary;
@@ -1217,9 +1219,9 @@ ${extends("/goframe/function_layout.httl")}
         var row = grid2.getSelected();
         var rowNum = grid2.indexOf(row);
         //row.colId = selected.colId == undefined?"":selected.colId;
-        row.type = selected.type == ""?"STRING":selected.type;
-        row.length = selected.length;
-        row.describe = selected.describe?selected.describe:selected.name;
+        row.type = (selected.type == "" ? "STRING" : selected.type);
+        row.length = (selected.type == "STRING" ? "" : selected.length);
+        row.describe = (selected.describe ? selected.describe : selected.name);
         row.note = "";
         row.indexed = selected.indexed;
         row.primary = selected.primary;

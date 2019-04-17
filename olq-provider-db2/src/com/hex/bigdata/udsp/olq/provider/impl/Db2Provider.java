@@ -8,13 +8,13 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by junjiem on 2017-2-15.
  */
-//@Component("com.hex.bigdata.udsp.olq.provider.impl.Db2Provider")
 public class Db2Provider extends JdbcProvider {
     private static Logger logger = LogManager.getLogger(Db2Provider.class);
 
+    @Override
     protected OlqQuerySql getPageSql(String sql, Page page) {
         OlqQuerySql olqQuerySql = new OlqQuerySql(sql);
-        if (page == null || !sql.toUpperCase().trim().contains("SELECT")) {
+        if (page == null || !sql.toUpperCase().contains("SELECT")) {
             return olqQuerySql;
         }
         // 分页sql组装

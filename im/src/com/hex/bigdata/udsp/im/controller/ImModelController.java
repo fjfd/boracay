@@ -148,14 +148,14 @@ public class ImModelController {
      *
      * @return
      */
-    @RequestMapping("getColumnsInfo/{srcDataSourceId}")
+    @RequestMapping("getColumnsInfo/{srcDatasourceId}")
     @ResponseBody
-    public MessageResult getSrcMateData(@PathVariable String srcDataSourceId, @RequestBody Property[] properties) {
+    public MessageResult getSrcMetadata(@PathVariable String srcDatasourceId, @RequestBody Property[] properties) {
         boolean status = true;
         String message = "获取字段信息成功";
         List<MetadataCol> metadataCols = null;
         try {
-            metadataCols = imModelService.getSrcMateData(properties, srcDataSourceId);
+            metadataCols = imModelService.getSrcMetadata(properties, srcDatasourceId);
             if (metadataCols == null || metadataCols.size() == 0) {
                 status = false;
                 message = "获取字段信息失败";

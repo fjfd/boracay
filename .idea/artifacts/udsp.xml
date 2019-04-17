@@ -13,29 +13,8 @@
           <element id="module-output" name="olq" />
           <element id="module-output" name="rc" />
           <element id="module-output" name="rts" />
-          <element id="module-output" name="im-converter-hive" />
-          <element id="module-output" name="im-converter-impala" />
-          <element id="module-output" name="im-converter-kafka" />
-          <element id="module-output" name="im-converter-kudu" />
-          <element id="module-output" name="im-converter-mysql" />
-          <element id="module-output" name="im-converter-oracle" />
-          <element id="module-output" name="im-converter-solr" />
-          <element id="module-output" name="im-converter-solr_hbase" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="common" />
-          <element id="library" level="project" name="goframe" />
-          <element id="library" level="project" name="hbase" />
-          <element id="library" level="project" name="mybatis" />
-          <element id="library" level="project" name="poi" />
-          <element id="library" level="project" name="redis" />
-          <element id="library" level="project" name="spring" />
-          <element id="library" level="project" name="tools" />
-          <element id="library" level="project" name="cxf" />
-          <element id="library" level="project" name="elasticsearch" />
-          <element id="library" level="project" name="kafka" />
-          <element id="library" level="project" name="solr" />
-          <element id="library" level="project" name="mail" />
           <element id="artifact" artifact-name="hex-udsp-common-api" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-api" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-hbase" />
@@ -61,8 +40,6 @@
           <element id="artifact" artifact-name="hex-udsp-consumer-http" />
           <element id="artifact" artifact-name="hex-udsp-consumer-restful" />
           <element id="artifact" artifact-name="hex-udsp-consumer-socket" />
-          <element id="artifact" artifact-name="hex-udsp-consumer-webservice" />
-          <element id="library" level="project" name="kudu" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-hive" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-impala" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-kafka" />
@@ -71,14 +48,35 @@
           <element id="artifact" artifact-name="hex-udsp-im-converter-oracle" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-solr" />
           <element id="artifact" artifact-name="hex-udsp-im-converter-solr_hbase" />
-          <element id="library" level="project" name="jdbc" />
-          <element id="library" level="project" name="db2-jdbc" />
-          <element id="library" level="project" name="oracle-jdbc" />
-          <element id="library" level="project" name="pgsql-jdbc" />
-          <element id="library" level="project" name="mysql-jdbc" />
-          <element id="library" level="project" name="kylin-jdbc" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-phoenix" />
+          <element id="library" level="project" name="common" />
+          <element id="library" level="project" name="goframe" />
+          <element id="library" level="project" name="hbase" />
+          <element id="library" level="project" name="mybatis" />
+          <element id="library" level="project" name="poi" />
+          <element id="library" level="project" name="redis" />
+          <element id="library" level="project" name="spring" />
+          <element id="library" level="project" name="tools" />
           <element id="library" level="project" name="hive-jdbc" />
-          <element id="library" level="project" name="impala-jdbc" />
+          <element id="library" level="project" name="kafka" />
+          <element id="library" level="project" name="kudu" />
+          <element id="library" level="project" name="mysql-jdbc" />
+          <element id="library" level="project" name="oracle-jdbc" />
+          <element id="library" level="project" name="solr" />
+          <element id="library" level="project" name="elasticsearch" />
+          <element id="library" level="project" name="db2-jdbc" />
+          <element id="library" level="project" name="kylin-jdbc" />
+          <element id="library" level="project" name="pgsql-jdbc" />
+          <element id="library" level="project" name="jdbc" />
+          <element id="library" level="project" name="mail" />
+          <element id="artifact" artifact-name="hex-udsp-rts-executor-kafka1" />
+          <element id="library" level="project" name="antlr4" />
+          <element id="artifact" artifact-name="hex-udsp-sdk" />
+          <element id="artifact" artifact-name="hex-udsp-dsl" />
+          <element id="artifact" artifact-name="hex-udsp-olq-provider-dsl" />
+          <element id="library" level="project" name="sdk" />
+          <element id="artifact" artifact-name="hex-udsp-im-converter-kafka1" />
+          <element id="library" level="project" name="netty" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="console/web/Web" />

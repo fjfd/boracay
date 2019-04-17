@@ -4,6 +4,7 @@ import com.hex.bigdata.udsp.common.constant.ErrorCode;
 import com.hex.bigdata.udsp.common.constant.Status;
 import com.hex.bigdata.udsp.common.constant.StatusCode;
 import com.hex.bigdata.udsp.consumer.model.Response;
+import com.hex.bigdata.udsp.consumer.util.Util;
 import com.hex.bigdata.udsp.im.constant.ModelType;
 import com.hex.bigdata.udsp.im.converter.model.Model;
 import com.hex.bigdata.udsp.im.service.BatchJobService;
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 @Service
 public class ImSyncService {
-    private static Logger logger = LoggerFactory.getLogger(ImSyncService.class);
+    private static Logger logger = LoggerFactory.getLogger (ImSyncService.class);
 
     @Autowired
     private BatchJobService batchJobService;
@@ -38,25 +39,22 @@ public class ImSyncService {
      * @return
      */
     public Response start(String appId, Map<String, String> data) {
-        long bef = System.currentTimeMillis();
-        Response response = new Response();
         try {
-            Model model = imModelService.getModel(appId, data);
-            if (ModelType.REALTIME == model.getType()) {
-                realtimeJobService.start(model);
+            long bef = System.currentTimeMillis ();
+            Model model = imModelService.getModel (appId, data);
+            if (ModelType.REALTIME == model.getType ()) {
+                realtimeJobService.start (model);
             } else {
-                batchJobService.start(model);
+                batchJobService.start (model);
             }
-            response.setStatus(Status.SUCCESS.getValue());
-            response.setStatusCode(StatusCode.SUCCESS.getValue());
+            Response response = new Response ();
+            response.setStatus (Status.SUCCESS.getValue ());
+            response.setStatusCode (StatusCode.SUCCESS.getValue ());
+            response.setConsumeTime (System.currentTimeMillis () - bef);
+            return response;
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_000007.getValue());
-            response.setMessage(e.getMessage());
+            e.printStackTrace ();
+            return Util.errorResponse (ErrorCode.ERROR_000007, e.toString ());
         }
-        response.setConsumeTime(System.currentTimeMillis() - bef);
-        return response;
     }
 }

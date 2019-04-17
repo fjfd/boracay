@@ -96,7 +96,7 @@ public class HostUtil {
                 clientIp = clientIp.substring(0, clientIp.indexOf(","));
             }
         }
-        logger.info("clientIp:" + clientIp);
+        logger.debug("clientIp:" + clientIp);
         return clientIp;
     }
 }

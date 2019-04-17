@@ -16,7 +16,7 @@ public class FtpClinetConfig {
 
     static {
         try {
-            loadConf("ftp.config.properties");
+            loadConf ("ftp.config.properties");
         } catch (Exception e) {
             //
         }
@@ -25,25 +25,27 @@ public class FtpClinetConfig {
     public static void loadConf(String configFilePath) {
         InputStream in = null;
         try {
-            in = FtpClinetConfig.class.getClassLoader().getResourceAsStream(
+            in = FtpClinetConfig.class.getClassLoader ().getResourceAsStream (
                     configFilePath);
-            Properties props = new Properties();
-            props.load(in);
-            hostname = props.getProperty("udsp.ftp.hostname");
-            String portStr = props.getProperty("udsp.ftp.port", "21");
-            if (StringUtils.isNotBlank(portStr)) port = Integer.valueOf(portStr);
-            username = props.getProperty("udsp.ftp.username");
-            password = props.getProperty("udsp.ftp.password");
-            datafilePostfix = props.getProperty("udsp.ftp.datafile.postfix", ".dat");
-            flgfilePostfix = props.getProperty("udsp.ftp.logfile.postfix", ".log");
+            Properties props = new Properties ();
+            props.load (in);
+            hostname = props.getProperty ("udsp.ftp.hostname");
+            String portStr = props.getProperty ("udsp.ftp.port", "21");
+            if (StringUtils.isNotBlank (portStr)) {
+                port = Integer.valueOf (portStr);
+            }
+            username = props.getProperty ("udsp.ftp.username");
+            password = props.getProperty ("udsp.ftp.password");
+            datafilePostfix = props.getProperty ("udsp.ftp.datafile.postfix", ".dat");
+            flgfilePostfix = props.getProperty ("udsp.ftp.logfile.postfix", ".log");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         } finally {
             if (in != null) {
                 try {
-                    in.close();
+                    in.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
         }

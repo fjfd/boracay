@@ -212,6 +212,10 @@ public class Model extends Base implements Serializable {
         return Boolean.valueOf(value);
     }
 
+    /**
+     * hive.set.sql="set mapred.map.tasks=1;"
+     * @return
+     */
     public String getHiveSetSql() {
         String value = getProperty("hive.set.sql").getValue();
         if (StringUtils.isBlank(value))

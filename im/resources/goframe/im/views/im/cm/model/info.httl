@@ -187,7 +187,7 @@ ${extends("/goframe/function_layout.httl")}
                             <div field="name" headerAlign="center" allowSort="true" width="30">目标名称<font color="#FF0000">（必填）</font>
                                 <input property="editor" class="nui-combobox"
                                        textField="name" valueField="name" allowInput="true" dataField="data"
-                                       onbeforeshowpopup="targetMateColumn" vtype="maxLength:64" required="true"
+                                       onbeforeshowpopup="targetMetadataColumn" vtype="maxLength:64" required="true"
                                        onvaluechanged="mappingTargetColChange"/>
                             </div>
                             <div field="type" headerAlign="center" allowSort="true" width="25">类型</font>

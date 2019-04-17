@@ -37,6 +37,8 @@ public class JdbcInfoClient extends BaseClient {
             helper = new ImpalaJdbcInfoHelper(this.conn);
         } else if (DBType.HIVE == dbType) {
             helper = new HiveJdbcInfoHelper(this.conn);
+        } else if (DBType.PHOENIX == dbType) {
+            helper = new PhoenixJdbcInfoHelper(this.conn);
         }
         return helper;
     }

@@ -120,7 +120,7 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 CREATE TABLE `t_gf_funcation` (
 `FUNC_ID`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 `FUNC_CODE`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-`FUNC_NAME`  varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+`FUNC_NAME`  varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `IS_FUNC`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `DISPLAYORDER`  int(65) NULL DEFAULT NULL ,
 `URL_ACCTION`  varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
@@ -170,6 +170,7 @@ CREATE TABLE `t_gf_loginuser` (
 `USER_COMMENT`  text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
 `VALID_STARTDATE`  varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `VALID_ENDDATE`  varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
+`ERROR_COUNT`  decimal NULL DEFAULT NULL ,
 PRIMARY KEY (`ID`)
 )
 ENGINE=InnoDB
@@ -182,7 +183,7 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 -- ----------------------------
 CREATE TABLE `t_gf_menu` (
 `MENUID`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-`MENUNAME`  varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`MENUNAME`  varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 `MENULABEL`  varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `MENUCODE`  varchar(120) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
 `ISLEAF`  char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ,
@@ -369,5 +370,4 @@ PRIMARY KEY (`USER_ID`)
 )
 ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
-
 ;

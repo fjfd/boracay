@@ -127,6 +127,10 @@ public class IqMetadataService extends BaseService {
         return iqMetadataMapper.select(iqMetadataView);
     }
 
+    public List<IqMetadata> selectAll() {
+        return iqMetadataMapper.selectAll();
+    }
+
     public boolean checkName(String name) {
         return iqMetadataMapper.selectByName(name) != null;
     }
@@ -212,8 +216,8 @@ public class IqMetadataService extends BaseService {
     }
 
     public String createExcel(IqMetadata[] iqMetadatas) {
-        HSSFWorkbook workbook = null;
-        HSSFWorkbook sourceWork;
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFWorkbook sourceWork = null;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
@@ -233,17 +237,13 @@ public class IqMetadataService extends BaseService {
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(
-                    templateFile));
-
+            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
             sourceWork = new HSSFWorkbook(sourceFile);
             sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HSSFSheet sheet;
+
         List<ComExcelParam> comExcelParams = new ArrayList<>();
         comExcelParams.add(new ComExcelParam(2, 1, "name"));
         comExcelParams.add(new ComExcelParam(2, 3, "dsId"));
@@ -251,9 +251,10 @@ public class IqMetadataService extends BaseService {
         comExcelParams.add(new ComExcelParam(3, 1, "describe"));
         comExcelParams.add(new ComExcelParam(3, 3, "tbName"));
 
+        HSSFSheet sheet = null;
         for (IqMetadata iqMetadata : iqMetadatas) {
-            sheet = workbook.createSheet();
-
+            iqMetadata = iqMetadataMapper.select(iqMetadata.getPkId());
+            sheet = workbook.createSheet(iqMetadata.getName ());
 
             //将前面样式内容复制到下载表中
             int i = 0;
@@ -265,20 +266,19 @@ public class IqMetadataService extends BaseService {
                 }
             }
 
-            //设置内容
-            IqMetadata iqmeta = iqMetadataMapper.select(iqMetadata.getPkId());
             //设置数据源名
-            iqmeta.setDsId(comDatasourceMapper.select(iqmeta.getDsId()).getName());
+            iqMetadata.setDsId(comDatasourceMapper.select(iqMetadata.getDsId()).getName());
             for (ComExcelParam comExcelParam : comExcelParams) {
                 try {
-                    Field field = iqmeta.getClass().getDeclaredField(comExcelParam.getName());
+                    Field field = iqMetadata.getClass().getDeclaredField(comExcelParam.getName());
                     field.setAccessible(true);
-                    ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), field.get(iqmeta) == null ? "" : field.get(iqmeta).toString());
+                    ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(),
+                            field.get(iqMetadata) == null ? "" : field.get(iqMetadata).toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            List<IqMetadataCol> iqMetadataQueryCols = iqMetadataColService.selectQueryColList(iqmeta.getPkId());
+            List<IqMetadataCol> iqMetadataQueryCols = iqMetadataColService.selectQueryColList(iqMetadata.getPkId());
             if (iqMetadataQueryCols.size() > 0) {
                 for (IqMetadataCol iqMetadataCol : iqMetadataQueryCols) {
                     row = sheet.createRow(i);
@@ -304,7 +304,7 @@ public class IqMetadataService extends BaseService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            List<IqMetadataCol> iqMetadataReturnCols = iqMetadataColService.selectReturnColList(iqmeta.getPkId());
+            List<IqMetadataCol> iqMetadataReturnCols = iqMetadataColService.selectReturnColList(iqMetadata.getPkId());
             if (iqMetadataReturnCols.size() > 0) {
                 for (IqMetadataCol iqMetadataCol : iqMetadataReturnCols) {
                     row = sheet.createRow(i);

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -16,18 +17,18 @@ public class NettyClientInitializer extends ChannelInitializer<NioSocketChannel>
 
     @Override
     protected void initChannel(NioSocketChannel ch) throws Exception {
-        handler = new NettyClientHandler();
+        handler = new NettyClientHandler ();
 
-        ch.pipeline().addLast(handler);
+//        ch.pipeline().addLast(handler);
 
-//                        ch.pipeline() //
-//                                .addLast(new StringDecoder()) //
-//                                .addLast(new StringEncoder()) //
-//                                .addLast(handler);
+//        ch.pipeline () //
+//                .addLast (new StringDecoder ()) //
+//                .addLast (new StringEncoder ()) //
+//                .addLast (handler);
 
-//                        ch.pipeline() //
-//                                .addLast(new JsonObjectDecoder()) //
-//                                .addLast(handler);
+        ch.pipeline () //
+                .addLast (new JsonObjectDecoder (Integer.MAX_VALUE)) //
+                .addLast (handler);
     }
 
     /**
@@ -36,11 +37,11 @@ public class NettyClientInitializer extends ChannelInitializer<NioSocketChannel>
      * @return
      */
     public String getResult() {
-        return handler.getResult();
+        return handler.getResult ();
     }
 
     public CountDownLatch getLathc() {
-        return handler.getLathc();
+        return handler.getLathc ();
     }
 
     /**
@@ -49,7 +50,7 @@ public class NettyClientInitializer extends ChannelInitializer<NioSocketChannel>
      * @param lathc
      */
     public void setLathc(CountDownLatch lathc) {
-        handler.setLathc(lathc);
+        handler.setLathc (lathc);
     }
 
     public NettyClientHandler getHandler() {

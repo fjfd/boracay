@@ -8,7 +8,7 @@ import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ExternalConsumerService;
 import com.hex.bigdata.udsp.consumer.service.LoggingService;
-import com.hex.bigdata.udsp.consumer.util.RequestUtil;
+import com.hex.bigdata.udsp.consumer.util.Util;
 import com.hex.goframe.controller.BaseController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -59,13 +59,12 @@ public class HttpConsumer extends BaseController {
         Response response = new Response();
         long bef = System.currentTimeMillis();
         try {
-            Request request = RequestUtil.jsonToRequest(json);
+            Request request = Util.jsonToRequest(json);
             request.setRequestIp(HostUtil.getRealRequestIp(httpServletRequest)); // 获取并设置客户端请求的IP
             response = consumerService.consume(request);
         } catch (Exception e) {
             e.printStackTrace();
-            loggingService.writeResponseLog(response, new ConsumeRequest(), bef, 0,
-                    ErrorCode.ERROR_000005.getValue(), ErrorCode.ERROR_000005.getName() + ":" + e.getMessage());
+            loggingService.writeResponseLog(response, new ConsumeRequest(), bef, 0, ErrorCode.ERROR_000005, e.toString ());
         }
         return response;
     }

@@ -16,7 +16,7 @@
     <orderEntry type="module" module-name="common" />
     <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="rts-executor-api" />
-    <orderEntry type="library" name="kafka" level="project" />
     <orderEntry type="module" module-name="rts-executor-kafka" />
+    <orderEntry type="module" module-name="rts-executor-kafka1" />
   </component>
 </module>

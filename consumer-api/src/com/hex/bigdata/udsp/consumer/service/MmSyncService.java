@@ -4,6 +4,7 @@ import com.hex.bigdata.udsp.common.constant.*;
 import com.hex.bigdata.udsp.common.util.CreateFileUtil;
 import com.hex.bigdata.udsp.consumer.model.Request;
 import com.hex.bigdata.udsp.consumer.model.Response;
+import com.hex.bigdata.udsp.consumer.util.Util;
 import com.hex.bigdata.udsp.mm.dto.MmFullAppInfoView;
 import com.hex.bigdata.udsp.mm.model.MmAppExecuteParam;
 import com.hex.bigdata.udsp.mm.model.MmAppReturnParam;
@@ -29,9 +30,9 @@ import java.util.Map;
  */
 @Service
 public class MmSyncService {
-    private static final Map<String, String> typeMap = new HashMap<String, String>() {{
-        put("sync", "1");
-        put("async", "2");
+    private static final Map<String, String> typeMap = new HashMap<String, String> () {{
+        put ("sync", "1");
+        put ("async", "2");
     }};
 
     /**
@@ -55,100 +56,83 @@ public class MmSyncService {
      * @return
      */
     public Response start(Request request) {
-        long bef = System.currentTimeMillis();
-        Response response = new Response();
+        long bef = System.currentTimeMillis ();
+        Response response = new Response ();
         try {
-            checkParam(request.getAppId(), request.getData());
+            checkParam (request.getAppId (), request.getData ());
         } catch (Exception e) {
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200003.getValue());
-            response.setMessage(ErrorCode.ERROR_200003.getName() + ":" + e.toString());
-            return response;
+            return Util.errorResponse (ErrorCode.ERROR_200003, e.toString ());
         }
-        MmFullAppInfoView appInfoView = mmApplicationService.selectFullAppInfo(request.getAppId());
+        MmFullAppInfoView appInfoView = mmApplicationService.selectFullAppInfo (request.getAppId ());
         if (appInfoView == null) {
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200004.getValue());
-            response.setMessage(ErrorCode.ERROR_200004.getName() + ":获取不到模型应用信息！");
-            return response;
+            return Util.errorResponse (ErrorCode.ERROR_200004, "获取不到模型应用信息!");
         }
-        String modelType = appInfoView.getModelType();
-        String type = request.getType().toLowerCase();
-        String typeKey = typeMap.get(type);
-        if (!modelType.contains(typeKey)) {
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200005.getValue());
-            response.setMessage(ErrorCode.ERROR_200005.getName() + ":该模型不支持" + type + "类型!");
-            return response;
+        String modelType = appInfoView.getModelType ();
+        String type = request.getType ().toLowerCase ();
+        String typeKey = typeMap.get (type);
+        if (!modelType.contains (typeKey)) {
+            return Util.errorResponse (ErrorCode.ERROR_200005, "该模型不支持" + type + "类型!");
         }
-        MmRequest mmRequest = getMmRequest(appInfoView, request);
+        MmRequest mmRequest = getMmRequest (appInfoView, request);
         try {
-            MmResponse mmResponse = mmProviderService.request(mmRequest, appInfoView.getHttpUrl());
-            response.setStatus(mmResponse.getStatus());
-            response.setStatusCode(Status.SUCCESS.getValue().equals(mmResponse.getStatus())
-                    ? StatusCode.SUCCESS.getValue() : StatusCode.DEFEAT.getValue());
-            response.setErrorCode(Status.DEFEAT.getValue().equals(mmResponse.getStatus())
-                    ? ErrorCode.ERROR_200004.getValue() : "");
-            response.setMessage(mmResponse.getMessage());
-            if (Status.SUCCESS.getValue().equals(mmResponse.getStatus())) {
-                MmResponseData mmResponseData = mmResponse.getData();
+            MmResponse mmResponse = mmProviderService.request (mmRequest, appInfoView.getHttpUrl ());
+            response.setStatus (mmResponse.getStatus ());
+            response.setStatusCode (Status.SUCCESS.getValue ().equals (mmResponse.getStatus ())
+                    ? StatusCode.SUCCESS.getValue () : StatusCode.DEFEAT.getValue ());
+            response.setErrorCode (Status.DEFEAT.getValue ().equals (mmResponse.getStatus ())
+                    ? ErrorCode.ERROR_200004.getValue () : "");
+            response.setMessage (mmResponse.getMessage ());
+            if (Status.SUCCESS.getValue ().equals (mmResponse.getStatus ())) {
+                MmResponseData mmResponseData = mmResponse.getData ();
                 if (mmResponseData != null) {
-                    response.setRecords(mmResponseData.getRecords());
-                    response.setResponseContent(mmResponseData.getFile());
+                    response.setRecords (mmResponseData.getRecords ());
+                    response.setResponseContent (mmResponseData.getFile ());
                 }
             }
-            response.setConsumeTime(System.currentTimeMillis() - bef);
+            response.setConsumeTime (System.currentTimeMillis () - bef);
+            return response;
         } catch (ConnectException e) {
-            e.printStackTrace();
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200001.getValue());
-            response.setMessage(ErrorCode.ERROR_200001.getName() + ":" + e.toString());
+            e.printStackTrace ();
+            return Util.errorResponse (ErrorCode.ERROR_200001, e.toString ());
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200004.getValue());
-            response.setMessage(ErrorCode.ERROR_200004.getName() + ":" + e.toString());
+            e.printStackTrace ();
+            return Util.errorResponse (ErrorCode.ERROR_200004, e.toString ());
         }
-        return response;
     }
 
     private MmRequest getMmRequest(MmFullAppInfoView appInfoView, Request request) {
-        MmRequest mmRequest = new MmRequest();
-        mmRequest.setType(request.getType());
-        mmRequest.setEntity(request.getEntity());
-        mmRequest.setModelName(appInfoView.getModelName());
-        mmRequest.setAppUser(request.getAppUser());
-        mmRequest.setLimit(returnLimit);
-        mmRequest.setUuid(request.getConsumeId());
-        List<MmAppReturnParam> returnParams = appInfoView.getReturnParams();
-        if (returnParams != null && returnParams.size() != 0) {
+        MmRequest mmRequest = new MmRequest ();
+        mmRequest.setType (request.getType ());
+        mmRequest.setEntity (request.getEntity ());
+        mmRequest.setModelName (appInfoView.getModelName ());
+        mmRequest.setAppUser (request.getAppUser ());
+        mmRequest.setLimit (returnLimit);
+        mmRequest.setUuid (request.getConsumeId ());
+        List<MmAppReturnParam> returnParams = appInfoView.getReturnParams ();
+        if (returnParams != null && returnParams.size () != 0) {
             String responseField = "";
             int count = 0;
             for (MmAppReturnParam returnParam : returnParams) {
-                responseField += (count == 0 ? "" : ",") + returnParam.getName();
+                responseField += (count == 0 ? "" : ",") + returnParam.getName ();
                 count++;
             }
-            mmRequest.setResponseField(responseField);
+            mmRequest.setResponseField (responseField);
         }
-        Map<String, String> paraMap = request.getData();
-        List<MmAppExecuteParam> executeParams = appInfoView.getExecuteParams();
-        if (executeParams != null && executeParams.size() != 0) {
-            Map<String, String> map = new HashMap<>();
+        Map<String, String> paraMap = request.getData ();
+        List<MmAppExecuteParam> executeParams = appInfoView.getExecuteParams ();
+        if (executeParams != null && executeParams.size () != 0) {
+            Map<String, String> map = new HashMap<> ();
             for (MmAppExecuteParam executeParam : executeParams) {
-                String name = executeParam.getName();
-                String value = (paraMap != null ? paraMap.get(name) : null);
-                map.put(name, value);
+                String name = executeParam.getName ();
+                String value = (paraMap != null ? paraMap.get (name) : null);
+                map.put (name, value);
             }
-            mmRequest.setRequest(map);
+            mmRequest.setRequest (map);
         }
-        if (ConsumerType.ASYNC.getValue().equalsIgnoreCase(request.getType())) {
-            String path = CreateFileUtil.getFtpFileDir(request.getUdspUser()) + "/" +
-                    appInfoView.getContractorName() + "/" + DateUtil.format(new Date(), "yyyyMMdd");
-            mmRequest.setPath(path);
+        if (ConsumerType.ASYNC.getValue ().equalsIgnoreCase (request.getType ())) {
+            String path = CreateFileUtil.getFtpFileDir (request.getUdspUser ()) + "/" +
+                    appInfoView.getContractorName () + "/" + DateUtil.format (new Date (), "yyyyMMdd");
+            mmRequest.setPath (path);
         }
         return mmRequest;
     }
@@ -160,38 +144,29 @@ public class MmSyncService {
      * @return
      */
     public Response status(Request request) {
-        long bef = System.currentTimeMillis();
-        Response response = new Response();
-        MmFullAppInfoView appInfoView = mmApplicationService.selectFullAppInfo(request.getAppId());
+        long bef = System.currentTimeMillis ();
+        Response response = new Response ();
+        MmFullAppInfoView appInfoView = mmApplicationService.selectFullAppInfo (request.getAppId ());
         if (appInfoView == null) {
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            response.setErrorCode(ErrorCode.ERROR_200004.getValue());
-            response.setMessage(ErrorCode.ERROR_200004.getName() + ":获取不到模型应用信息！");
-            return response;
+            return Util.errorResponse (ErrorCode.ERROR_200004, "获取不到模型应用信息!");
         }
-        MmRequest mmRequest = new MmRequest();
-        mmRequest.setModelName(appInfoView.getModelName());
-        mmRequest.setType(request.getType());
-        mmRequest.setEntity(request.getEntity());
-        mmRequest.setUuid(request.getConsumeId());
+        MmRequest mmRequest = new MmRequest ();
+        mmRequest.setModelName (appInfoView.getModelName ());
+        mmRequest.setType (request.getType ());
+        mmRequest.setEntity (request.getEntity ());
+        mmRequest.setUuid (request.getConsumeId ());
         try {
-            MmResponse mmResponse = mmProviderService.request(mmRequest, appInfoView.getHttpUrl());
-            response.setStatus(mmResponse.getStatus());
-            response.setStatusCode(Status.SUCCESS.getValue().equals(mmResponse.getStatus())
-                    ? StatusCode.SUCCESS.getValue() : StatusCode.DEFEAT.getValue());
-            response.setErrorCode(Status.DEFEAT.getValue().equals(mmResponse.getStatus())
-                    ? ErrorCode.ERROR_200004.getValue() : "");
-            response.setMessage(mmResponse.getMessage());
-            response.setConsumeTime(System.currentTimeMillis() - bef);
+            MmResponse mmResponse = mmProviderService.request (mmRequest, appInfoView.getHttpUrl ());
+            response.setStatus (mmResponse.getStatus ());
+            response.setStatusCode (Status.SUCCESS.getValue ().equals (mmResponse.getStatus ())
+                    ? StatusCode.SUCCESS.getValue () : StatusCode.DEFEAT.getValue ());
+            response.setErrorCode (Status.DEFEAT.getValue ().equals (mmResponse.getStatus ())
+                    ? ErrorCode.ERROR_200004.getValue () : "");
+            response.setMessage (mmResponse.getMessage ());
+            response.setConsumeTime (System.currentTimeMillis () - bef);
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setConsumeId(request.getConsumeId());
-            response.setMessage(ErrorCode.ERROR_000007.getName() + "：" + e.getMessage());
-            response.setErrorCode(ErrorCode.ERROR_000007.getValue());
-            response.setStatus(Status.DEFEAT.getValue());
-            response.setStatusCode(StatusCode.DEFEAT.getValue());
-            return response;
+            e.printStackTrace ();
+            return Util.errorResponse (ErrorCode.ERROR_000007, e.toString ());
         }
         return response;
     }
@@ -207,11 +182,11 @@ public class MmSyncService {
         boolean isError = false;
         String message = "";
         int count = 0;
-        for (MmAppExecuteParam mmAppExecuteParam : mmApplicationService.selectFullAppInfo(appId).getExecuteParams()) {
-            if (EnumTrans.transTrue(mmAppExecuteParam.getIsNeed())) {
-                String name = mmAppExecuteParam.getName();
-                String value = paraMap.get(name);
-                if (StringUtils.isBlank(value)) {
+        for (MmAppExecuteParam mmAppExecuteParam : mmApplicationService.selectFullAppInfo (appId).getExecuteParams ()) {
+            if (EnumTrans.transTrue (mmAppExecuteParam.getIsNeed ())) {
+                String name = mmAppExecuteParam.getName ();
+                String value = paraMap.get (name);
+                if (StringUtils.isBlank (value)) {
                     message += (count == 0 ? "" : ", ") + name;
                     isError = true;
                     count++;
@@ -219,7 +194,7 @@ public class MmSyncService {
             }
         }
         if (isError) {
-            throw new Exception(message + "参数不能为空!");
+            throw new Exception (message + "参数不能为空!");
         }
     }
 }

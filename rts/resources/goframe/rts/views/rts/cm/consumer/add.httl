@@ -76,7 +76,7 @@ ${extends("/goframe/function_layout.httl")}
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>
                         <div name="name" field="name" headerAlign="center" allowSort="true" width="30">名称
                             <input id="propsName" property="editor" class="nui-combobox" textField="dictId"
-                                   valueField="dictId" name="propsName" allowInput="false"
+                                   valueField="dictId" name="propsName" allowInput="true"
                                    onbeforeshowpopup="propsNameBeforeShowPopup"
                                    vtype="maxLength:256" required="true"
                                    onvaluechanged="propsNameChanged" onvalidation="propsNameValidation"/>

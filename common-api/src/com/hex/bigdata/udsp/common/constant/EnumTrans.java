@@ -1,6 +1,6 @@
 package com.hex.bigdata.udsp.common.constant;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 枚举转换

@@ -1,7 +1,7 @@
 package com.hex.bigdata.udsp.iq.provider.impl.util;
 
 import com.hex.bigdata.udsp.common.constant.DataType;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -133,13 +133,13 @@ public class RcUserServiceController extends BaseController {
     public MessageResult select(@PathVariable("pkId") String pkId) {
         boolean status = true;
         String message = "查询成功";
-        RcUserServiceView rtsMatedata = null;
+        RcUserServiceView rtsMetadata = null;
         if (StringUtils.isBlank(pkId)) {
             status = false;
             message = "请求参数为空";
         } else {
             try {
-                rtsMatedata = this.rcUserServiceService.selectFullResultMap(pkId);
+                rtsMetadata = this.rcUserServiceService.selectFullResultMap(pkId);
             } catch (Exception e) {
                 status = false;
                 message = "系统异常：" + e.getMessage();
@@ -150,7 +150,7 @@ public class RcUserServiceController extends BaseController {
         } else {
             logger.warn(message);
         }
-        return new MessageResult(status, message, rtsMatedata);
+        return new MessageResult(status, message, rtsMetadata);
     }
 
     @RequestMapping({"/update"})

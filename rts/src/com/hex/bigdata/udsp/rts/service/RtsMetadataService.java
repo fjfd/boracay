@@ -253,6 +253,13 @@ public class RtsMetadataService extends BaseService {
                 rtsMetadata.setDsId(comDatasourceMapper.selectByModelAndName("RTS", rtsMetadata.getDsId()).getPkId());
                 String pkId = insert(rtsMetadata);
                 List<RtsMetadataCol> rtsMetadataCols = (List<RtsMetadataCol>) uploadExcelModel.get("com.hex.bigdata.udsp.rts.model.RtsMetadataCol");
+                for(RtsMetadataCol rtsMetadataCol: rtsMetadataCols){
+                    if(rtsMetadataCol.getName().trim().equals("time")) {
+                        resultMap.put ("status", "false");
+                        resultMap.put ("message", "第" + (i + 1) + "个数据列配置中不能有保留名称'time'！");
+                        break;
+                    }
+                }
                 boolean insert = rtsMetadataColService.insertList(pkId, rtsMetadataCols);
                 if (insert) {
                     resultMap.put("status", "true");
@@ -279,8 +286,8 @@ public class RtsMetadataService extends BaseService {
     }
 
     public String createExcel(RtsMetadata[] rtsMetadatas) {
-        HSSFWorkbook workbook = null;
-        HSSFWorkbook sourceWork;
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFWorkbook sourceWork = null;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
@@ -300,20 +307,18 @@ public class RtsMetadataService extends BaseService {
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(
-                    templateFile));
-
+            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
             sourceWork = new HSSFWorkbook(sourceFile);
             sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HSSFSheet sheet;
 
+        HSSFSheet sheet = null;
         for (RtsMetadata rtsMetadata : rtsMetadatas) {
-            sheet = workbook.createSheet();
+            rtsMetadata = rtsMetadataMapper.select(rtsMetadata.getPkId());
+            sheet = workbook.createSheet(rtsMetadata.getName ());
+
             //将前面样式内容复制到下载表中
             int i = 0;
             for (; i < 10; i++) {
@@ -324,16 +329,14 @@ public class RtsMetadataService extends BaseService {
                 }
             }
 
-            //设置内容
-            RtsMetadata metadata = rtsMetadataMapper.select(rtsMetadata.getPkId());
             //设置数据源名字
-            metadata.setDsId(comDatasourceMapper.select(metadata.getDsId()).getName());
+            rtsMetadata.setDsId(comDatasourceMapper.select(rtsMetadata.getDsId()).getName());
             for (ComExcelParam comExcelParam : comExcelParams) {
                 try {
-                    Field field = metadata.getClass().getDeclaredField(comExcelParam.getName());
+                    Field field = rtsMetadata.getClass().getDeclaredField(comExcelParam.getName());
                     field.setAccessible(true);
                     ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(),
-                            field.get(metadata) == null ? "" : field.get(metadata).toString());
+                            field.get(rtsMetadata) == null ? "" : field.get(rtsMetadata).toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -354,6 +357,7 @@ public class RtsMetadataService extends BaseService {
                 }
             }
         }
+
         if (workbook != null) {
             try {
                 FileOutputStream stream = new FileOutputStream(dirPath);

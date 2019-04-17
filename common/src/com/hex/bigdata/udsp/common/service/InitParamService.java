@@ -14,7 +14,7 @@ public class InitParamService {
     /**
      * 是否严格的控制分布式并发
      */
-    @Value("${cluster_concurrency_control:true}")
+    @Value("${cluster.concurrency.control:true}")
     private boolean clusterConcurrencyControl;
 
     /**

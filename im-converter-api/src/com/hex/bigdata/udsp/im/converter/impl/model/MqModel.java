@@ -12,6 +12,7 @@ import java.util.List;
  * Created by JunjieM on 2017-9-15.
  */
 public class MqModel extends Model implements Serializable {
+
     // Redis使用Jackson进行序列化和反序列化时对于get开头的方法必须要有对应的变量
     private String topic;
     private String consumerTimeoutMs;
@@ -29,6 +30,7 @@ public class MqModel extends Model implements Serializable {
         super(properties, srcDatasource);
     }
 
+    // 主题
     public String getTopic() {
         String value = getProperty("topic").getValue();
         if (StringUtils.isBlank(value))
@@ -36,6 +38,7 @@ public class MqModel extends Model implements Serializable {
         return value;
     }
 
+    // 消费超时时间（毫秒）
     public String getConsumerTimeoutMs() {
         String value = getProperty("consumer.timeout.ms").getValue();
         if (StringUtils.isBlank(value))
@@ -43,6 +46,7 @@ public class MqModel extends Model implements Serializable {
         return value;
     }
 
+    // 消费计划任务表达式
     public String getConsumerCronExpression() {
         String value = getProperty("consumer.cron.expression").getValue();
         if (StringUtils.isBlank(value))

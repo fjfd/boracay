@@ -119,13 +119,19 @@ public class JdbcUtil {
         BasicDataSource dataSource = getDataSource(datasource);
         if (dataSource != null) {
             conn = dataSource.getConnection();
+            try {
+                logger.info ("JDBC DB Type: " + conn.getMetaData ().getDatabaseProductName ());
+            } catch (Exception e) {
+                //
+            }
         }
         return conn;
     }
 
     public static void createEngineSchema(JdbcDatasource datasource, String dbName, String updateSql) throws SQLException {
-        String sql = HiveSqlUtil.createDatabase(true, dbName);
-        executeUpdate(datasource, sql);
+        // 不建议建表前判断并创建数据库
+        //String sql = HiveSqlUtil.createDatabase(true, dbName);
+        //executeUpdate(datasource, sql);
         executeUpdate(datasource, updateSql);
     }
 
@@ -163,7 +169,7 @@ public class JdbcUtil {
         try {
             if (obj instanceof Connection) {
                 Connection conn = ((Connection) obj);
-                if(!conn.isClosed())
+                if (!conn.isClosed())
                     conn.close();
             } else if (obj instanceof Statement) {
                 ((Statement) obj).close();

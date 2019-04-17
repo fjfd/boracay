@@ -8,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
@@ -46,16 +47,16 @@ public class SocketServer implements Runnable {
                     .childHandler(new ChannelInitializer<SocketChannel>() { // 服务端过滤器
                         @Override
                         public void initChannel(SocketChannel ch) {
-                            ch.pipeline().addLast(new SocketHandler());
+//                            ch.pipeline().addLast(new SocketHandler());
 
 //                            ch.pipeline() //
 //                                    .addLast(new StringEncoder()) //
 //                                    .addLast(new StringDecoder()) //
 //                                    .addLast(new SocketHandler());
 
-//                            ch.pipeline() //
-//                                    .addLast(new JsonObjectDecoder()) //
-//                                    .addLast(new SocketHandler());
+                            ch.pipeline() //
+                                    .addLast(new JsonObjectDecoder (Integer.MAX_VALUE)) //
+                                    .addLast(new SocketHandler());
 
                         }
                     });

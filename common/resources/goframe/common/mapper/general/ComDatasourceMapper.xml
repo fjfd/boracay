@@ -114,7 +114,7 @@
     select GFD.*
 	from T_GF_DICT GFD
 	left join COM_DATASOURCE CD
-	on GFD.DICT_TYPE_ID = 'IM_MODEL_PROPS_'||CD.TYPE
+	on GFD.DICT_TYPE_ID = concat('IM_MODEL_PROPS_', CD.TYPE)
 	where CD.PK_ID = #{sourceId}
     and exists (
     select 1

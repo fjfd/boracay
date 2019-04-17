@@ -25,8 +25,9 @@ public class SolrHBaseMetadata extends Metadata {
 
     public String getSolrPrimaryKey() {
         String value = getProperty("solr.primary.key").getValue();
-        if (StringUtils.isBlank(value))
+        if (StringUtils.isBlank(value)) {
             value = "id";
+        }
         return value;
     }
 

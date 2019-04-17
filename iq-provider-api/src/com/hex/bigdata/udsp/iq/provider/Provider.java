@@ -5,6 +5,8 @@ import com.hex.bigdata.udsp.common.api.model.Page;
 import com.hex.bigdata.udsp.iq.provider.model.IqRequest;
 import com.hex.bigdata.udsp.iq.provider.model.IqResponse;
 import com.hex.bigdata.udsp.iq.provider.model.MetadataCol;
+import com.hex.bigdata.udsp.iq.provider.model.dsl.IqDslRequest;
+import com.hex.bigdata.udsp.iq.provider.model.dsl.IqDslResponse;
 
 import java.util.List;
 
@@ -46,5 +48,13 @@ public interface Provider {
      * @return
      */
     List<MetadataCol> columnInfo(Datasource datasource, String schemaName);
+
+    /**
+     * 自定义SQL查询
+     *
+     * @param request
+     * @return
+     */
+    IqDslResponse select(IqDslRequest request);
 
 }

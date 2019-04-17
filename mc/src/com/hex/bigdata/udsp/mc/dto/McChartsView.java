@@ -10,7 +10,7 @@ public class McChartsView implements Serializable {
     private String appType;
     private String serviceName;
     private String userName;
-    private int countNum;
+    private long countNum;
     private String status; // 状态（0：成功，1：失败）
     private String realStatus;
 
@@ -91,11 +91,11 @@ public class McChartsView implements Serializable {
         this.userName = userName;
     }
 
-    public int getCountNum() {
+    public long getCountNum() {
         return countNum;
     }
 
-    public void setCountNum(int countNum) {
+    public void setCountNum(long countNum) {
         this.countNum = countNum;
     }
 

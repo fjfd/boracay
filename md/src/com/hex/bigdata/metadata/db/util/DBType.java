@@ -15,7 +15,8 @@ public enum DBType {
     IMPALA_FOR_PGSQL("Impala的PostgreSql元数据库", Constant.DB_TYPE_IMPALA_FOR_PGSQL),
     HIVE_FOR_MYSQL("Hive的MySql元数据库", Constant.DB_TYPE_HIVE_FOR_MYSQL),
     HIVE_FOR_ORACLE("Hive的Oracle元数据库", Constant.DB_TYPE_HIVE_FOR_ORACLE),
-    HIVE_FOR_PGSQL("Hive的PostgreSql元数据库", Constant.DB_TYPE_HIVE_FOR_PGSQL);
+    HIVE_FOR_PGSQL("Hive的PostgreSql元数据库", Constant.DB_TYPE_HIVE_FOR_PGSQL),
+    PHOENIX("Phoenix数据库", Constant.DB_TYPE_PHOENIX);
 
     private String value;
     private String name;

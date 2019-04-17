@@ -251,8 +251,8 @@ ${extends("/goframe/function_layout.httl")}
             return;
         }
         var saveData = {
-            "rtsMatedata": baseData,
-            "rtsMatedataColList": propsData
+            "rtsMetadata": baseData,
+            "rtsMetadataColList": propsData
         }
         //console.warn(saveData);
         return saveData;
@@ -284,6 +284,11 @@ ${extends("/goframe/function_layout.httl")}
             record.seq = grid1.indexOf(record) + 1;
             if (record.name == null || record.name == "") {
                 nui.alert("【数据列配置】的位置" + record.seq + "：【名称】不能为空!");
+                status = false;
+                return false;
+            }
+            if (record.name.trim() == "time"){
+                nui.alert("【数据列配置】的位置" + record.seq + "：【名称】不能为保留名称'time'!");
                 status = false;
                 return false;
             }

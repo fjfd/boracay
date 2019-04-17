@@ -27,7 +27,6 @@ ${extends("/goframe/function_layout.httl")}
                 <tr>
                     <th class="nui-form-label"><label for="dsId">数据源：</label></th>
                     <td>
-
                         <div id="dsId" class="nui-combobox" style="width:97%;" popupWidth="400" textField="name"
                              valueField="pkId" onvaluechanged="typeChanged" allowInput="true"
                              url="${basePath}/com/ds/select?model=IM" dataField="data" name="dsId"
@@ -39,8 +38,7 @@ ${extends("/goframe/function_layout.httl")}
                             </div>
                         </div>
                     </td>
-
-                    <th class="nui-form-label"></th>
+                    <th class="nui-form-label"><label for="tbName">类型：</label></th>
                     <td>
                         <div id="type" name="type" onvaluechanged="onvaluechangedType" class="nui-radiobuttonlist"
                              repeatItems="2" repeatLayout="table" repeatDirection="horizontal"
@@ -54,6 +52,9 @@ ${extends("/goframe/function_layout.httl")}
                     <td>
                         <input id="tbName" name="tbName" class="nui-textbox" style="width:97%" required="true"
                                vtype="maxLength:64" onblur="setCols"/>
+                    </td>
+                    <td colspan="2">
+                        <font color="red">提示：数据源支持SQL，建议使用SQL建表，然后选择外表！</font>
                     </td>
                 </tr>
                 <tr>
@@ -433,6 +434,9 @@ ${extends("/goframe/function_layout.httl")}
         if (!baseData) {
             return;
         }
+        if(!checkSchema()){
+            return;
+        }
         var colsData = getColsData();
         if (!colsData) {
             return;
@@ -457,8 +461,7 @@ ${extends("/goframe/function_layout.httl")}
         if (form1.isValid() == false) {
             return;
         }
-        var baseData = form1.getData(true, true);
-        return baseData;
+        return form1.getData(true, true);
     }
 
     /**
@@ -642,9 +645,9 @@ ${extends("/goframe/function_layout.httl")}
         // --同一行的说明、长度和别名变化--
         var selected = e.selected;
         var row = grid1.getSelected();
-        row.describe = selected.describe;
-        row.type = selected.type;
-        row.length = selected.length;
+        row.type = (selected.type == "" ? "STRING" : selected.type);
+        row.length = (selected.type == "STRING" ? "" : selected.length);
+        row.describe = (selected.describe ? selected.describe : selected.name);
         row.indexed = selected.indexed ? 0 : 1;
         row.primary = selected.primary ? 0 : 1;
         row.stored = selected.stored ? 0 : 1;
@@ -745,7 +748,10 @@ ${extends("/goframe/function_layout.httl")}
     function onvaluechangedType() {
         originTbName = "";
         setSaveButton();
-        setCols();
+        // 注释掉的原因：想保留一种入口，可以使用同一个表（HBase、Solr）可以有不同的字段信息，
+        // 但是又能可以自动从数据源类型（如：Hive、Impala、Mysql等）的某个表中自动拉取字段信息，
+        // 然后改回真实的数据源（如：HBase、Solr等）的某个表且设置为外表时不会又重新拉取新的字段信息。
+        // setCols();
         setParams();
     }
 
@@ -761,6 +767,33 @@ ${extends("/goframe/function_layout.httl")}
             nui.get("saveButton").show();
             nui.get("saveAndCreateButton").hide();
         }
+    }
+
+    /**
+     * 检查表是否存在
+     */
+    function checkSchema() {
+        var status = false;
+        var type = nui.get("type").getValue();
+        var dsId = nui.get("dsId").getValue();
+        var tbName = nui.get("tbName").getValue();
+        $.ajax({
+            url: "${basePath}/im/md/checkSchema/" + dsId + "/" + tbName,
+            type: 'POST',
+            cache: false,
+            async: false,
+            contentType: 'application/json',
+            success: function (result) {
+                if (type == 0 && !result.status) {
+                    nui.alert("内表已存在，请检查后重新输入！");
+                } else if(type == 1 && result.status){
+                    nui.alert("外表不存在，请检查后重新输入！");
+                } else {
+                    status = true;
+                }
+            }
+        });
+        return status;
     }
 
     /**
@@ -781,7 +814,7 @@ ${extends("/goframe/function_layout.httl")}
         var json = nui.encode({"dsId": dsId, "tbName": tbName});
         if (type == 0) { // 内表
             form1.loading("正在检查表中,请稍等...");
-            $.post("${basePath}/im/md/checkSchema/"+dsId,{"tbName":tbName}, function (result) {
+            $.post("${basePath}/im/md/checkSchema/" + dsId + "/" + tbName, function (result) {
                 if (!result.status) {
                     nui.alert(result.message);
                 }
@@ -790,7 +823,7 @@ ${extends("/goframe/function_layout.httl")}
         } else { // 外表
             form1.loading("正在获取字段中,请稍等...");
             grid1.clearRows();
-            $.post("${basePath}/im/md/getCloumnInfo/"+dsId,{"tbName":tbName}, function (result) {
+            $.post("${basePath}/im/md/getCloumnInfo/" + dsId + "/" + tbName, function (result) {
                 if (result.status && result.data && result.data.length > 0) {
                     grid1.addRows(dealCols(result.data));
                 }
@@ -820,9 +853,9 @@ ${extends("/goframe/function_layout.httl")}
         $.each(data, function (i, val) {
             cols.push({
                 "name": val.name,
-                "describe": val.describe,
-                "type": val.type,
-                "length": val.length,
+                "type": val.type ? "STRING" : val.type,
+                "length": val.type == "STRING" ? "" : val.length,
+                "describe": val.describe ? val.describe : val.name,
                 "indexed": val.indexed ? 0 : 1,
                 "primary": val.primary ? 0 : 1,
                 "stored": val.stored ? 0 : 1

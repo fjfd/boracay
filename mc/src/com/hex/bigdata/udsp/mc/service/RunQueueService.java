@@ -79,6 +79,7 @@ public class RunQueueService {
      * @return
      */
     public boolean emptyLocalCache() {
+        logger.info("清空本机的运行队列信息【开始】");
         for (Current current : currentService.getLocalRun()) {
             String key = this.getKey(current);
             RunQueue runQueue = this.select(key);
@@ -92,6 +93,7 @@ public class RunQueueService {
                 currentService.delete(current.getPkId());
             }
         }
+        logger.info("清空本机的运行队列信息【结束】");
         return true;
     }
 

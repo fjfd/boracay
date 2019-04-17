@@ -13,18 +13,14 @@
     <orderEntry type="library" name="mybatis" level="project" />
     <orderEntry type="library" name="spring" level="project" />
     <orderEntry type="library" name="poi" level="project" />
-    <orderEntry type="library" name="jetty" level="project" />
     <orderEntry type="module" module-name="common" />
     <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="iq-provider-api" />
-    <orderEntry type="library" name="elasticsearch" level="project" />
     <orderEntry type="module" module-name="iq-provider-es" />
-    <orderEntry type="library" name="hbase" level="project" />
     <orderEntry type="module" module-name="iq-provider-hbase" />
-    <orderEntry type="library" name="redis" level="project" />
     <orderEntry type="module" module-name="iq-provider-redis" />
-    <orderEntry type="library" name="solr" level="project" />
     <orderEntry type="module" module-name="iq-provider-solr" />
     <orderEntry type="module" module-name="iq-provider-solr_hbase" />
+    <orderEntry type="module" module-name="dsl" />
   </component>
 </module>

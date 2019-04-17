@@ -14,11 +14,6 @@ public class RtsMetadataColsView implements Serializable {
     private RtsMetadata rtsMetadata;
     private List<RtsMetadataCol> rtsMetadataColList;
 
-    public RtsMetadataColsView(RtsMetadata rtsMetadata, List<RtsMetadataCol> rtsMetadataColList) {
-        this.rtsMetadata = rtsMetadata;
-        this.rtsMetadataColList = rtsMetadataColList;
-    }
-
     public RtsMetadata getRtsMetadata() {
         return rtsMetadata;
     }

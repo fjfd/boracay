@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by junjiem on 2017-3-2.
  */
 public class IqResponse {
-    private IqRequest request; // 请求信息
+//    private IqRequest request; // 请求信息
     private List<Map<String,String>> records; // 响应结果集
     private Page page; // 分页信息
     private long consumeTime; // 持续时间(毫秒)
@@ -30,13 +30,13 @@ public class IqResponse {
         this.page = page;
     }
 
-    public IqRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(IqRequest request) {
-        this.request = request;
-    }
+//    public IqRequest getRequest() {
+//        return request;
+//    }
+//
+//    public void setRequest(IqRequest request) {
+//        this.request = request;
+//    }
 
     public List<Map<String, String>> getRecords() {
         return records;

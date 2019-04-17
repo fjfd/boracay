@@ -42,13 +42,13 @@ public class MmModelInfoMapper extends SyncMapper<MmModelInfo> {
     }
 
     /**
-     * @param modelInfoView
+     * @param mmModelInfoView
      * @param page
      * @return
      */
-    public List<MmModelInfoView> selectPage(MmModelInfoView modelInfoView, Page page) {
+    public List<MmModelInfoView> selectPage(MmModelInfoView mmModelInfoView, Page page) {
         return sqlSessionTemplate.selectList(
-                "com.hex.bigdata.udsp.mm.dao.MmModelInfoMapper.selectPage", modelInfoView,
+                "com.hex.bigdata.udsp.mm.dao.MmModelInfoMapper.selectPage", mmModelInfoView,
                 page.toPageBounds());
     }
 

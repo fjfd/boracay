@@ -102,9 +102,6 @@ ${extends("/goframe/function_layout.httl")}
                         <div field="length" headerAlign="center" allowSort="true" width="15">长度
                             <input property="editor" class="nui-textbox" vtype="maxLength:32"/>
                         </div>
-                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
-                            <input property="editor" class="nui-textbox"/>
-                        </div>
                         <div field="defaultVal" headerAlign="center" allowSort="true" width="15">默认值
                             <input property="editor" class="nui-textbox" vtype="maxLength:64"/>
                         </div>
@@ -117,6 +114,9 @@ ${extends("/goframe/function_layout.httl")}
                         </div>
                         <div type="checkboxcolumn" field="isOfferOut" trueValue="0" falseValue="1"
                              headerAlign="center" allowSort="true" width="8">开放
+                        </div>
+                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
+                            <input property="editor" class="nui-textbox"/>
                         </div>
                     </div>
                 </div>
@@ -169,9 +169,6 @@ ${extends("/goframe/function_layout.httl")}
                         <div field="length" headerAlign="center" allowSort="true" width="15">长度
                             <input property="editor" class="nui-textbox" vtype="maxLength:32"/>
                         </div>
-                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
-                            <input property="editor" class="nui-textbox"/>
-                        </div>
                         <div field="stats" headerAlign="center" allowSort="true" width="20">统计函数
                             <input property="editor" class="nui-dictcombobox" valueField="dictId" textField="dictName"
                                    dictTypeId="IQ_APP_RETURN_COL_STATS"/>
@@ -179,6 +176,9 @@ ${extends("/goframe/function_layout.httl")}
                         <div field="label" headerAlign="center" allowSort="true" width="30">别名
                             <input property="editor" class="nui-textbox" vtype="maxLength:64"
                                    onvalidation="colLabelValidation2"/>
+                        </div>
+                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
+                            <input property="editor" class="nui-textbox"/>
                         </div>
                     </div>
                 </div>
@@ -227,12 +227,12 @@ ${extends("/goframe/function_layout.httl")}
                             <input property="editor" class="nui-dictcombobox" valueField="dictId" textField="dictName"
                                    dictTypeId="IQ_MD_COL_DATA_TYPE" vtype="maxLength:32"/>
                         </div>
-                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
-                            <input property="editor" class="nui-textbox"/>
-                        </div>
                         <div field="orderType" headerAlign="center" allowSort="true" width="20">排序
                             <input property="editor" class="nui-dictcombobox" valueField="dictId" textField="dictName"
                                    dictTypeId="IQ_APP_ORDER_COL_TYPE"/>
+                        </div>
+                        <div field="note" headerAlign="center" allowSort="true" width="30">备注
+                            <input property="editor" class="nui-textbox"/>
                         </div>
                     </div>
                 </div>

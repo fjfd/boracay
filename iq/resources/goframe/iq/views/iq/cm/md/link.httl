@@ -11,7 +11,7 @@ ${extends("/goframe/function_layout.httl")}
                         <div id="dsId" class="nui-combobox" style="width:97%;" popupWidth="400" textField="name"
                              valueField="pkId" onvaluechanged="dsIdChanged" allowInput="true"
                              url="${basePath}/com/ds/select?model=IM&imDsTypeDictId=IM_DS_TARGET_TYPE&type=${dsType}"
-                             dataField="data" name="dsId" multiSelect="false">
+                             dataField="data" name="dsId" required="true" multiSelect="false">
                             <div property="columns">
                                 <div header="名称" field="name"></div>
                                 <div header="说明" field="describe"></div>
@@ -19,16 +19,22 @@ ${extends("/goframe/function_layout.httl")}
                             </div>
                         </div>
                     </td>
-                    <th class="nui-form-label"><label for="dsId">元数据信息：</label></th>
+                    <th class="nui-form-label"><label for="dsId">元数据：</label></th>
                     <td>
                         <div id="mdId" class="nui-combobox" style="width:97%;" popupWidth="400" textField="name"
                              valueField="pkId" allowInput="true" onvaluechanged="mdIdChanged"
-                             dataField="data" name="dsId" multiSelect="false">
+                             dataField="data" name="dsId" required="true" multiSelect="false">
                             <div property="columns">
                                 <div header="名称" field="name"></div>
                                 <div header="说明" field="describe"></div>
                             </div>
                         </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="nui-form-label"><label for="tbName">表名：</label></th>
+                    <td colspan="3">
+                        <input id="tbName" name="tbName" class="nui-textbox" style="width:99%" readonly="true"/>
                     </td>
                 </tr>
             </table>
@@ -52,7 +58,6 @@ ${extends("/goframe/function_layout.httl")}
                      idField="pkId" multiSelect="true" allowCellEdit="true" allowCellSelect="true" sortMode="client"
                      showPager="false" editNextOnEnterKey="true" editNextRowCell="true">
                     <div property="columns">
-                        <div type="checkcolumn" headerAlign="center" width="5"></div>
                         <div type="indexcolumn" headerAlign="center" width="8">位置</div>
                         <div field="name" headerAlign="center" allowSort="true" width="30">名称<font
                                 color="#FF0000">（必填）</font>
@@ -98,8 +103,9 @@ ${extends("/goframe/function_layout.httl")}
 <script type="text/javascript">
     var form1;
     var grid1;
-    var dsIdObject;
-    var mdIdObject;
+    var dsIdObj;
+    var mdIdObj;
+    var tbNameObj;
 
     /**
      * 按需加载资源文件
@@ -108,15 +114,16 @@ ${extends("/goframe/function_layout.httl")}
         nui.parse();
         form1 = new nui.Form("#form1");
         grid1 = nui.get("datagrid1");
-        dsIdObject = nui.get("dsId");
-        mdIdObject = nui.get("mdId");
+        dsIdObj = nui.get("dsId");
+        mdIdObj = nui.get("mdId");
+        tbNameObj = nui.get("tbName");
     });
 
     /**
      * 数据源改变
      */
     function dsIdChanged() {
-        var dsIdSelected = dsIdObject.getSelected();
+        var dsIdSelected = dsIdObj.getSelected();
         if (!dsIdSelected || dsIdSelected == undefined) {
             return;
         }
@@ -124,7 +131,6 @@ ${extends("/goframe/function_layout.httl")}
         requestBody.dsId = dsIdSelected.pkId;
         requestBody.status = "2";
         var json = nui.encode(requestBody);
-        //debugger;
         $.ajax({
             url: "${basePath}/im/md/selectByCondition",
             type: 'POST',
@@ -133,20 +139,32 @@ ${extends("/goframe/function_layout.httl")}
             contentType: 'application/json',
             success: function (result) {
                 if (result.status == true) {
-                    mdIdObject.setData(result.data);
+                    mdIdObj.setData(result.data);
                 }
             }
         });
     }
 
     function mdIdChanged() {
-        var mdIdSelected = mdIdObject.getSelected();
-        //清除所有行
+        var mdIdSelected = mdIdObj.getSelected();
+        tbNameObj.setValue("");
         grid1.clearRows();
         if (!mdIdSelected || mdIdSelected == undefined) {
             return;
         }
         var mdId = mdIdSelected.pkId;
+        $.ajax({
+            url: "${basePath}/im/md/select/" + mdId,
+            type: 'POST',
+            data: null,
+            cache: false,
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.status == true) {
+                    tbNameObj.setValue(result.data.tbName);
+                }
+            }
+        });
         $.ajax({
             url: "${basePath}/im/md/col/select/" + mdId,
             type: 'POST',
@@ -165,9 +183,9 @@ ${extends("/goframe/function_layout.httl")}
      * 保存
      */
     function save() {
-        //var colsSelected = grid1.getSelecteds();
-        var colsSelected = grid1.getData(true, true);
-        window.Owner.setColsData(colsSelected);
+        var tbName = tbNameObj.value;
+        var cols = grid1.getData(true, true);
+        window.Owner.setColsData(tbName, cols);
         cancel();
     }
 

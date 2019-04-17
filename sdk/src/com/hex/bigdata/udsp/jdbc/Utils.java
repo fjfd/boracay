@@ -27,7 +27,7 @@ public class Utils {
     /**
      * Hive's default service name
      */
-    public static final String DEFAULT_SERVICE_NAME = "default";
+    public static final String DEFAULT_SERVICE_NAME = "";
 
     private static final String URI_JDBC_PREFIX = "jdbc:";
 

@@ -70,11 +70,12 @@ public class NoSqlClient extends ConsumerClient {
     /**
      * 检查start业务参数
      */
+    @Override
     protected void checkStartBusinessParams(BaseRequest baseRequest) {
-        NoSqlRequest request = (NoSqlRequest) baseRequest;
-        Map<String, String> data = request.getData();
-        if (data == null || data.size() == 0) {
-            throw new IllegalArgumentException("参数data不能为空!");
-        }
+//        NoSqlRequest request = (NoSqlRequest) baseRequest;
+//        Map<String, String> data = request.getData();
+//        if (data == null || data.size() == 0) {
+//            throw new IllegalArgumentException("参数data不能为空!");
+//        }
     }
 }

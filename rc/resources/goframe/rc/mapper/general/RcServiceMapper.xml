@@ -111,6 +111,15 @@
     and TYPE = #{serviceType,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectStartByTypeAndName" resultMap="BaseResultMap" parameterType="com.hex.bigdata.udsp.rc.model.RcService" >
+    select PK_ID, NAME, DESCRIPTION, TYPE, APP_ID, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
+    UPT_TIME, STATUS, IS_CACHE, TIME_OUT
+    from RC_SERVICE
+    where DEL_FLG = '0' AND STATUS = '0'
+    and TYPE = #{type,jdbcType=VARCHAR}
+    <if test="name!='' and name!=null ">and NAME like #{name}</if>
+  </select>
+
   <select id="selectByServiceName" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select PK_ID, NAME, DESCRIPTION, TYPE, APP_ID, DEL_FLG, CRT_USER, CRT_TIME, UPT_USER,
    UPT_TIME, STATUS, IS_CACHE, TIME_OUT

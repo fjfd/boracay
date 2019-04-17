@@ -52,6 +52,11 @@ public class IqMetadataMapper extends SyncMapper<IqMetadata> {
                 "com.hex.bigdata.udsp.iq.dao.IqMetadataMapper.select", iqMetadataView);
     }
 
+    public List<IqMetadata> selectAll() {
+        return sqlSessionTemplate.selectList(
+                "com.hex.bigdata.udsp.iq.dao.IqMetadataMapper.selectAll");
+    }
+
     public IqMetadata selectByName(String name) {
         return this.sqlSessionTemplate.selectOne("com.hex.bigdata.udsp.iq.dao.IqMetadataMapper.selectByName", name);
     }

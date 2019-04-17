@@ -74,6 +74,7 @@ public class WaitQueueService {
      * @return
      */
     public boolean emptyLocalCache() {
+        logger.info("清空本机的等待队列信息【开始】");
         for (Current current : currentService.getLocalWait()) {
             String key = this.getKey(current);
             WaitQueue waitQueue = this.select(key);
@@ -87,6 +88,7 @@ public class WaitQueueService {
                 currentService.deleteWait(current.getPkId());
             }
         }
+        logger.info("清空本机的等待队列信息【结束】");
         return true;
     }
 

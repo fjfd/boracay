@@ -351,8 +351,7 @@ ${extends("/goframe/function_layout.httl")}
         if (form1.isValid() == false) {
             return;
         }
-        var baseData = form1.getData(true, true);
-        return baseData;
+        return form1.getData(true, true);
     }
 
     /**

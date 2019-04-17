@@ -4,8 +4,8 @@ package com.hex.bigdata.udsp.common.api.model;
  * Created by junjiem on 2017-3-2.
  */
 public class Page {
-    private int pageIndex = 1; // 当前页
-    private int pageSize = 10; // 每页显示条数
+    private int pageIndex = 1; // 页号
+    private int pageSize = 10; // 条数
 
     private long totalPage; // 总页数
     private long totalCount; // 总记录数

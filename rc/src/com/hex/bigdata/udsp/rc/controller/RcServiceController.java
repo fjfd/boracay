@@ -133,13 +133,13 @@ public class RcServiceController extends BaseController {
     public MessageResult select(@PathVariable("pkId") String pkId) {
         boolean status = true;
         String message = "查询成功";
-        RcService rtsMatedata = null;
+        RcService rtsMetadata = null;
         if (StringUtils.isBlank(pkId)) {
             status = false;
             message = "请求参数为空";
         } else {
             try {
-                rtsMatedata = this.rcServiceService.select(pkId);
+                rtsMetadata = this.rcServiceService.select(pkId);
             } catch (Exception e) {
                 status = false;
                 message = "系统异常：" + e.getMessage();
@@ -150,7 +150,7 @@ public class RcServiceController extends BaseController {
         } else {
             logger.warn(message);
         }
-        return new MessageResult(status, message, rtsMatedata);
+        return new MessageResult(status, message, rtsMetadata);
     }
 
     @RequestMapping({"/update"})
@@ -324,13 +324,13 @@ public class RcServiceController extends BaseController {
     public MessageResult selectAuthInfo(@PathVariable("pkId") String pkId) {
         boolean status = true;
         String message = "查询成功";
-        RcService rtsMatedata = null;
+        RcService rtsMetadata = null;
         if (StringUtils.isBlank(pkId)) {
             status = false;
             message = "请求参数为空";
         } else {
             try {
-                rtsMatedata = this.rcServiceService.selectAuthInfo(pkId);
+                rtsMetadata = this.rcServiceService.selectAuthInfo(pkId);
             } catch (Exception e) {
                 status = false;
                 message = "系统异常：" + e.getMessage();
@@ -341,7 +341,7 @@ public class RcServiceController extends BaseController {
         } else {
             logger.warn(message);
         }
-        return new MessageResult(status, message, rtsMatedata);
+        return new MessageResult(status, message, rtsMetadata);
     }
 
     /**

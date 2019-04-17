@@ -227,6 +227,7 @@ ${extends("/goframe/function_layout.httl")}
     var grid2;
     var grid3;
     var dsIdObj;
+    var tbNameObj;
     var originTbName;
 
     /**
@@ -239,6 +240,7 @@ ${extends("/goframe/function_layout.httl")}
         grid2 = nui.get("datagrid2");
         grid3 = nui.get("datagrid3");
         dsIdObj = nui.get("dsId");
+        tbNameObj = nui.get("tbName");
     });
 
     /**
@@ -489,8 +491,7 @@ ${extends("/goframe/function_layout.httl")}
         if (form1.isValid() == false) {
             return;
         }
-        var baseData = form1.getData(true, true);
-        return baseData;
+        return form1.getData(true, true);
     }
 
     /**
@@ -759,10 +760,11 @@ ${extends("/goframe/function_layout.httl")}
         });
     }
 
-    function setColsData(colsSelected) {
+    function setColsData(tbName, cols) {
+        tbNameObj.setValue(tbName);
         var queryColArray = [];//查询字段
         var returnColArray = [];//返回字段
-        $.each(colsSelected, function (index, value) {
+        $.each(cols, function (index, value) {
             //如果value.indexed为0则是查询字段
             if (value.indexed == "0") {
                 queryColArray.push(initQueryCols(value));

@@ -1,5 +1,6 @@
 package com.hex.bigdata.udsp.jdbc;
 
+import com.hex.bigdata.udsp.config.NettyClientConfig;
 import com.hex.bigdata.udsp.jdbc.netty.Client;
 import com.hex.bigdata.udsp.jdbc.netty.ClientFactory;
 import com.hex.bigdata.udsp.jdbc.netty.NettyClientFactory;
@@ -25,7 +26,7 @@ public class UdspConnection implements Connection {
 
     private RemotingUrl url;
 
-    private int loginTimeout = 3000; // 超时时间（毫秒）
+    private int loginTimeout = NettyClientConfig.getConnectTimeout ();
 
     private SQLWarning warningChain = null;
     private ClientFactory factory;
@@ -334,31 +335,12 @@ public class UdspConnection implements Connection {
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        if (isClosed()) {
-            throw new SQLException("Connection is closed");
-        }
-        if (schema == null || schema.isEmpty()) {
-            throw new SQLException("Schema name is null or empty");
-        }
-        Statement stmt = createStatement();
-        stmt.execute("use " + schema);
-        stmt.close();
+        throw new SQLException("Method not supported");
     }
 
     @Override
     public String getSchema() throws SQLException {
-        if (isClosed()) {
-            throw new SQLException("Connection is closed");
-        }
-        Statement stmt = createStatement();
-        ResultSet res = stmt.executeQuery("SELECT current_database()");
-        if (!res.next()) {
-            throw new SQLException("Failed to get schema information");
-        }
-        String schemaName = res.getString(1);
-        res.close();
-        stmt.close();
-        return schemaName;
+        throw new SQLException("Method not supported");
     }
 
     @Override

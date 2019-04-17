@@ -233,6 +233,7 @@ ${extends("/goframe/function_layout.httl")}
     var grid2;
     var grid3;
     var dsIdObj;
+    var tbNameObj;
     var originName;
     var originTbName;
 
@@ -245,6 +246,7 @@ ${extends("/goframe/function_layout.httl")}
         grid1 = nui.get("datagrid1");
         grid2 = nui.get("datagrid2");
         grid3 = nui.get("datagrid3");
+        tbNameObj = nui.get("tbName");
         dsIdObj = nui.get("dsId");
         setData();
         grid1.load();
@@ -795,10 +797,11 @@ ${extends("/goframe/function_layout.httl")}
         });
     }
 
-    function setColsData(colsSelected) {
+    function setColsData(tbName, cols) {
+        tbNameObj.setValue(tbName);
         var queryColArray = [];//查询字段
         var returnColArray = [];//返回字段
-        $.each(colsSelected, function (index, value) {
+        $.each(cols, function (index, value) {
             //如果value.indexed为0则是查询字段
             if (value.indexed == "0") {
                 queryColArray.push(initQueryCols(value));

@@ -58,22 +58,23 @@ public class MmModelInfoService extends BaseService {
     @Autowired
     private MmContractorMapper contractorMapper;
 
-    private static  List<ComExcelParam> comExcelParams = new ArrayList<>();
+    private static List<ComExcelParam> comExcelParams = new ArrayList<> ();
+
     static {
         //固定栏内容
-        comExcelParams.add(new ComExcelParam(1,1,"name"));
-        comExcelParams.add(new ComExcelParam(1,3,"contractor"));
-        comExcelParams.add(new ComExcelParam(1,5,"note"));
-        comExcelParams.add(new ComExcelParam(2,1,"modelType"));
-        comExcelParams.add(new ComExcelParam(2,3,"describe"));
+        comExcelParams.add (new ComExcelParam (1, 1, "name"));
+        comExcelParams.add (new ComExcelParam (1, 3, "contractor"));
+        comExcelParams.add (new ComExcelParam (1, 5, "note"));
+        comExcelParams.add (new ComExcelParam (2, 1, "modelType"));
+        comExcelParams.add (new ComExcelParam (2, 3, "describe"));
     }
 
 
     @Transactional
     public String insert(MmModelInfo modelInfo) {
-        String pkId = Util.uuid();
-        modelInfo.setPkId(pkId);
-        if (modelInfoMapper.insert(pkId, modelInfo)) {
+        String pkId = Util.uuid ();
+        modelInfo.setPkId (pkId);
+        if (modelInfoMapper.insert (pkId, modelInfo)) {
             return pkId;
         }
         return "";
@@ -87,10 +88,10 @@ public class MmModelInfoService extends BaseService {
      */
     @Transactional
     public String insert(MmCollocateParamView mmCollocateParamView) {
-        String pkId = this.insert(mmCollocateParamView.getModelInfo());
-        if (StringUtils.isNotBlank(pkId)) {
-            modelParamService.insertQueryColList(pkId, mmCollocateParamView.getModelExcuteParam());
-            modelParamService.insertReturnColList(pkId, mmCollocateParamView.getModelReturnParam());
+        String pkId = this.insert (mmCollocateParamView.getModelInfo ());
+        if (StringUtils.isNotBlank (pkId)) {
+            modelParamService.insertQueryColList (pkId, mmCollocateParamView.getModelExcuteParam ());
+            modelParamService.insertReturnColList (pkId, mmCollocateParamView.getModelReturnParam ());
             return pkId;
         }
         return "";
@@ -104,7 +105,7 @@ public class MmModelInfoService extends BaseService {
      */
     @Transactional
     public boolean update(MmModelInfo modelInfo) {
-        return modelInfoMapper.update(modelInfo.getPkId(), modelInfo);
+        return modelInfoMapper.update (modelInfo.getPkId (), modelInfo);
     }
 
     /**
@@ -115,17 +116,17 @@ public class MmModelInfoService extends BaseService {
      */
     @Transactional
     public boolean update(MmCollocateParamView mmCollocateParamView) {
-        MmModelInfo modelInfo = mmCollocateParamView.getModelInfo();
+        MmModelInfo modelInfo = mmCollocateParamView.getModelInfo ();
 
-        String mmId = modelInfo.getPkId();
-        if (!this.update(modelInfo)) {
+        String mmId = modelInfo.getPkId ();
+        if (!this.update (modelInfo)) {
             return false;
         }
-        if (!modelParamService.deleteByMmId(mmId)) {
+        if (!modelParamService.deleteByMmId (mmId)) {
             return false;
         }
-        modelParamService.insertQueryColList(mmId, mmCollocateParamView.getModelExcuteParam());
-        modelParamService.insertReturnColList(mmId, mmCollocateParamView.getModelReturnParam());
+        modelParamService.insertQueryColList (mmId, mmCollocateParamView.getModelExcuteParam ());
+        modelParamService.insertReturnColList (mmId, mmCollocateParamView.getModelReturnParam ());
         return true;
     }
 
@@ -137,7 +138,7 @@ public class MmModelInfoService extends BaseService {
      */
     @Transactional
     public boolean delete(String pkId) {
-        return modelInfoMapper.delete(pkId);
+        return modelInfoMapper.delete (pkId);
     }
 
     /**
@@ -147,18 +148,18 @@ public class MmModelInfoService extends BaseService {
      * @return
      */
     public MmModelInfo select(String pkId) {
-        return modelInfoMapper.select(pkId);
+        return modelInfoMapper.select (pkId);
     }
 
     /**
      * 分页多条件查询
      *
-     * @param rtsMatedataView 查询参数
+     * @param mmModelInfoView 查询参数
      * @param page            分页参数
      * @return
      */
-    public List<MmModelInfoView> select(MmModelInfoView rtsMatedataView, Page page) {
-        return modelInfoMapper.selectPage(rtsMatedataView, page);
+    public List<MmModelInfoView> select(MmModelInfoView mmModelInfoView, Page page) {
+        return modelInfoMapper.selectPage (mmModelInfoView, page);
     }
 
     /**
@@ -168,8 +169,7 @@ public class MmModelInfoService extends BaseService {
      * @return 存在返回true，不存在返回false
      */
     public boolean checekUniqueName(String name) {
-        MmModelInfo rtsMatedata = this.modelInfoMapper.selectByName(name);
-        return rtsMatedata != null;
+        return this.modelInfoMapper.selectByName (name) != null;
     }
 
     /**
@@ -181,27 +181,27 @@ public class MmModelInfoService extends BaseService {
     @Transactional
     public MessageResult delete(MmModelInfo[] modelInfos) {
         boolean flag = true;
-        StringBuffer message = new StringBuffer("");
+        StringBuffer message = new StringBuffer ("");
         for (MmModelInfo modelInfo : modelInfos) {
-            String pkId = modelInfo.getPkId();
+            String pkId = modelInfo.getPkId ();
             //检查依赖
-            List<MmApplication> mmApplications = mmApplicationService.selectByModelId(pkId);
+            List<MmApplication> mmApplications = mmApplicationService.selectByModelId (pkId);
             //存在下游依赖
-            if (mmApplications != null && mmApplications.size() > 0) {
+            if (mmApplications != null && mmApplications.size () > 0) {
                 flag = false;
-                message.append(modelInfo.getName()).append("、");
+                message.append (modelInfo.getName ()).append ("、");
                 continue;
             }
-            boolean delFlg = delete(pkId);
+            boolean delFlg = delete (pkId);
             if (!delFlg) {
                 flag = false;
                 break;
             }
         }
         if (!flag) {
-            message.deleteCharAt(message.length() - 1).append("，").append("模型已被应用，不允许对模型信息进行删除，删除失败！");
+            message.deleteCharAt (message.length () - 1).append ("，").append ("模型已被应用，不允许对模型信息进行删除，删除失败！");
         }
-        return new MessageResult(flag, message.toString(), null);
+        return new MessageResult (flag, message.toString (), null);
     }
 
     /**
@@ -210,7 +210,7 @@ public class MmModelInfoService extends BaseService {
      * @return
      */
     public List<MmModelInfo> selectAll() {
-        return this.modelInfoMapper.selectAll();
+        return this.modelInfoMapper.selectAll ();
     }
 
     /**
@@ -220,18 +220,18 @@ public class MmModelInfoService extends BaseService {
      * @return
      */
     public List<MmModelInfo> selectByContractorId(String contractorId) {
-        return this.modelInfoMapper.selectByContractorId(contractorId);
+        return this.modelInfoMapper.selectByContractorId (contractorId);
     }
 
     /**
      * 检查是否存在下游依赖
      * 存在则返回false、不存在则返回true
      */
-    public boolean checkDepend(String modelId){
+    public boolean checkDepend(String modelId) {
         //检查是否关联下游应用
-        List<MmApplication> mmApplications = mmApplicationService.selectByModelId(modelId);
+        List<MmApplication> mmApplications = mmApplicationService.selectByModelId (modelId);
         //存在依赖
-        if (mmApplications != null && mmApplications.size() > 0) {
+        if (mmApplications != null && mmApplications.size () > 0) {
             return false;
         }
         return true;
@@ -239,76 +239,77 @@ public class MmModelInfoService extends BaseService {
 
     /**
      * 数据源excel文件导入
+     *
      * @param uploadFilePath
      * @return
      */
     public Map<String, String> uploadExcel(String uploadFilePath) {
-        Map resultMap = new HashMap<String,String>(2);
-        File uploadFile = new File(uploadFilePath);
+        Map resultMap = new HashMap<String, String> (2);
+        File uploadFile = new File (uploadFilePath);
         FileInputStream in = null;
         try {
-            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent();
-            dataSourceContent.setClassName("com.hex.bigdata.udsp.mm.model.ModelInfo");
+            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent ();
+            dataSourceContent.setClassName ("com.hex.bigdata.udsp.mm.model.ModelInfo");
 
-            dataSourceContent.setComExcelParams(comExcelParams);
-            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<>();
+            dataSourceContent.setComExcelParams (comExcelParams);
+            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<> ();
             //添加对应的配置栏内容
-            comExcelPropertiesList.add(new ComExcelProperties("查询字段",
+            comExcelPropertiesList.add (new ComExcelProperties ("查询字段",
                     "com.hex.bigdata.udsp.mm.model.ModelParam",
-                    11,0,1, ComExcelEnums.ModelParam.getAllNums()));
-            comExcelPropertiesList.add(new ComExcelProperties("返回字段",
+                    11, 0, 1, ComExcelEnums.ModelParam.getAllNums ()));
+            comExcelPropertiesList.add (new ComExcelProperties ("返回字段",
                     "com.hex.bigdata.udsp.mm.model.ModelParam",
-                    10,0,2, ComExcelEnums.ModelParam.getAllNums()));
+                    10, 0, 2, ComExcelEnums.ModelParam.getAllNums ()));
 
-            dataSourceContent.setComExcelPropertiesList(comExcelPropertiesList);
-            dataSourceContent.setType("fixed");
+            dataSourceContent.setComExcelPropertiesList (comExcelPropertiesList);
+            dataSourceContent.setType ("fixed");
 
-            in = new FileInputStream(uploadFile);
-            HSSFWorkbook hfb = new HSSFWorkbook(in);
+            in = new FileInputStream (uploadFile);
+            HSSFWorkbook hfb = new HSSFWorkbook (in);
             HSSFSheet sheet;
-            for(int i = 0 ,activeIndex =  hfb.getNumberOfSheets();i < activeIndex;i++){
-                sheet = hfb.getSheetAt(i);
-                Map<String,List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel(sheet, dataSourceContent);
-                List<MmModelInfo> modelInfos = (List<MmModelInfo>)uploadExcelModel.get("com.hex.bigdata.udsp.mm.model.ModelInfo");
-                MmModelInfo modelInfo = modelInfos.get(0);
-                if(modelInfoMapper.selectByName(modelInfo.getName()) != null){
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个名称重复！");
+            for (int i = 0, activeIndex = hfb.getNumberOfSheets (); i < activeIndex; i++) {
+                sheet = hfb.getSheetAt (i);
+                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel (sheet, dataSourceContent);
+                List<MmModelInfo> modelInfos = (List<MmModelInfo>) uploadExcelModel.get ("com.hex.bigdata.udsp.mm.model.ModelInfo");
+                MmModelInfo modelInfo = modelInfos.get (0);
+                if (modelInfoMapper.selectByName (modelInfo.getName ()) != null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个名称重复！");
                     break;
                 }
-                if(contractorMapper.selectByName(modelInfo.getContractor()) == null){
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个模型配置对应厂商名称不存在！");
+                if (contractorMapper.selectByName (modelInfo.getContractor ()) == null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个模型配置对应厂商名称不存在！");
                     break;
                 }
                 //设置厂商id
-                modelInfo.setContractor(contractorMapper.selectByName(modelInfo.getContractor()).getPkId());
-                String pkId = insert(modelInfo);
+                modelInfo.setContractor (contractorMapper.selectByName (modelInfo.getContractor ()).getPkId ());
+                String pkId = insert (modelInfo);
 
-                List<MmModelParam> modelQueryParam = (List<MmModelParam>)uploadExcelModel.get("com.hex.bigdata.udsp.mm.model.ModelParam");
-                List<MmModelParam> modelReturnParam = (List<MmModelParam>)uploadExcelModel.get("com.hex.bigdata.udsp.mm.model.ModelParam1");
+                List<MmModelParam> modelQueryParam = (List<MmModelParam>) uploadExcelModel.get ("com.hex.bigdata.udsp.mm.model.ModelParam");
+                List<MmModelParam> modelReturnParam = (List<MmModelParam>) uploadExcelModel.get ("com.hex.bigdata.udsp.mm.model.ModelParam1");
 
-                boolean insertQuery = modelParamService.insertQueryColList(pkId, modelQueryParam);
-                boolean insertReturn = modelParamService.insertReturnColList(pkId, modelReturnParam);
+                boolean insertQuery = modelParamService.insertQueryColList (pkId, modelQueryParam);
+                boolean insertReturn = modelParamService.insertReturnColList (pkId, modelReturnParam);
 
-                if(insertQuery  && insertReturn){
-                    resultMap.put("status","true");
-                }else{
-                    resultMap.put("status","false");
-                    resultMap.put("message","第" + (i+1) + "个保存失败！");
+                if (insertQuery && insertReturn) {
+                    resultMap.put ("status", "true");
+                } else {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个保存失败！");
                     break;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.put("status","false");
-            resultMap.put("message","程序内部异常：" + e.getMessage());
-        }finally {
-            if(in != null){
+            e.printStackTrace ();
+            resultMap.put ("status", "false");
+            resultMap.put ("message", "程序内部异常：" + e.getMessage ());
+        } finally {
+            if (in != null) {
                 try {
-                    in.close();
+                    in.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
         }
@@ -316,122 +317,124 @@ public class MmModelInfoService extends BaseService {
     }
 
     public String createExcel(MmModelInfo[] modelInfos) {
-        HSSFWorkbook workbook = null;
+        HSSFWorkbook workbook = new HSSFWorkbook ();
         HSSFWorkbook sourceWork;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
-        String seprator = FileUtil.getFileSeparator();
-        String dirPath = FileUtil.getWebPath("/");
+        String seprator = FileUtil.getFileSeparator ();
+        String dirPath = FileUtil.getWebPath ("/");
         //模板文件位置
         String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_modelInfo.xls";
         // 判断是否存在，不存在则创建
         dirPath += seprator + "TEMP_DOWNLOAD";
-        File file = new File(dirPath);
+        File file = new File (dirPath);
         // 判断文件是否存在
-        if (!file.exists()) {
-            FileUtil.mkdir(dirPath);
+        if (!file.exists ()) {
+            FileUtil.mkdir (dirPath);
         }
-        dirPath += seprator+ "download_modelInfo_excel_"+ DateUtil.format(new Date(), "yyyyMMddHHmmss")+".xls";
+        dirPath += seprator + "download_modelInfo_excel_" + DateUtil.format (new Date (), "yyyyMMddHHmmss") + ".xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(
-                    templateFile));
-
-            sourceWork = new HSSFWorkbook(sourceFile);
-            sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            sourceSheet = sourceWork.getSheetAt (0);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
-        HSSFSheet sheet;
-        List<ComExcelParam> comExcelParams = new ArrayList<>();
-        comExcelParams.add(new ComExcelParam(1,1,"name"));
-        comExcelParams.add(new ComExcelParam(1,3,"contractor"));
-        comExcelParams.add(new ComExcelParam(1,5,"note"));
-        comExcelParams.add(new ComExcelParam(2,1,"modelType"));
-        comExcelParams.add(new ComExcelParam(2,3,"describe"));
-        for(MmModelInfo modelInfo : modelInfos){
-            sheet = workbook.createSheet();
+
+
+        List<ComExcelParam> comExcelParams = new ArrayList<> ();
+        comExcelParams.add (new ComExcelParam (1, 1, "name"));
+        comExcelParams.add (new ComExcelParam (1, 3, "contractor"));
+        comExcelParams.add (new ComExcelParam (1, 5, "note"));
+        comExcelParams.add (new ComExcelParam (2, 1, "modelType"));
+        comExcelParams.add (new ComExcelParam (2, 3, "describe"));
+
+        HSSFSheet sheet = null;
+        for (MmModelInfo modelInfo : modelInfos) {
+            modelInfo = modelInfoMapper.select (modelInfo.getPkId ());
+            sheet = workbook.createSheet (modelInfo.getName ());
+
             //将前面样式内容复制到下载表中
             int i = 0;
-            for( ; i < 11 ; i++){
+            for (; i < 11; i++) {
                 try {
-                    ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                    ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
 
-            //设置内容
-            MmModelInfo model = modelInfoMapper.select(modelInfo.getPkId());
             //设置厂商名字
-            model.setContractor(contractorMapper.select(model.getContractor()).getName());
-            for(ComExcelParam comExcelParam : comExcelParams){
+            modelInfo.setContractor (contractorMapper.select (modelInfo.getContractor ()).getName ());
+            for (ComExcelParam comExcelParam : comExcelParams) {
                 try {
-                    Field field = model.getClass().getDeclaredField(comExcelParam.getName());
-                    field.setAccessible(true);
-                    ExcelCopyUtils.setCellValue(sheet,comExcelParam.getRowNum(),comExcelParam.getCellNum(),field.get(model)==null?"":field.get(model).toString());
+                    Field field = modelInfo.getClass ().getDeclaredField (comExcelParam.getName ());
+                    field.setAccessible (true);
+                    ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (),
+                            field.get (modelInfo) == null ? "" : field.get (modelInfo).toString ());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
-            List<MmModelParam> modelQueryCols = modelParamService.select(modelInfo.getPkId(),"1");
-            if(modelQueryCols.size() > 0){
-                for(MmModelParam modelQueryCol : modelQueryCols){
-                    row = sheet.createRow(i);
-                    cell = row.createCell(0);
-                    cell.setCellValue(modelQueryCol.getSeq());
-                    cell = row.createCell(1);
-                    cell.setCellValue(modelQueryCol.getName());
-                    cell = row.createCell(2);
-                    cell.setCellValue(modelQueryCol.getDescribe());
-                    cell = row.createCell(3);
-                    cell.setCellValue(modelQueryCol.getColType());
-                    cell = row.createCell(4);
-                    cell.setCellValue(modelQueryCol.getLength());
-                    cell = row.createCell(5);
-                    cell.setCellValue(modelQueryCol.getNote());
+            List<MmModelParam> modelQueryCols = modelParamService.select (modelInfo.getPkId (), "1");
+            if (modelQueryCols.size () > 0) {
+                for (MmModelParam modelQueryCol : modelQueryCols) {
+                    row = sheet.createRow (i);
+                    cell = row.createCell (0);
+                    cell.setCellValue (modelQueryCol.getSeq ());
+                    cell = row.createCell (1);
+                    cell.setCellValue (modelQueryCol.getName ());
+                    cell = row.createCell (2);
+                    cell.setCellValue (modelQueryCol.getDescribe ());
+                    cell = row.createCell (3);
+                    cell.setCellValue (modelQueryCol.getColType ());
+                    cell = row.createCell (4);
+                    cell.setCellValue (modelQueryCol.getLength ());
+                    cell = row.createCell (5);
+                    cell.setCellValue (modelQueryCol.getNote ());
                     i++;
                 }
             }
+
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i++), sourceSheet.getRow(17), sheet.createDrawingPatriarch(), workbook);
-                ExcelCopyUtils.copyRow(sheet.createRow(i++), sourceSheet.getRow(18), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i++), sourceSheet.getRow (17), sheet.createDrawingPatriarch (), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i++), sourceSheet.getRow (18), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
-            List<MmModelParam> modelReturnCols = modelParamService.select(modelInfo.getPkId(), "2");
-            if(modelQueryCols.size() > 0){
-                for(MmModelParam modelReturnCol : modelReturnCols){
-                    row = sheet.createRow(i);
-                    cell = row.createCell(0);
-                    cell.setCellValue(modelReturnCol.getSeq());
-                    cell = row.createCell(1);
-                    cell.setCellValue(modelReturnCol.getName());
-                    cell = row.createCell(2);
-                    cell.setCellValue(modelReturnCol.getDescribe());
-                    cell = row.createCell(3);
-                    cell.setCellValue(modelReturnCol.getColType());
-                    cell = row.createCell(4);
-                    cell.setCellValue(modelReturnCol.getLength());
-                    cell = row.createCell(5);
-                    cell.setCellValue(modelReturnCol.getNote());
+            List<MmModelParam> modelReturnCols = modelParamService.select (modelInfo.getPkId (), "2");
+            if (modelQueryCols.size () > 0) {
+                for (MmModelParam modelReturnCol : modelReturnCols) {
+                    row = sheet.createRow (i);
+                    cell = row.createCell (0);
+                    cell.setCellValue (modelReturnCol.getSeq ());
+                    cell = row.createCell (1);
+                    cell.setCellValue (modelReturnCol.getName ());
+                    cell = row.createCell (2);
+                    cell.setCellValue (modelReturnCol.getDescribe ());
+                    cell = row.createCell (3);
+                    cell.setCellValue (modelReturnCol.getColType ());
+                    cell = row.createCell (4);
+                    cell.setCellValue (modelReturnCol.getLength ());
+                    cell = row.createCell (5);
+                    cell.setCellValue (modelReturnCol.getNote ());
                     i++;
                 }
             }
         }
+
         if (workbook != null) {
             try {
-                FileOutputStream stream = new FileOutputStream(dirPath);
-                workbook.write(new FileOutputStream(dirPath));
-                stream.close();
+                FileOutputStream stream = new FileOutputStream (dirPath);
+                workbook.write (new FileOutputStream (dirPath));
+                stream.close ();
                 return dirPath;
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
         return null;

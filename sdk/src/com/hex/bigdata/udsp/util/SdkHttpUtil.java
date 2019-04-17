@@ -4,17 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.hex.bigdata.udsp.common.api.model.BaseRequest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.nio.charset.Charset;
 
 public class SdkHttpUtil {
-
-    /**
-     * 日志记录
-     */
-    private static Logger logger = LogManager.getLogger(SdkHttpUtil.class);
 
     /**
      * 调用UDSP

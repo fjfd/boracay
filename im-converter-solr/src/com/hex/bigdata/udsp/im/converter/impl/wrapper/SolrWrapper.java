@@ -129,7 +129,7 @@ public abstract class SolrWrapper extends Wrapper implements BatchSourceConverte
         SolrUtil.updateDocument(solrDatasource, tableName, idName, ids, map);
     }
 
-    protected String getIdName(List<ModelMapping> modelMappings) {
+    private String getIdName(List<ModelMapping> modelMappings) {
         String idName = "";
         for (ModelMapping mapping : modelMappings) {
             MetadataCol col = mapping.getMetadataCol();

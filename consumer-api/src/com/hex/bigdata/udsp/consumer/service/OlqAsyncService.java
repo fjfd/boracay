@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OlqAsyncService implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger(OlqAsyncService.class);
+    private static Logger logger = LoggerFactory.getLogger (OlqAsyncService.class);
 
     private OlqSyncService olqSyncService;
     private RunQueueService runQueueService;
@@ -20,8 +20,8 @@ public class OlqAsyncService implements Runnable {
     private long bef;
 
     public OlqAsyncService(ConsumeRequest consumeRequest, String fileName, long bef) {
-        this.olqSyncService = (OlqSyncService) WebApplicationContextUtil.getBean("olqSyncService");
-        this.runQueueService = (RunQueueService) WebApplicationContextUtil.getBean("runQueueService");
+        this.olqSyncService = (OlqSyncService) WebApplicationContextUtil.getBean ("olqSyncService");
+        this.runQueueService = (RunQueueService) WebApplicationContextUtil.getBean ("runQueueService");
         this.consumeRequest = consumeRequest;
         this.fileName = fileName;
         this.bef = bef;
@@ -30,9 +30,9 @@ public class OlqAsyncService implements Runnable {
     @Override
     public void run() {
         try {
-            olqSyncService.asyncStartForTimeout(consumeRequest, fileName, bef);
+            olqSyncService.asyncStartForTimeout (consumeRequest, fileName, bef);
         } finally {
-            runQueueService.reduceCurrent(consumeRequest.getMcCurrent());
+            runQueueService.reduceCurrent (consumeRequest.getMcCurrent ());
         }
     }
 }

@@ -19,7 +19,6 @@ ${extends("/goframe/function_layout.httl")}
     var returnData = {};
     var filterCols;
 
-
     function loadForm(){
         /**
          * 按需加载资源文件

@@ -37,9 +37,9 @@ public class DatasourceTestService {
      */
     public boolean testDatasource(ComDatasourcePropsView comDatasourcePropsView) {
         ComDatasource comDatasource = comDatasourcePropsView.getComDatasource();
-        String model = comDatasourcePropsView.getComDatasource().getModel();
         List<ComProperties> comPropertiesList = comDatasourcePropsView.getComPropertiesList();
         Datasource datasource = DatasourceUtil.getDatasource(comDatasource, comPropertiesList);
+        String model = comDatasource.getModel();
         if (DatasourceMode.IQ.getValue().equalsIgnoreCase(model)) {
             return iqProviderService.testDatasource(datasource);
         } else if (DatasourceMode.OLQ.getValue().equalsIgnoreCase(model)) {

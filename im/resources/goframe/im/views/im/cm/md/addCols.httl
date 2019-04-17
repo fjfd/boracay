@@ -16,7 +16,6 @@ ${extends("/goframe/function_layout.httl")}
         <input name="type" class="nui-hidden"/>
         <input name="describe" class="nui-hidden"/>
         <input name="type" class="nui-hidden"/>
-
         <fieldset style="border:dotted 1px #227EA0;">
             <legend><span style="font-weight: bold">原字段栏</span></legend>
             <div style="padding: 5px 5px 0px 5px;">

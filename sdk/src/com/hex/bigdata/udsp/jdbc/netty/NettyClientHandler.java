@@ -1,16 +1,19 @@
 package com.hex.bigdata.udsp.jdbc.netty;
 
+import com.hex.bigdata.udsp.client.FtpFileClient;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.CharsetUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.util.concurrent.CountDownLatch;
 
 public class NettyClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
-    private Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
+
+    private static Logger logger = LogManager.getLogger(NettyClientHandler.class);
 
     private CountDownLatch lathc = new CountDownLatch(1); // 闭锁
 
@@ -65,11 +68,23 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
      */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-        logger.debug("客户端接收信息:\n" + msg.toString(CharsetUtil.UTF_8));
 //        result = msg.toString(CharsetUtil.UTF_8);
-        byte[] reqByte = new byte[msg.readableBytes()];
-        msg.readBytes(reqByte);
-        result = new String(reqByte, CharsetUtil.UTF_8);
+
+//        byte[] reqByte = new byte[msg.readableBytes()];
+//        msg.readBytes(reqByte);
+//        result = new String(reqByte, CharsetUtil.UTF_8);
+
+        if(msg.hasArray()) { // 处理堆缓冲区
+            result = new String(msg.array(), msg.arrayOffset() + msg.readerIndex(), msg.readableBytes());
+        } else { // 处理直接缓冲区以及复合缓冲区
+            byte[] bytes = new byte[msg.readableBytes()];
+            msg.getBytes(msg.readerIndex(), bytes);
+            result = new String(bytes, 0, msg.readableBytes());
+        }
+
+        logger.info ("客户端接收信息大小:" + result.length ());
+        logger.debug("客户端接收信息:\n" + result);
+
         if (lathc != null) {
             lathc.countDown();
         }

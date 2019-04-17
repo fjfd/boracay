@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * 心跳的任务
+ * 定时心跳检查
  */
 @Component
 public class HeartbeatCheckTask {

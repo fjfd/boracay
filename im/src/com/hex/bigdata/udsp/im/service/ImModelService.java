@@ -223,7 +223,7 @@ public class ImModelService {
         return imModelMapper.selectByName(modelName);
     }
 
-    public List<MetadataCol> getSrcMateData(Property[] properties, String srcDataSourceId) {
+    public List<MetadataCol> getSrcMetadata(Property[] properties, String srcDataSourceId) {
         //根据元数据获取相关信息
         Model model = new Model(Arrays.asList(properties));
         ComDatasource comDatasource = comDatasourceMapper.select(srcDataSourceId);
@@ -365,8 +365,8 @@ public class ImModelService {
     }
 
     public String createExcel(ImModel[] imModels) {
-        HSSFWorkbook workbook = null;
-        HSSFWorkbook sourceWork;
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFWorkbook sourceWork = null;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
@@ -380,19 +380,17 @@ public class ImModelService {
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(
-                    templateFile));
-
+            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
             sourceWork = new HSSFWorkbook(sourceFile);
             sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HSSFSheet sheet;
+
+        HSSFSheet sheet = null;
         for (ImModel imModel : imModels) {
-            sheet = workbook.createSheet();
+            imModel = imModelMapper.select(imModel.getPkId());
+            sheet = workbook.createSheet(imModel.getName ());
 
             //将前面样式内容复制到下载表中
             int i = 0;
@@ -404,8 +402,6 @@ public class ImModelService {
                 }
             }
 
-            //设置内容
-            imModel = imModelMapper.select(imModel.getPkId());
             //设置引擎数据源
             if (StringUtils.isNotBlank(imModel.getEngineDsId())) {
                 imModel.setEngineDsId(comDatasourceMapper.select(imModel.getEngineDsId()).getName());
@@ -676,7 +672,7 @@ public class ImModelService {
         //设置一些基础信息
         transformModel(model, imModel);
         //设置目标数据元信息
-        model.setTargetMetadata(getMateDataById(imModel.getTargetMdId()));
+        model.setTargetMetadata(getMetadataById(imModel.getTargetMdId()));
         //设置引擎数据源信息
         model.setEngineDatasource(getDatasourceById(imModel.getEngineDsId()));
         //设置更新键值
@@ -718,7 +714,7 @@ public class ImModelService {
         return model;
     }
 
-    private Metadata getMateDataById(String mdId) throws Exception {
+    private Metadata getMetadataById(String mdId) throws Exception {
 
         List<ComProperties> comProperties = comPropertiesService.selectList(mdId);
         Metadata metadata = new Metadata(PropertyUtil.convertToPropertyList(comProperties));
@@ -837,24 +833,17 @@ public class ImModelService {
         modelFilterCol.setOperator(Operator.getOperatorByValue(imModelFilterCol.getOperator()));
     }
 
-    /**
-     * 服务信息导出
-     *
-     */
-    public void setWorkbooksheet(HSSFWorkbook workbook, Map<String,String> map, String appId) {
-        HSSFWorkbook sourceWork;
-        HSSFSheet sourceSheet = null;
-        String seprator = FileUtil.getFileSeparator();
-        String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_allServiceInfo.xls";
+    public HSSFWorkbook setWorkbookSheet(HSSFWorkbook workbook, Map<String,String> map, String appId) {
+        String templateFile = ExcelCopyUtils.templatePath + FileUtil.getFileSeparator() + "downLoadTemplate_allServiceInfo.xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
-
+        HSSFWorkbook sourceWork = null;
+        HSSFSheet sourceSheet = null;
         try {
             sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
             sourceWork = new HSSFWorkbook(sourceFile);
-            //交互建模为第7个sheet
+            // 交互建模为第7个sheet
             sourceSheet = sourceWork.getSheetAt(6);
-            //创建表格
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -871,7 +860,8 @@ public class ImModelService {
         comExcelParams.add(new ComExcelParam(4, 1, "userId"));
         comExcelParams.add(new ComExcelParam(4, 3, "userName"));
 
-        HSSFSheet sheet = workbook.createSheet();
+        HSSFSheet sheet = workbook.createSheet(map.get("serviceName"));
+
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 11; i++) {
@@ -891,9 +881,11 @@ public class ImModelService {
         }
 
         this.setWorkbookSheetPart(sheet, imModel, sourceSheet, workbook, new ImIndexDto(i));
+
+        return workbook;
     }
 
-    public void setWorkbookSheetPart(HSSFSheet sheet, ImModel imModel, HSSFSheet sourceSheet,
+    private void setWorkbookSheetPart(HSSFSheet sheet, ImModel imModel, HSSFSheet sourceSheet,
                                      HSSFWorkbook workbook, ImIndexDto imIndexDto) {
         HSSFRow row;
         HSSFCell cell;

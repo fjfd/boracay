@@ -12,6 +12,7 @@ public class HiveDatasource extends JdbcDatasource {
         super(datasource);
     }
 
+    @Override
     public String getDriverClass() {
         String value = getProperty("driver.class").getValue();
         if (StringUtils.isBlank(value))

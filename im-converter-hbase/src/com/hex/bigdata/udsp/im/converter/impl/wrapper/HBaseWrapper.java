@@ -143,7 +143,7 @@ public abstract class HBaseWrapper extends Wrapper implements BatchTargetConvert
 
     private String getKeySql(List<MetadataCol> keys, List<MetadataCol> dts, List<MetadataCol> vals) {
         if ((keys == null || keys.size() == 0) && (dts == null || dts.size() == 0)) {
-            throw new IllegalArgumentException("keys和dts不能同时为空");
+            throw new IllegalArgumentException("HBase的元数据配置中至少要有一个索引字段！");
         }
         String sql = "\nCONCAT_WS('|'";
         // 哈希头

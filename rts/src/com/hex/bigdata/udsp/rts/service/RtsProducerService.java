@@ -46,7 +46,7 @@ import java.util.*;
 @Service
 public class RtsProducerService extends BaseService {
 
-    private static Logger logger = LogManager.getLogger(RtsProducerService.class);
+    private static Logger logger = LogManager.getLogger (RtsProducerService.class);
 
     @Autowired
     private ComPropertiesService comPropertiesService;
@@ -60,18 +60,18 @@ public class RtsProducerService extends BaseService {
     private static List<ComExcelParam> comExcelParams;
 
     static {
-        comExcelParams = new ArrayList<>();
-        comExcelParams.add(new ComExcelParam(1, 1, "name"));
-        comExcelParams.add(new ComExcelParam(1, 3, "mdId"));
-        comExcelParams.add(new ComExcelParam(2, 1, "describe"));
-        comExcelParams.add(new ComExcelParam(3, 1, "note"));
+        comExcelParams = new ArrayList<> ();
+        comExcelParams.add (new ComExcelParam (1, 1, "name"));
+        comExcelParams.add (new ComExcelParam (1, 3, "mdId"));
+        comExcelParams.add (new ComExcelParam (2, 1, "describe"));
+        comExcelParams.add (new ComExcelParam (3, 1, "note"));
     }
 
     @Transactional
     public String insert(RtsProducer rtsProducer) {
-        String pkId = Util.uuid();
-        rtsProducer.setPkId(pkId);
-        if (rtsProducerMapper.insert(pkId, rtsProducer)) {
+        String pkId = Util.uuid ();
+        rtsProducer.setPkId (pkId);
+        if (rtsProducerMapper.insert (pkId, rtsProducer)) {
             return pkId;
         }
         return "";
@@ -85,7 +85,7 @@ public class RtsProducerService extends BaseService {
      */
     @Transactional
     public boolean update(RtsProducer rtsProducer) {
-        return rtsProducerMapper.update(rtsProducer.getPkId(), rtsProducer);
+        return rtsProducerMapper.update (rtsProducer.getPkId (), rtsProducer);
     }
 
     /**
@@ -96,7 +96,7 @@ public class RtsProducerService extends BaseService {
      */
     @Transactional
     public boolean delete(String pkId) {
-        return rtsProducerMapper.delete(pkId);
+        return rtsProducerMapper.delete (pkId);
     }
 
     /**
@@ -106,7 +106,7 @@ public class RtsProducerService extends BaseService {
      * @return
      */
     public RtsProducer select(String pkId) {
-        return rtsProducerMapper.select(pkId);
+        return rtsProducerMapper.select (pkId);
     }
 
     /**
@@ -117,7 +117,7 @@ public class RtsProducerService extends BaseService {
      * @return
      */
     public List<RtsProducerView> select(RtsProducerView rtsProConfigView, Page page) {
-        return rtsProducerMapper.selectPage(rtsProConfigView, page);
+        return rtsProducerMapper.selectPage (rtsProConfigView, page);
     }
 
     /**
@@ -127,11 +127,11 @@ public class RtsProducerService extends BaseService {
      * @return
      */
     public List<RtsProducerView> select(RtsProducerView rtsProConfigView) {
-        return rtsProducerMapper.select(rtsProConfigView);
+        return rtsProducerMapper.select (rtsProConfigView);
     }
 
     public List<RtsProducer> selectAll() {
-        return rtsProducerMapper.selectAll();
+        return rtsProducerMapper.selectAll ();
     }
 
     /**
@@ -142,11 +142,11 @@ public class RtsProducerService extends BaseService {
      */
     @Transactional
     public String insert(RtsProducerProsView rtsProducerProsView) {
-        RtsProducer rtsProducer = rtsProducerProsView.getRtsProducer();
-        String pkId = this.insert(rtsProducer);
-        if (StringUtils.isNotBlank(pkId)) {
-            List<ComProperties> comPropertiesList = rtsProducerProsView.getComPropertiesList();
-            comPropertiesService.insertList(pkId, comPropertiesList);
+        RtsProducer rtsProducer = rtsProducerProsView.getRtsProducer ();
+        String pkId = this.insert (rtsProducer);
+        if (StringUtils.isNotBlank (pkId)) {
+            List<ComProperties> comPropertiesList = rtsProducerProsView.getComPropertiesList ();
+            comPropertiesService.insertList (pkId, comPropertiesList);
             return pkId;
         }
         return "";
@@ -160,7 +160,7 @@ public class RtsProducerService extends BaseService {
      * @return 存在返回true，不存在返回fals
      */
     public boolean checekUniqueName(String name) {
-        RtsProducer rtsProducer = this.rtsProducerMapper.selectByName(name);
+        RtsProducer rtsProducer = this.rtsProducerMapper.selectByName (name);
         return rtsProducer != null;
     }
 
@@ -172,19 +172,19 @@ public class RtsProducerService extends BaseService {
      */
     @Transactional
     public boolean update(RtsProducerProsView rtsProducerProsView) {
-        RtsProducer rtsProducer = rtsProducerProsView.getRtsProducer();
-        String pkId = rtsProducer.getPkId();
+        RtsProducer rtsProducer = rtsProducerProsView.getRtsProducer ();
+        String pkId = rtsProducer.getPkId ();
         //更新基础信息
-        if (!rtsProducerMapper.update(pkId, rtsProducer)) {
+        if (!rtsProducerMapper.update (pkId, rtsProducer)) {
             return false;
         }
         //删除旧的的配置参数信息
-        if (!comPropertiesService.deleteList(pkId)) {
+        if (!comPropertiesService.deleteList (pkId)) {
             return false;
         }
         //插入新的配置参数信息
-        List<ComProperties> comPropertiesList = rtsProducerProsView.getComPropertiesList();
-        return comPropertiesService.insertList(pkId, comPropertiesList);
+        List<ComProperties> comPropertiesList = rtsProducerProsView.getComPropertiesList ();
+        return comPropertiesService.insertList (pkId, comPropertiesList);
     }
 
     /**
@@ -197,8 +197,8 @@ public class RtsProducerService extends BaseService {
     public boolean delete(RtsProducer[] rtsProducers) {
         boolean flag = true;
         for (RtsProducer rtsProducer : rtsProducers) {
-            String pkId = rtsProducer.getPkId();
-            boolean delFlg = delete(pkId);
+            String pkId = rtsProducer.getPkId ();
+            boolean delFlg = delete (pkId);
             //删除旧的的配置参数信息
             if (!delFlg) {
                 flag = false;
@@ -209,10 +209,10 @@ public class RtsProducerService extends BaseService {
     }
 
     public List<RtsMetadataCol> selectProducerColumns(String producerId) {
-        RtsProducer rtsProducer = this.select(producerId);
+        RtsProducer rtsProducer = this.select (producerId);
         List<RtsMetadataCol> colList = null;
         if (rtsProducer != null) {
-            colList = rtsMetadataColService.selectByMdId(rtsProducer.getMdId());
+            colList = rtsMetadataColService.selectByMdId (rtsProducer.getMdId ());
         }
         return colList;
     }
@@ -224,70 +224,70 @@ public class RtsProducerService extends BaseService {
      * @return
      */
     public Map<String, String> uploadExcel(String uploadFilePath) {
-        Map resultMap = new HashMap<String, String>(2);
-        File uploadFile = new File(uploadFilePath);
+        Map resultMap = new HashMap<String, String> (2);
+        File uploadFile = new File (uploadFilePath);
         FileInputStream in = null;
         try {
-            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent();
-            dataSourceContent.setClassName("com.hex.bigdata.udsp.rts.model.RtsProducer");
-            List<ComExcelParam> comExcelParams = new ArrayList<>();
+            ComUploadExcelContent dataSourceContent = new ComUploadExcelContent ();
+            dataSourceContent.setClassName ("com.hex.bigdata.udsp.rts.model.RtsProducer");
+            List<ComExcelParam> comExcelParams = new ArrayList<> ();
             //固定栏内容
-            comExcelParams.add(new ComExcelParam(1, 1, "name"));
-            comExcelParams.add(new ComExcelParam(1, 3, "mdId"));
-            comExcelParams.add(new ComExcelParam(2, 1, "describe"));
-            comExcelParams.add(new ComExcelParam(3, 1, "note"));
+            comExcelParams.add (new ComExcelParam (1, 1, "name"));
+            comExcelParams.add (new ComExcelParam (1, 3, "mdId"));
+            comExcelParams.add (new ComExcelParam (2, 1, "describe"));
+            comExcelParams.add (new ComExcelParam (3, 1, "note"));
 
-            dataSourceContent.setComExcelParams(comExcelParams);
-            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<>();
+            dataSourceContent.setComExcelParams (comExcelParams);
+            List<ComExcelProperties> comExcelPropertiesList = new ArrayList<> ();
             //添加对应的配置栏内容
-            comExcelPropertiesList.add(new ComExcelProperties("数据源配置",
+            comExcelPropertiesList.add (new ComExcelProperties ("数据源配置",
                     "com.hex.bigdata.udsp.common.model.ComProperties",
-                    10, 0, 1, ComExcelEnums.Comproperties.getAllNums()));
+                    10, 0, 1, ComExcelEnums.Comproperties.getAllNums ()));
 
-            dataSourceContent.setComExcelPropertiesList(comExcelPropertiesList);
-            dataSourceContent.setType("fixed");
+            dataSourceContent.setComExcelPropertiesList (comExcelPropertiesList);
+            dataSourceContent.setType ("fixed");
 
-            in = new FileInputStream(uploadFile);
-            HSSFWorkbook hfb = new HSSFWorkbook(in);
+            in = new FileInputStream (uploadFile);
+            HSSFWorkbook hfb = new HSSFWorkbook (in);
             HSSFSheet sheet;
-            for (int i = 0, activeIndex = hfb.getNumberOfSheets(); i < activeIndex; i++) {
-                sheet = hfb.getSheetAt(i);
-                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel(sheet, dataSourceContent);
-                List<RtsProducer> rtsProducers = (List<RtsProducer>) uploadExcelModel.get("com.hex.bigdata.udsp.rts.model.RtsProducer");
-                RtsProducer rtsProducer = rtsProducers.get(0);
-                if (rtsProducerMapper.selectByName(rtsProducer.getName()) != null) {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个名称重复！");
+            for (int i = 0, activeIndex = hfb.getNumberOfSheets (); i < activeIndex; i++) {
+                sheet = hfb.getSheetAt (i);
+                Map<String, List> uploadExcelModel = ExcelUploadhelper.getUploadExcelModel (sheet, dataSourceContent);
+                List<RtsProducer> rtsProducers = (List<RtsProducer>) uploadExcelModel.get ("com.hex.bigdata.udsp.rts.model.RtsProducer");
+                RtsProducer rtsProducer = rtsProducers.get (0);
+                if (rtsProducerMapper.selectByName (rtsProducer.getName ()) != null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个名称重复！");
                     break;
                 }
-                if (rtsMetadataMapper.selectByName(rtsProducer.getMdId()) == null) {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个对应元数据不存在！");
+                if (rtsMetadataMapper.selectByName (rtsProducer.getMdId ()) == null) {
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个对应元数据不存在！");
                     break;
                 }
                 //更新元数据
-                rtsProducer.setMdId(rtsMetadataMapper.selectByName(rtsProducer.getMdId()).getPkId());
-                String pkId = insert(rtsProducer);
-                List<ComProperties> comPropertiesList = (List<ComProperties>) uploadExcelModel.get("com.hex.bigdata.udsp.common.model.ComProperties");
-                boolean insert = comPropertiesService.insertList(pkId, comPropertiesList);
+                rtsProducer.setMdId (rtsMetadataMapper.selectByName (rtsProducer.getMdId ()).getPkId ());
+                String pkId = insert (rtsProducer);
+                List<ComProperties> comPropertiesList = (List<ComProperties>) uploadExcelModel.get ("com.hex.bigdata.udsp.common.model.ComProperties");
+                boolean insert = comPropertiesService.insertList (pkId, comPropertiesList);
                 if (insert) {
-                    resultMap.put("status", "true");
+                    resultMap.put ("status", "true");
                 } else {
-                    resultMap.put("status", "false");
-                    resultMap.put("message", "第" + (i + 1) + "个保存失败！");
+                    resultMap.put ("status", "false");
+                    resultMap.put ("message", "第" + (i + 1) + "个保存失败！");
                     break;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            resultMap.put("status", "false");
-            resultMap.put("message", "程序内部异常：" + e.getMessage());
+            e.printStackTrace ();
+            resultMap.put ("status", "false");
+            resultMap.put ("message", "程序内部异常：" + e.getMessage ());
         } finally {
             if (in != null) {
                 try {
-                    in.close();
+                    in.close ();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace ();
                 }
             }
         }
@@ -296,153 +296,144 @@ public class RtsProducerService extends BaseService {
 
 
     public String createExcel(RtsProducer[] rtsProducers) {
-        HSSFWorkbook workbook = null;
+        HSSFWorkbook workbook = new HSSFWorkbook ();
         HSSFWorkbook sourceWork;
         HSSFSheet sourceSheet = null;
         HSSFRow row;
         HSSFCell cell;
-        String seprator = FileUtil.getFileSeparator();
+        String seprator = FileUtil.getFileSeparator ();
         //模板文件位置
         String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_rtsProducer.xls";
         // 下载地址
-        String dirPath = CreateFileUtil.getLocalDirPath();
-        dirPath += seprator + "download_rtsProducer_excel_" + DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".xls";
+        String dirPath = CreateFileUtil.getLocalDirPath ();
+        dirPath += seprator + "download_rtsProducer_excel_" + DateUtil.format (new Date (), "yyyyMMddHHmmss") + ".xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
 
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
-            sourceWork = new HSSFWorkbook(sourceFile);
-            sourceSheet = sourceWork.getSheetAt(0);
-            //创建表格
-            workbook = new HSSFWorkbook();
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            sourceSheet = sourceWork.getSheetAt (0);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
         for (RtsProducer rtsProducer : rtsProducers) {
-            this.setWorkbookSheet(workbook, sourceSheet, comExcelParams, rtsProducer);
+            this.setWorkbookSheet (workbook, sourceSheet, comExcelParams, rtsProducer);
         }
 
         if (workbook != null) {
             try {
-                FileOutputStream stream = new FileOutputStream(dirPath);
-                workbook.write(new FileOutputStream(dirPath));
-                stream.close();
+                FileOutputStream stream = new FileOutputStream (dirPath);
+                workbook.write (new FileOutputStream (dirPath));
+                stream.close ();
                 return dirPath;
             } catch (IOException e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
         return null;
     }
 
-    public void setWorkbooksheet(HSSFWorkbook workbook, Map<String,String> map, String appId) {
-        HSSFWorkbook sourceWork;
-        HSSFSheet sourceSheet = null;
-        String seprator = FileUtil.getFileSeparator();
-        String templateFile = ExcelCopyUtils.templatePath + seprator + "downLoadTemplate_allServiceInfo.xls";
+    public HSSFWorkbook setWorkbookSheet(HSSFWorkbook workbook, Map<String, String> map, String appId) {
+        String templateFile = ExcelCopyUtils.templatePath + FileUtil.getFileSeparator () + "downLoadTemplate_allServiceInfo.xls";
         // 获取模板文件第一个Sheet对象
         POIFSFileSystem sourceFile = null;
-
+        HSSFWorkbook sourceWork;
+        HSSFSheet sourceSheet = null;
         try {
-            sourceFile = new POIFSFileSystem(new FileInputStream(templateFile));
-            sourceWork = new HSSFWorkbook(sourceFile);
-            sourceSheet = sourceWork.getSheetAt(5);
-            //创建表格
+            sourceFile = new POIFSFileSystem (new FileInputStream (templateFile));
+            sourceWork = new HSSFWorkbook (sourceFile);
+            // 实时流-生产者为第5个sheet
+            sourceSheet = sourceWork.getSheetAt (4);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace ();
         }
 
-        RtsProducer rtsProducer = this.select(appId);
+        RtsProducer rtsProducer = this.select (appId);
 
-        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam>();
-        comExcelParams.add(new ComExcelParam(2, 1, "serviceName"));
-        comExcelParams.add(new ComExcelParam(2, 3, "serviceDescribe"));
-        comExcelParams.add(new ComExcelParam(3, 1, "maxSyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 3, "maxAsyncNum"));
-        comExcelParams.add(new ComExcelParam(3, 5, "maxSyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(3, 7, "maxAsyncWaitNum"));
-        comExcelParams.add(new ComExcelParam(4, 1, "userId"));
-        comExcelParams.add(new ComExcelParam(4, 3, "userName"));
+        List<ComExcelParam> comExcelParams = new ArrayList<ComExcelParam> ();
+        comExcelParams.add (new ComExcelParam (2, 1, "serviceName"));
+        comExcelParams.add (new ComExcelParam (2, 3, "serviceDescribe"));
+        comExcelParams.add (new ComExcelParam (3, 1, "maxSyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 3, "maxAsyncNum"));
+        comExcelParams.add (new ComExcelParam (3, 5, "maxSyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (3, 7, "maxAsyncWaitNum"));
+        comExcelParams.add (new ComExcelParam (4, 1, "userId"));
+        comExcelParams.add (new ComExcelParam (4, 3, "userName"));
 
-        HSSFSheet sheet = workbook.createSheet();
+        HSSFSheet sheet = workbook.createSheet (map.get ("serviceName"));
+
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 10; i++) {
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
         for (ComExcelParam comExcelParam : comExcelParams) {
             try {
-                ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(), map.get(comExcelParam.getName()));
+                ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (), map.get (comExcelParam.getName ()));
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
-        this.setWorkbookSheetPart(sheet, rtsProducer, sourceSheet, workbook, new RtsIndexDto(i));
+        this.setWorkbookSheetPart (sheet, rtsProducer, sourceSheet, workbook, new RtsIndexDto (i));
+
+        return workbook;
     }
 
-    /**
-     * 设置信息到workbook
-     *
-     * @param workbook
-     * @param sourceSheet
-     * @param comExcelParams
-     * @param rtsProducer
-     */
-    public void setWorkbookSheet(HSSFWorkbook workbook, HSSFSheet sourceSheet, List<ComExcelParam> comExcelParams, RtsProducer rtsProducer) {
+    private void setWorkbookSheet(HSSFWorkbook workbook, HSSFSheet sourceSheet, List<ComExcelParam> comExcelParams, RtsProducer rtsProducer) {
+        rtsProducer = rtsProducerMapper.select (rtsProducer.getPkId ());
+        HSSFSheet sheet = workbook.createSheet (rtsProducer.getName ());
 
-        HSSFSheet sheet = workbook.createSheet();
         //将前面样式内容复制到下载表中
         int i = 0;
         for (; i < 10; i++) {
             try {
-                ExcelCopyUtils.copyRow(sheet.createRow(i), sourceSheet.getRow(i), sheet.createDrawingPatriarch(), workbook);
+                ExcelCopyUtils.copyRow (sheet.createRow (i), sourceSheet.getRow (i), sheet.createDrawingPatriarch (), workbook);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
 
-        //设置内容
-        RtsProducer rtsProducer1 = rtsProducerMapper.select(rtsProducer.getPkId());
         //设置元数据名字
-        rtsProducer1.setMdId(rtsMetadataMapper.select(rtsProducer1.getMdId()).getName());
+        rtsProducer.setMdId (rtsMetadataMapper.select (rtsProducer.getMdId ()).getName ());
         for (ComExcelParam comExcelParam : comExcelParams) {
             try {
-                Field field = rtsProducer1.getClass().getDeclaredField(comExcelParam.getName());
-                field.setAccessible(true);
-                ExcelCopyUtils.setCellValue(sheet, comExcelParam.getRowNum(), comExcelParam.getCellNum(),
-                        field.get(rtsProducer1) == null ? "" : field.get(rtsProducer1).toString());
+                Field field = rtsProducer.getClass ().getDeclaredField (comExcelParam.getName ());
+                field.setAccessible (true);
+                ExcelCopyUtils.setCellValue (sheet, comExcelParam.getRowNum (), comExcelParam.getCellNum (),
+                        field.get (rtsProducer) == null ? "" : field.get (rtsProducer).toString ());
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace ();
             }
         }
-        this.setWorkbookSheetPart(sheet, rtsProducer, sourceSheet, workbook, new RtsIndexDto(i));
+
+        this.setWorkbookSheetPart (sheet, rtsProducer, sourceSheet, workbook, new RtsIndexDto (i));
     }
 
-    public void setWorkbookSheetPart(HSSFSheet sheet, RtsProducer rtsProducer, HSSFSheet sourceSheet, HSSFWorkbook workbook, RtsIndexDto rtsIndexDto) {
+    private void setWorkbookSheetPart(HSSFSheet sheet, RtsProducer rtsProducer, HSSFSheet sourceSheet, HSSFWorkbook workbook, RtsIndexDto rtsIndexDto) {
         HSSFRow row;
         HSSFCell cell;
-        int rowIndex = rtsIndexDto.getRowIndex();
-        List<RtsMetadataCol> colList = rtsMetadataColService.selectByMdId(rtsProducer.getMdId());
-        if (colList != null && colList.size() != 0) {
+        int rowIndex = rtsIndexDto.getRowIndex ();
+        List<RtsMetadataCol> colList = rtsMetadataColService.selectByMdId (rtsProducer.getMdId ());
+        if (colList != null && colList.size () != 0) {
             int k = 1;
             for (RtsMetadataCol col : colList) {
-                row = sheet.createRow(rowIndex);
-                cell = row.createCell(0);
-                cell.setCellValue(k);
-                cell = row.createCell(1);
-                cell.setCellValue(col.getName());
-                cell = row.createCell(2);
-                cell.setCellValue(col.getType());
-                cell = row.createCell(3);
-                cell.setCellValue(col.getDescribe());
+                row = sheet.createRow (rowIndex);
+                cell = row.createCell (0);
+                cell.setCellValue (k);
+                cell = row.createCell (1);
+                cell.setCellValue (col.getName ());
+                cell = row.createCell (2);
+                cell.setCellValue (col.getType ());
+                cell = row.createCell (3);
+                cell.setCellValue (col.getDescribe ());
                 rowIndex++;
                 k++;
             }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-olq-provider-phoenix">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_olq_provider_phoenix</output-path>
+    <root id="archive" name="hex-udsp-olq-provider-phoenix.jar">
+      <element id="module-output" name="olq-provider-phoenix" />
+    </root>
+  </artifact>
+</component>

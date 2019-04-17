@@ -22,8 +22,7 @@ public class FTPHelper {
     public FTPHelper() {
     }
 
-    public FTPHelper(String hostname, int port, String username,
-                     String password) {
+    public FTPHelper(String hostname, int port, String username, String password) {
         this.hostname = hostname;
         if (this.port > 0) {
             this.port = port;

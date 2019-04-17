@@ -75,10 +75,10 @@ public class OlqAppClient extends ConsumerClient {
      */
     @Override
     protected void checkStartBusinessParams(BaseRequest baseRequest) {
-        OlqAppRequest request = (OlqAppRequest) baseRequest;
-        Map<String, String> data = request.getData();
-        if (data == null || data.size() == 0) {
-            throw new IllegalArgumentException("参数data不能为空!");
-        }
+//        OlqAppRequest request = (OlqAppRequest) baseRequest;
+//        Map<String, String> data = request.getData();
+//        if (data == null || data.size() == 0) {
+//            throw new IllegalArgumentException("参数data不能为空!");
+//        }
     }
 }

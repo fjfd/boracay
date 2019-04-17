@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.hex.bigdata.udsp.config.NettyClientConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public abstract class AbstractClientFactory implements ClientFactory {
 
     // 长连接缓存，一个域名对应一个长连接
     private final Cache<RemotingUrl, Client> cacherClients = CacheBuilder.newBuilder()//
-            .maximumSize(65535) // 单机长连接上限，超过上限采用LRU淘汰
-            .expireAfterAccess(30, TimeUnit.MINUTES) // 连接长时间没有读写则删除
+            .maximumSize(NettyClientConfig.getMaximumSize ()) // 单机长连接上限，超过上限采用LRU淘汰
+            .expireAfterAccess(NettyClientConfig.getExpireAfterAccess (), TimeUnit.MINUTES) // 连接长时间没有读写则删除
             .removalListener(new RemovalListener<RemotingUrl, Client>() {
                 @Override
                 public void onRemoval(RemovalNotification<RemotingUrl, Client> notification) {

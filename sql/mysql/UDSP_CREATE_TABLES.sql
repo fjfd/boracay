@@ -228,7 +228,6 @@ CREATE TABLE `iq_application` (
 `NAME`  varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称(唯一、英文)' ,
 `DESCRIPTION`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '说明' ,
 `NOTE`  text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '备注' ,
-`MAX_NUM`  decimal(10,0) NULL DEFAULT NULL COMMENT '最大返回数' ,
 `DEL_FLG`  char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '删除标志（0：未删除，1：删除）' ,
 `CRT_USER`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者' ,
 `CRT_TIME`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间' ,
@@ -399,7 +398,6 @@ CREATE TABLE `mm_application` (
 `MODEL_ID`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '模型ID' ,
 `NAME`  varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '名称((英文、唯一)' ,
 `DESCRIPTION`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '说明' ,
-`MAX_NUM`  decimal(10,0) NULL DEFAULT NULL COMMENT '最大返回数' ,
 `DEL_FLG`  char(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '删除标志(0：未删除，1：删除)' ,
 `CRT_USER`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建者' ,
 `CRT_TIME`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建时间' ,
@@ -737,8 +735,6 @@ ALTER TABLE RC_SERVICE ADD TIME_OUT DECIMAL(10) default 60 COMMENT '缓存时效
 ALTER TABLE MC_CONSUME_LOG ADD IS_CACHE CHAR(1) COMMENT '是否从缓存获取（0：是，1：否）';
 
 -- 删除字段
-alter table IQ_APPLICATION drop column MAX_NUM;
-alter table MM_APPLICATION drop column MAX_NUM;
 alter table RTS_CUSTOMER_CONFIG drop column GROUP_ID;
 
 -- 删除字段

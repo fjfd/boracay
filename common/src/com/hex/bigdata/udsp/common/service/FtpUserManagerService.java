@@ -17,6 +17,11 @@ public class FtpUserManagerService {
 
     private static Logger logger = LogManager.getLogger(FtpUserManagerService.class);
 
+    private static final String SHELL_DIR_PATH = "goframe/common/shell";
+
+    @Value("${auto.create.ftp.user:true}")
+    private boolean autoCreateFtpUser;
+
     @Value("${ftp.hostname}")
     private String ftpHostname;
 
@@ -35,26 +40,29 @@ public class FtpUserManagerService {
     @Value("${ftp.password}")
     private String ftpPassword;
 
-    private final String SHELL_DIR_PATH = "goframe/udsp/shell";
-
     private String shellDirPath;
+
+    public FtpUserManagerService() {
+        try {
+            shellDirPath = ResourceUtils.getFile("classpath:" + SHELL_DIR_PATH).getAbsolutePath();
+            logger.info("shellDirPath：" + shellDirPath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 启动服务时初始化FTP服务器上UDSP用户和用户组
      */
     public void init() {
-        try {
-            shellDirPath = ResourceUtils.getFile("classpath:" + SHELL_DIR_PATH).getAbsolutePath();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (autoCreateFtpUser) {
+            logger.info("初始化FTP服务器上UDSP用户和用户组【开始】");
+            String shell = "sh " + shellDirPath + "/init_udsp_user_group.sh "
+                    + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername + " " + ftpPassword
+                    + " >> /tmp/init_udsp_user_group.log";
+            ShellUtil.exec(shell);
+            logger.info("初始化FTP服务器上UDSP用户和用户组【结束】");
         }
-        logger.info("shellDirPath：" + shellDirPath);
-        logger.info("初始化FTP服务器上UDSP用户和用户组【开始】");
-        String shell = "sh " + shellDirPath + "/init_udsp_user_group.sh "
-                + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername + " " + ftpPassword
-                + " >> /tmp/init_udsp_user_group.log";
-        ShellUtil.exec(shell);
-        logger.info("初始化FTP服务器上UDSP用户和用户组【结束】");
     }
 
     /**
@@ -64,12 +72,14 @@ public class FtpUserManagerService {
      * @param ftpPassword
      */
     public void addProducerFtpUser(String ftpUsername, String ftpPassword) {
-        logger.info("添加FTP服务器上" + ftpUsername + "用户【开始】");
-        String shell = "sh " + shellDirPath + "/add_producer_user.sh "
-                + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpUsername + " " + ftpPassword
-                + " >> /tmp/add_consumer_user.log";
-        ShellUtil.exec(shell);
-        logger.info("添加FTP服务器上" + ftpUsername + "用户【结束】");
+        if (autoCreateFtpUser) {
+            logger.info("添加FTP服务器上" + ftpUsername + "用户【开始】");
+            String shell = "sh " + shellDirPath + "/add_producer_user.sh "
+                    + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpUsername + " " + ftpPassword
+                    + " >> /tmp/add_consumer_user.log";
+            ShellUtil.exec(shell);
+            logger.info("添加FTP服务器上" + ftpUsername + "用户【结束】");
+        }
     }
 
     /**
@@ -78,12 +88,14 @@ public class FtpUserManagerService {
      * @param ftpUsername
      */
     public void delProducerFtpUser(String ftpUsername) {
-        logger.info("删除FTP服务器上" + ftpUsername + "用户【开始】");
-        String shell = "sh " + shellDirPath + "/del_producer_user.sh "
-                + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpUsername
-                + " >> /tmp/del_consumer_user.log";
-        ShellUtil.exec(shell);
-        logger.info("删除FTP服务器上" + ftpUsername + "用户【结束】");
+        if (autoCreateFtpUser) {
+            logger.info("删除FTP服务器上" + ftpUsername + "用户【开始】");
+            String shell = "sh " + shellDirPath + "/del_producer_user.sh "
+                    + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpUsername
+                    + " >> /tmp/del_consumer_user.log";
+            ShellUtil.exec(shell);
+            logger.info("删除FTP服务器上" + ftpUsername + "用户【结束】");
+        }
     }
 
     /**
@@ -93,15 +105,17 @@ public class FtpUserManagerService {
      * @param ftpPassword
      */
     public void addConsumerFtpUser(String ftpUsername, String ftpPassword) {
-        if ("admin".equals(ftpUsername)) {
-            ftpUsername = "udsp" + ftpUsername;
+        if (autoCreateFtpUser) {
+            if ("admin".equals(ftpUsername)) {
+                ftpUsername = "udsp" + ftpUsername;
+            }
+            logger.info("添加FTP服务器上" + ftpUsername + "用户【开始】");
+            String shell = "sh " + shellDirPath + "/add_consumer_user.sh "
+                    + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername + " " + ftpPassword
+                    + " >> /tmp/add_consumer_user.log";
+            ShellUtil.exec(shell);
+            logger.info("添加FTP服务器上" + ftpUsername + "用户【结束】");
         }
-        logger.info("添加FTP服务器上" + ftpUsername + "用户【开始】");
-        String shell = "sh " + shellDirPath + "/add_consumer_user.sh "
-                + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername + " " + ftpPassword
-                + " >> /tmp/add_consumer_user.log";
-        ShellUtil.exec(shell);
-        logger.info("添加FTP服务器上" + ftpUsername + "用户【结束】");
     }
 
     /**
@@ -110,14 +124,16 @@ public class FtpUserManagerService {
      * @param ftpUsername
      */
     public void delConsumerFtpUser(String ftpUsername) {
-        if ("admin".equals(ftpUsername)) {
-            ftpUsername = "udsp" + ftpUsername;
+        if (autoCreateFtpUser) {
+            if ("admin".equals(ftpUsername)) {
+                ftpUsername = "udsp" + ftpUsername;
+            }
+            logger.info("删除FTP服务器上" + ftpUsername + "用户【开始】");
+            String shell = "sh " + shellDirPath + "/del_consumer_user.sh "
+                    + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername
+                    + " >> /tmp/del_consumer_user.log";
+            ShellUtil.exec(shell);
+            logger.info("删除FTP服务器上" + ftpUsername + "用户【结束】");
         }
-        logger.info("删除FTP服务器上" + ftpUsername + "用户【开始】");
-        String shell = "sh " + shellDirPath + "/del_consumer_user.sh "
-                + ftpHostname + " " + hostUsername + " " + hostPassword + " " + ftpRootpath + " " + ftpUsername
-                + " >> /tmp/del_consumer_user.log";
-        ShellUtil.exec(shell);
-        logger.info("删除FTP服务器上" + ftpUsername + "用户【结束】");
     }
 }

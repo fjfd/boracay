@@ -86,6 +86,10 @@ ${extends("/goframe/function_layout.httl")}
                         </td>
                     </tr>
                     <tr>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">表名：</td>
+                        <td class="roleText" style="width: 25%">
+                            <input name="tbName" class="nui-textbox" style="width:98%;"/>
+                        </td>
                         <td class="tit roleLabel" style="width: 100px;text-align: right">类型：</td>
                         <td class="roleText" style="width: 25%">
                             <input name="type" class="nui-dictcombobox" valueField="dictId" textField="dictName"

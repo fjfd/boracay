@@ -48,10 +48,13 @@ public class OlqProviderService extends BaseService {
      * @return
      */
     public OlqResponse select(String consumeId, String dsId, String sql, Page page) {
-        Datasource datasource = getDatasource(dsId);
-        OlqRequest request = new OlqRequest(datasource, sql, page);
-        Provider provider = getProviderImpl(datasource);
-        return provider.execute(consumeId, request);
+        if (StringUtils.isBlank (sql)) {
+            throw new IllegalArgumentException ("sql参数不能为空!");
+        }
+        Datasource datasource = getDatasource (dsId);
+        OlqRequest request = new OlqRequest (datasource, sql, page);
+        Provider provider = getProviderImpl (datasource);
+        return provider.execute (consumeId, request);
     }
 
     /**
@@ -63,10 +66,13 @@ public class OlqProviderService extends BaseService {
      * @return
      */
     public OlqResponseFetch selectFetch(String consumeId, String dsId, String sql, Page page) {
-        Datasource datasource = getDatasource(dsId);
-        OlqRequest request = new OlqRequest(datasource, sql, page);
-        Provider provider = getProviderImpl(datasource);
-        return provider.executeFetch(consumeId, request);
+        if (StringUtils.isBlank (sql)) {
+            throw new IllegalArgumentException ("sql参数不能为空!");
+        }
+        Datasource datasource = getDatasource (dsId);
+        OlqRequest request = new OlqRequest (datasource, sql, page);
+        Provider provider = getProviderImpl (datasource);
+        return provider.executeFetch (consumeId, request);
     }
 
     /**
@@ -76,9 +82,9 @@ public class OlqProviderService extends BaseService {
      * @return
      */
     private Datasource getDatasource(String dsId) {
-        ComDatasource comDatasource = comDatasourceService.select(dsId);
-        List<ComProperties> comPropertiesList = comPropertiesService.selectList(dsId);
-        return DatasourceUtil.getDatasource(comDatasource, comPropertiesList);
+        ComDatasource comDatasource = comDatasourceService.select (dsId);
+        List<ComProperties> comPropertiesList = comPropertiesService.selectList (dsId);
+        return DatasourceUtil.getDatasource (comDatasource, comPropertiesList);
     }
 
     /**
@@ -88,19 +94,19 @@ public class OlqProviderService extends BaseService {
      * @return
      */
     public boolean testDatasource(Datasource datasource) {
-        Provider provider = getProviderImpl(datasource);
-        return provider.testDatasource(datasource);
+        Provider provider = getProviderImpl (datasource);
+        return provider.testDatasource (datasource);
     }
 
     private Provider getProviderImpl(Datasource datasource) {
-        return (Provider) ObjectUtil.newInstance(getImplClass(datasource));
+        return (Provider) ObjectUtil.newInstance (getImplClass (datasource));
     }
 
     private String getImplClass(Datasource datasource) {
-        String implClass = datasource.getImplClass();
-        if (StringUtils.isBlank(implClass)) {
-            GFDict gfDict = gfDictMapper.selectByPrimaryKey(OLQ_IMPL_CLASS, datasource.getType());
-            implClass = gfDict.getDictName();
+        String implClass = datasource.getImplClass ();
+        if (StringUtils.isBlank (implClass)) {
+            GFDict gfDict = gfDictMapper.selectByPrimaryKey (OLQ_IMPL_CLASS, datasource.getType ());
+            implClass = gfDict.getDictName ();
         }
         return implClass;
     }

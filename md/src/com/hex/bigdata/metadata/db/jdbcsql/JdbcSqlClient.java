@@ -44,6 +44,8 @@ public class JdbcSqlClient extends BaseClient {
             helper = new HiveForOracleJdbcSqlHelper(this.conn);
         } else if (DBType.HIVE_FOR_PGSQL == dbType) {
             helper = new HiveForPgsqlJdbcSqlHelper(this.conn);
+        } else if (DBType.PHOENIX == dbType) {
+            helper = new PhoenixJdbcSqlHelper(this.conn);
         }
         return helper;
     }

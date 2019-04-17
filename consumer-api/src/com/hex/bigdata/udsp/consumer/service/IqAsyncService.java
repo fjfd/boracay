@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IqAsyncService implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger(IqAsyncService.class);
+    private static Logger logger = LoggerFactory.getLogger (IqAsyncService.class);
 
     private IqSyncService iqSyncService;
     private RunQueueService runQueueService;
@@ -20,8 +20,8 @@ public class IqAsyncService implements Runnable {
     private long bef;
 
     public IqAsyncService(ConsumeRequest consumeRequest, String fileName, long bef) {
-        this.iqSyncService = (IqSyncService) WebApplicationContextUtil.getBean("iqSyncService");
-        this.runQueueService = (RunQueueService) WebApplicationContextUtil.getBean("runQueueService");
+        this.iqSyncService = (IqSyncService) WebApplicationContextUtil.getBean ("iqSyncService");
+        this.runQueueService = (RunQueueService) WebApplicationContextUtil.getBean ("runQueueService");
         this.consumeRequest = consumeRequest;
         this.fileName = fileName;
         this.bef = bef;
@@ -30,9 +30,9 @@ public class IqAsyncService implements Runnable {
     @Override
     public void run() {
         try {
-            iqSyncService.asyncStartForTimeout(consumeRequest, fileName, bef);
+            iqSyncService.asyncStartForTimeout (consumeRequest, fileName, bef);
         } finally {
-            runQueueService.reduceCurrent(consumeRequest.getMcCurrent());
+            runQueueService.reduceCurrent (consumeRequest.getMcCurrent ());
         }
     }
 }

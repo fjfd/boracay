@@ -1,9 +1,6 @@
 package com.hex.bigdata.udsp.service;
 
-import com.hex.bigdata.udsp.common.constant.ConsumerEntity;
-import com.hex.bigdata.udsp.common.constant.ConsumerType;
-import com.hex.bigdata.udsp.common.constant.ErrorCode;
-import com.hex.bigdata.udsp.common.constant.RequestType;
+import com.hex.bigdata.udsp.common.constant.*;
 import com.hex.bigdata.udsp.common.util.JSONUtil;
 import com.hex.bigdata.udsp.consumer.model.ConsumeRequest;
 import com.hex.bigdata.udsp.consumer.model.Request;
@@ -11,6 +8,8 @@ import com.hex.bigdata.udsp.consumer.model.Response;
 import com.hex.bigdata.udsp.consumer.service.ConsumerService;
 import com.hex.bigdata.udsp.mc.model.Current;
 import com.hex.bigdata.udsp.mc.service.CurrentService;
+import com.hex.bigdata.udsp.olq.dto.OlqApplicationDto;
+import com.hex.bigdata.udsp.olq.service.OlqApplicationService;
 import com.hex.bigdata.udsp.rc.model.RcService;
 import com.hex.bigdata.udsp.rc.service.RcServiceService;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +18,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * 消费的服务
@@ -33,6 +34,8 @@ public class InnerConsumerService {
     private ConsumerService consumerService;
     @Autowired
     private CurrentService currentService;
+    @Autowired
+    private OlqApplicationService olqApplicationService;
 
     /**
      * 管理员用户最大同步并发数
@@ -106,16 +109,32 @@ public class InnerConsumerService {
             consumeRequest.setError(ErrorCode.ERROR_000010);
             return consumeRequest;
         }
+
         // 管理员用户，直接访问
         if (isAdmin) {
             // 管理员用户执行队列（同步/异步）没有限制
             Current mcCurrent = consumerService.getCurrent(request, -1, -1);
             consumeRequest.setMcCurrent(mcCurrent);
             currentService.insert(mcCurrent);
-            // 重新设置request
+            // OLQ_APP
+            if (ServiceType.OLQ_APP.getValue().equals(appType)
+                    && ConsumerEntity.START.getValue().equalsIgnoreCase(entity)) {
+                Map<String, String> paraMap = request.getData();
+                OlqApplicationDto olqApplicationDto = olqApplicationService.selectFullAppInfo(appId);
+                try {
+                    olqApplicationService.checkParam(olqApplicationDto.getParams(), paraMap);
+                } catch (Exception e) {
+                    consumeRequest.setError(ErrorCode.ERROR_000009);
+                    consumeRequest.setMessage(e.toString());
+                    return consumeRequest;
+                }
+                String dsId = olqApplicationDto.getOlqApplication().getOlqDsId();
+                String sql = olqApplicationService.getExecuteSQL(olqApplicationDto, paraMap);
+                consumeRequest.getRequest().setAppId(dsId);
+                consumeRequest.getRequest().setSql(sql);
+            }
             if (StringUtils.isBlank(request.getConsumeId())) {
-                request.setConsumeId(mcCurrent.getPkId());
-                consumeRequest.setRequest(request);
+                consumeRequest.getRequest().setConsumeId (mcCurrent.getPkId());
             }
             return consumeRequest;
         }

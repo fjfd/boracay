@@ -64,6 +64,10 @@ ${extends("/goframe/function_layout.httl")}
             <div id="form1">
                 <table style="width:100%">
                     <tr>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">作业ID：</td>
+                        <td class="roleText" style="width: 25%">
+                            <input name="id" class="nui-textbox" style="width:98%;"/>
+                        </td>
                         <td class="tit roleLabel" style="width: 100px;text-align: right">模型名称：</td>
                         <td class="roleText" style="width: 25%">
                             <input name="modelName" class="nui-textbox" style="width:98%;"/>
@@ -73,10 +77,6 @@ ${extends("/goframe/function_layout.httl")}
                             <input name="status" class="nui-dictcombobox" valueField="dictId" textField="dictName"
                                    emptyText="全部" dictTypeId="IM_BATCH_JOB_STATUS" showNullItem="true" nullItemText="全部"
                                    style="width:98%;"/>
-                        </td>
-                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
-                        <td class="roleText" style="width: 25%">
-                            <input name="host" class="nui-textbox" style="width:98%;"/>
                         </td>
                     </tr>
                     <tr>
@@ -90,16 +90,6 @@ ${extends("/goframe/function_layout.httl")}
                                    showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
                                    style="width: 46%"/>
                         </td>
-                        <td style="width: 100px;text-align: right">更新时间：</td>
-                        <td style="width: 25%">
-                            <input name="updateTimeStart" class="nui-datepicker" allowInput="true"
-                                   showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
-                                   style="width: 46%"/>
-                            -
-                            <input name="updateTimeEnd" class="nui-datepicker" allowInput="true"
-                                   showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
-                                   style="width: 46%"/>
-                        </td>
                         <td style="width: 100px;text-align: right">请求结束时间：</td>
                         <td style="width: 25%">
                             <input name="endTimeStart" class="nui-datepicker" allowInput="true"
@@ -110,10 +100,24 @@ ${extends("/goframe/function_layout.httl")}
                                    showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
                                    style="width: 46%"/>
                         </td>
+                        <td style="width: 100px;text-align: right">更新时间：</td>
+                        <td style="width: 25%">
+                            <input name="updateTimeStart" class="nui-datepicker" allowInput="true"
+                                   showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
+                                   style="width: 46%"/>
+                            -
+                            <input name="updateTimeEnd" class="nui-datepicker" allowInput="true"
+                                   showTime="true" format="yyyy-MM-dd HH:mm:ss" timeFormat="HH:mm:ss"
+                                   style="width: 46%"/>
+                        </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px;text-align: right">消息：</td>
+                        <td class="tit roleLabel" style="width: 100px;text-align: right">主机：</td>
                         <td class="roleText" style="width: 25%">
+                            <input name="host" class="nui-textbox" style="width:98%;"/>
+                        </td>
+                        <td style="width: 100px;text-align: right">错误信息：</td>
+                        <td colspan="3" class="roleText" style="width: 25%">
                             <input name="message" class="nui-textbox" style="width:98%;"/>
                         </td>
                     </tr>
@@ -143,12 +147,10 @@ ${extends("/goframe/function_layout.httl")}
             <div field="startTime" headerAlign="center" allowSort="true">开始时间</div>
             <div field="endTime" headerAlign="center" allowSort="true">结束时间</div>
             <div field="updateTime" headerAlign="center" allowSort="true">更新时间</div>
-            <div field="percent" headerAlign="center" align="center" allowSort="true" renderer="renderPercentComplete">
-                进度
-            </div>
+            <div field="percent" headerAlign="center" align="center" allowSort="true" renderer="renderPercentComplete">进度</div>
             <div headerAlign="center" allowSort="true" align="center" renderer="renderInterval">耗时</div>
             <div field="requestContent" headerAlign="center" allowSort="true">请求信息</div>
-            <div field="message" headerAlign="center" allowSort="true">返回信息</div>
+            <div field="message" headerAlign="center" allowSort="true">错误信息</div>
             <div headerAlign="center" allowSort="true" width="50" renderer="operateType">操作</div>
         </div>
     </div>
@@ -196,7 +198,7 @@ ${extends("/goframe/function_layout.httl")}
             return;
         }
         nui.open({
-            url: "${basePath}/goframe/p/mc.job.batch.info/?pkId=" + row.id,
+            url: "${basePath}/goframe/p/im.job.batch.info/?pkId=" + row.id,
             title: "批量作业详情",
             width: 750,
             height: 470,

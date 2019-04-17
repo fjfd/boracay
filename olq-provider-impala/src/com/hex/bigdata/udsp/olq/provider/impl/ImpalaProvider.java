@@ -8,13 +8,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by junjiem on 2017-2-15.
  */
-//@Component("com.hex.bigdata.udsp.olq.provider.impl.ImpalaProvider")
 public class ImpalaProvider extends JdbcProvider {
+
     private static Logger logger = LogManager.getLogger(ImpalaProvider.class);
 
+    @Override
     protected OlqQuerySql getPageSql(String sql, Page page) {
         OlqQuerySql olqQuerySql = new OlqQuerySql(sql);
-        if (page == null || !sql.toUpperCase().trim().contains("SELECT")) {
+        if (page == null || !sql.toUpperCase().contains("SELECT")) {
             return olqQuerySql;
         }
         // 分页sql组装
@@ -24,10 +25,10 @@ public class ImpalaProvider extends JdbcProvider {
         String pageSql = null;
         // TODO 以下方式实际是错误的！Impala分页必须指定唯一字段集进行排序，否则分页结果不正确。
         if (pageIndex == 1) {
-            pageSql = "SELECT * FROM (" + sql + " ) UDSP_VIEW LIMIT " + pageSize;
+            pageSql = "SELECT * FROM (" + sql + ") UDSP_VIEW LIMIT " + pageSize;
         } else {
             Integer startRow = (pageIndex - 1) * pageSize;
-            pageSql = "SELECT * FROM (" + sql + " ) UDSP_VIEW ORDER BY 1 LIMIT " + pageSize + " OFFSET " + startRow;
+            pageSql = "SELECT * FROM (" + sql + ") UDSP_VIEW ORDER BY 1 LIMIT " + pageSize + " OFFSET " + startRow;
         }
         olqQuerySql.setPageSql(pageSql);
         // 总记录数查询SQL组装

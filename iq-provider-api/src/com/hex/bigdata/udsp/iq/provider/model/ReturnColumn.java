@@ -2,7 +2,7 @@ package com.hex.bigdata.udsp.iq.provider.model;
 
 import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.common.constant.Stats;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by junjiem on 2017-3-2.

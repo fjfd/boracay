@@ -135,13 +135,12 @@ public class ImpalaSqlUtil {
                 length = column.getLength();
                 if (StringUtils.isBlank(colName) || StringUtils.isBlank(dataType))
                     continue;
-                dataType = getColType(dataType, length);
                 sql += (count == 0 ? "\n" : "\n,");
-                sql += colName + " " + dataType;
-                if (column.isPrimaryKey() && !"STRING".equals(column.getDataType())) { //类型不能指定为pk
-                    sql += " PRIMARY KEY ";
+                sql += colName + " " + getColType(dataType, length);
+                if (column.isPrimaryKey()) {
+                    sql += " PRIMARY KEY";
                 }
-                if (StringUtils.isNoneBlank(colComment)) {
+                if (StringUtils.isNotBlank(colComment)) {
                     sql += " COMMENT '" + colComment + "'";
                 }
                 count++;

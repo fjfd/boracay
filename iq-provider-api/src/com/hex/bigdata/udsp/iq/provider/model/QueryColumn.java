@@ -2,7 +2,7 @@ package com.hex.bigdata.udsp.iq.provider.model;
 
 import com.hex.bigdata.udsp.common.constant.DataType;
 import com.hex.bigdata.udsp.common.constant.Operator;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Created by junjiem on 2017-3-2.
@@ -31,8 +31,9 @@ public class QueryColumn {
     private String value;
 
     public Short getSeq() {
-        if (seq == null)
-            throw new IllegalArgumentException("查询字段序号不能为空");
+        if (seq == null) {
+            throw new IllegalArgumentException ("查询字段序号不能为空");
+        }
         return seq;
     }
 
@@ -41,8 +42,9 @@ public class QueryColumn {
     }
 
     public String getName() {
-        if (StringUtils.isBlank(name))
-            throw new IllegalArgumentException("查询字段名称不能为空");
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException ("查询字段名称不能为空");
+        }
         return name;
     }
 
@@ -59,8 +61,9 @@ public class QueryColumn {
     }
 
     public DataType getType() {
-        if (type == null)
-            throw new IllegalArgumentException("查询字段类型不能为空");
+        if (type == null) {
+            throw new IllegalArgumentException ("查询字段类型不能为空");
+        }
         return type;
     }
 
@@ -93,8 +96,9 @@ public class QueryColumn {
     }
 
     public Operator getOperator() {
-        if (operator == null)
-            throw new IllegalArgumentException("查询字段操作符不能为空");
+        if (operator == null) {
+            throw new IllegalArgumentException ("查询字段操作符不能为空");
+        }
         return operator;
     }
 
@@ -103,8 +107,9 @@ public class QueryColumn {
     }
 
     public String getLabel() {
-        if (StringUtils.isBlank(label))
-            throw new IllegalArgumentException("查询字段不能为空");
+        if (StringUtils.isBlank(label)) {
+            throw new IllegalArgumentException ("查询字段不能为空");
+        }
         return label;
     }
 

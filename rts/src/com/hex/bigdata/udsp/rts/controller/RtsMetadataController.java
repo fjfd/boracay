@@ -236,8 +236,7 @@ public class RtsMetadataController extends BaseController {
         if (((CommonsMultipartFile) excelFile).getFileItem().getName().endsWith(".xls")
                 || ((CommonsMultipartFile) excelFile).getFileItem().getName().endsWith(".xlsx")) {
             //将文件放到项目上传文件目录中
-            String uploadFilePath = FileUtil.uploadFile(FileUtil
-                    .getRealUploadPath("EXCEL_UPLOAD"), excelFile);
+            String uploadFilePath = FileUtil.uploadFile(FileUtil.getRealUploadPath("EXCEL_UPLOAD"), excelFile);
             Map<String, String> result = rtsMetadataService.uploadExcel(uploadFilePath);
             if ("false".equals(result.get("status"))) {
                 status = false;

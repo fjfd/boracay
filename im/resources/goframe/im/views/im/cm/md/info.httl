@@ -20,7 +20,6 @@ ${extends("/goframe/function_layout.httl")}
                 <tr>
                     <th class="nui-form-label"><label for="dsId">数据源：</label></th>
                     <td>
-
                         <div id="dsId" class="nui-combobox" style="width:97%;"  popupWidth="400" textField="name" valueField="pkId" onvaluechanged="typeChanged"
                              url="${basePath}/com/ds/select?model=IM" dataField="data" name="dsId" multiSelect="false"  readonly="true">
                             <div property="columns">
@@ -30,8 +29,7 @@ ${extends("/goframe/function_layout.httl")}
                             </div>
                         </div>
                     </td>
-
-                    <th class="nui-form-label"></th>
+                    <th class="nui-form-label"><label for="tbName">类型：</label></th>
                     <td >
                         <div id="type" name="type" onvaluechanged="setSaveButton" class="nui-radiobuttonlist" repeatItems="2" repeatLayout="table" repeatDirection="horizontal"
                              textField="text" valueField="id" data="[{'id':'0','text':'内表'},{'id':'1','text':'外表'}]" value='0' readonly="true">
@@ -43,6 +41,9 @@ ${extends("/goframe/function_layout.httl")}
                     <td >
                         <input id="tbName" name="tbName" class="nui-textbox" style="width:97%" readonly="true"
                                vtype="maxLength:64"/>
+                    </td>
+                    <td colspan="2">
+                        <font color="red">提示：数据源支持SQL，建议使用SQL建表，然后选择外表！</font>
                     </td>
                 </tr>
                 <tr>

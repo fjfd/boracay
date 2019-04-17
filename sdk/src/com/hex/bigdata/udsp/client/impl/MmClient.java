@@ -64,11 +64,11 @@ public class MmClient extends ConsumerClient {
 
     @Override
     protected void checkStartBusinessParams(BaseRequest baseRequest) {
-        MmRequest request = (MmRequest) baseRequest;
-        Map<String, String> data = request.getData();
-        if (data == null || data.size() == 0) {
-            throw new IllegalArgumentException("参数data不能为空!");
-        }
+//        MmRequest request = (MmRequest) baseRequest;
+//        Map<String, String> data = request.getData();
+//        if (data == null || data.size() == 0) {
+//            throw new IllegalArgumentException("参数data不能为空!");
+//        }
     }
 
 }

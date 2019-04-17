@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-im-converter-kafka1">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_im_converter_kafka1</output-path>
+    <root id="archive" name="hex-udsp-im-converter-kafka1.jar">
+      <element id="module-output" name="im-converter-kafka1" />
+    </root>
+  </artifact>
+</component>

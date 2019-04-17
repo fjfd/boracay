@@ -332,10 +332,10 @@ ${extends("/goframe/function_layout.httl")}
                     contentType: 'application/json',
                     success: function (result) {
                         if (result.status == true) {
-                            showMessage(result.message);
+                            nui.alert(result.message);
                             grid1.reload();
                         } else {
-                            showMessage(result.message);
+                            nui.alert(result.message, "错误提示");
                             grid1.unmask();
                         }
                     }

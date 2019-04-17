@@ -15,22 +15,22 @@ public class RcServiceMapper extends SyncMapper<RcService> {
 
     @Override
     protected boolean insertExe(RcService rcService) {
-        return this.sqlSessionTemplate.insert("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.insert", rcService) == 1;
+        return this.sqlSessionTemplate.insert ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.insert", rcService) == 1;
     }
 
     @Override
     protected boolean updateExe(RcService rcService) {
-        return this.sqlSessionTemplate.update("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.updateByPrimaryKey", rcService) == 1;
+        return this.sqlSessionTemplate.update ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.updateByPrimaryKey", rcService) == 1;
     }
 
     @Override
     protected boolean deleteExe(String id) {
-        return this.sqlSessionTemplate.update("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.deleteByPrimaryKeyFake", id) == 1;
+        return this.sqlSessionTemplate.update ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.deleteByPrimaryKeyFake", id) == 1;
     }
 
     @Override
     protected RcService selectExe(String id) {
-        return this.sqlSessionTemplate.selectOne("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByPrimaryKey", id);
+        return this.sqlSessionTemplate.selectOne ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByPrimaryKey", id);
     }
 
 
@@ -50,9 +50,9 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @return
      */
     public List<RcServiceView> selectPage(RcServiceView rcServiceView, Page page) {
-        return sqlSessionTemplate.selectList(
+        return sqlSessionTemplate.selectList (
                 "com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectPage", rcServiceView,
-                page.toPageBounds());
+                page.toPageBounds ());
     }
 
     /**
@@ -62,7 +62,7 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @return
      */
     public RcService selectByName(String name) {
-        return sqlSessionTemplate.selectOne(
+        return sqlSessionTemplate.selectOne (
                 "com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByName", name);
     }
 
@@ -72,9 +72,24 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @param serviceType 服务类型
      * @return
      */
-    public List selectByType(String serviceType) {
-        return sqlSessionTemplate.selectList(
+    public List<RcService> selectByType(String serviceType) {
+        return sqlSessionTemplate.selectList (
                 "com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByType", serviceType);
+    }
+
+    /**
+     * 根据服务类型查询启用状态的服务
+     *
+     * @param type 类型
+     * @param name 名称
+     * @return
+     */
+    public List<RcService> selectStartByTypeAndName(String type, String name) {
+        RcService rcService = new RcService ();
+        rcService.setType (type);
+        rcService.setName (name);
+        return sqlSessionTemplate.selectList (
+                "com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectStartByTypeAndName", rcService);
     }
 
     /**
@@ -84,7 +99,7 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @return
      */
     public RcService selectAuthInfo(String serviceType) {
-        return sqlSessionTemplate.selectOne(
+        return sqlSessionTemplate.selectOne (
                 "com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectAuthInfo", serviceType);
     }
 
@@ -96,10 +111,10 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @return
      */
     public RcService selectByAppTypeAndAppId(String type, String appId) {
-        RcService rcService = new RcService();
-        rcService.setType(type);
-        rcService.setAppId(appId);
-        return this.sqlSessionTemplate.selectOne("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByAppTypeAndAppId", rcService);
+        RcService rcService = new RcService ();
+        rcService.setType (type);
+        rcService.setAppId (appId);
+        return this.sqlSessionTemplate.selectOne ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectByAppTypeAndAppId", rcService);
     }
 
     /**
@@ -110,10 +125,10 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      * @return
      */
     public RcService selectStartByAppTypeAndAppId(String type, String appId) {
-        RcService rcService = new RcService();
-        rcService.setType(type);
-        rcService.setAppId(appId);
-        return this.sqlSessionTemplate.selectOne("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectStartByAppTypeAndAppId", rcService);
+        RcService rcService = new RcService ();
+        rcService.setType (type);
+        rcService.setAppId (appId);
+        return this.sqlSessionTemplate.selectOne ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.selectStartByAppTypeAndAppId", rcService);
     }
 
     /**
@@ -124,6 +139,6 @@ public class RcServiceMapper extends SyncMapper<RcService> {
      */
     @Transactional
     public boolean statusChange(RcService item) {
-        return this.sqlSessionTemplate.update("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.updateStatus", item) == 1;
+        return this.sqlSessionTemplate.update ("com.hex.bigdata.udsp.rc.dao.RcServiceMapper.updateStatus", item) == 1;
     }
 }

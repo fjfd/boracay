@@ -235,7 +235,7 @@ ${extends("/goframe/function_layout.httl")}
             return;
         }
         nui.open({
-            url: "${basePath}/goframe/p/mc.job.realtime.info/?pkId=" + row.id,
+            url: "${basePath}/goframe/p/im.job.realtime.info/?pkId=" + row.id,
             title: "实时作业详情",
             width: 800,
             height: 400,

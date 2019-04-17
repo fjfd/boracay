@@ -8,13 +8,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by junjiem on 2017-2-15.
  */
-//@Component("com.hex.bigdata.udsp.olq.provider.impl.HiveProvider")
 public class HiveProvider extends JdbcProvider {
+
     private static Logger logger = LogManager.getLogger(HiveProvider.class);
 
+    @Override
     protected OlqQuerySql getPageSql(String sql, Page page) {
         OlqQuerySql olqQuerySql = new OlqQuerySql(sql);
-        if (page == null || !sql.toUpperCase().trim().contains("SELECT")) {
+        if (page == null || !sql.toUpperCase().contains("SELECT")) {
             return olqQuerySql;
         }
         // 分页sql组装
@@ -24,12 +25,12 @@ public class HiveProvider extends JdbcProvider {
         String pageSql = null;
         // TODO 以下方式实际是错误的！Hive分页必须指定唯一字段集进行排序，否则分页结果不正确。
         if (pageIndex == 1) {
-            pageSql = "SELECT * FROM (" + sql + " ) UDSP_VIEW LIMIT " + pageSize;
+            pageSql = "SELECT * FROM (" + sql + ") UDSP_VIEW LIMIT " + pageSize;
         } else {
             Integer startRow = (pageIndex - 1) * pageSize;
             Integer endRow = pageSize * pageIndex;
             pageSql = "SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY 1) AS ROWNUM, UDSP_VIEW.*  FROM (" + sql +
-                    " ) UDSP_VIEW) UDSP_VIEW2 WHERE UDSP_VIEW2.ROWNUM BETWEEN " + startRow + " AND " + endRow;
+                    ") UDSP_VIEW) UDSP_VIEW2 WHERE UDSP_VIEW2.ROWNUM BETWEEN " + startRow + " AND " + endRow;
         }
         olqQuerySql.setPageSql(pageSql);
         // 总记录数查询SQL组装

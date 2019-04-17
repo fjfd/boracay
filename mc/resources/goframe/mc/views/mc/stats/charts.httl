@@ -87,13 +87,6 @@ ${extends("/goframe/function_layout.httl")}
 
 <script type="text/javascript">
     var echarts;
-    var chart1;
-    var chart2;
-    var chart3;
-    var chart4;
-    var chart5;
-    var chart6;
-    var chart7;
 
     /**
      * 按需加载资源文件
@@ -101,14 +94,36 @@ ${extends("/goframe/function_layout.httl")}
     require(['echarts', 'jquery', 'nui'], function (ec, $, nui) {
         nui.parse();
         echarts = ec;
-        chart1 = ec.init(document.getElementById('chart1'));
-        chart2 = ec.init(document.getElementById('chart2'));
-        chart3 = ec.init(document.getElementById('chart3'));
-        chart4 = ec.init(document.getElementById('chart4'));
-        chart5 = ec.init(document.getElementById('chart5'));
-        chart6 = ec.init(document.getElementById('chart6'));
-        chart7 = ec.init(document.getElementById('chart7'));
     });
+
+    /**
+     * 触发图表
+     */
+    function optionCharts(datetime, interval) {
+        var form1 = new nui.Form("#form1");
+        form1.loading("正在加载中,请稍等...");
+
+        // 1、时间维度-分结果状态的消费统计
+        optionChart1(datetime, interval);
+        // 2、时间维度-分应用类型的消费统计
+        optionChart2(datetime, interval);
+        // 3、用户维度-分结果状态的消费统计
+        optionChart3(datetime, interval);
+        // 4、用户维度-分应用类型的消费统计
+        optionChart4(datetime, interval);
+        // 5、服务维度-分结果状态的消费统计
+        optionChart5(datetime, interval);
+        // 6、服务维度-分应用类型的消费统计
+        optionChart6(datetime, interval);
+        // 7、服务维度-同步请求的耗时统计
+        optionChart7(datetime, interval);
+        // 8、服务维度-异步请求的耗时统计
+        optionChart8(datetime, interval);
+
+        setTimeout(function () {
+            form1.unmask();
+        }, 1000);
+    }
 
     /**
      * 时间间隔点击时触发
@@ -124,28 +139,7 @@ ${extends("/goframe/function_layout.httl")}
             var datetime = nui.formatDate(new Date(getNowTime()), "yyyy-MM-dd HH:mm");
             $("#intervalStr").text(text);
             $("#datetimeStr").text(datetime);
-
-            var form1 = new nui.Form("#form1");
-            form1.loading("正在加载中,请稍等...");
-            // 1、时间维度-分结果状态的消费统计
-            optionChart1(datetime, interval);
-            // 2、时间维度-分应用类型的消费统计
-            optionChart2(datetime, interval);
-            // 3、用户维度-分结果状态的消费统计
-            optionChart3(datetime, interval);
-            // 4、用户维度-分应用类型的消费统计
-            optionChart4(datetime, interval);
-            // 5、服务维度-分结果状态的消费统计
-            optionChart5(datetime, interval);
-            // 6、服务维度-分应用类型的消费统计
-            optionChart6(datetime, interval);
-            // 7、服务维度-同步请求的耗时统计
-            optionChart7(datetime, interval);
-            // 8、服务维度-异步请求的耗时统计
-            optionChart8(datetime, interval);
-            setTimeout(function () {
-                form1.unmask();
-            }, 1000);
+            optionCharts(datetime, interval);
         }
     }
 
@@ -180,24 +174,7 @@ ${extends("/goframe/function_layout.httl")}
                         var datetime = data.timeEnd;
                         $("#intervalStr").text(text);
                         $("#datetimeStr").text(datetime);
-
-                        var form1 = new nui.Form("#form1");
-                        form1.loading("正在加载中,请稍等...");
-                        // 1、时间维度-分结果状态的消费统计
-                        optionChart1(datetime, interval);
-                        // 2、时间维度-分应用类型的消费统计
-                        optionChart2(datetime, interval);
-                        // 3、用户维度-分结果状态的消费统计
-                        optionChart3(datetime, interval);
-                        // 4、用户维度-分应用类型的消费统计
-                        optionChart4(datetime, interval);
-                        // 5、服务维度-分结果状态的消费统计
-                        optionChart5(datetime, interval);
-                        // 6、服务维度-分应用类型的消费统计
-                        optionChart6(datetime, interval);
-                        setTimeout(function () {
-                            form1.unmask();
-                        }, 1000);
+                        optionCharts(datetime, interval);
                     }
                 }
             });
@@ -208,38 +185,8 @@ ${extends("/goframe/function_layout.httl")}
      * 时间维度-分结果状态的消费统计
      */
     function optionChart1(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 成功Array
-        var yData2 = []; // 失败Array
-        var dataMap1 = {}; // 成功Map
-        var dataMap2 = {}; // 失败Map
-        var befDatetime = new Date(new Date(datetime).getTime() - interval * 60000);
-        //var name = "时间（分）";
-        var milli = 60000;
-        var format = "yyyy-MM-dd HH:mm";
-        var len = 30;
-        var url = "${basePath}/mc/stats/charts/chart1Minute?datetime=" + datetime + "&interval=" + interval;
-        if (interval <= 360) { // 数据粒度：分钟
-            //name = "时间（分）";
-            milli = 60000;
-            format = "yyyy-MM-dd HH:mm";
-            len = interval;
-            url = "${basePath}/mc/stats/charts/chart1Minute?datetime=" + datetime + "&interval=" + interval;
-        } else if (interval <= 2880) { // 数据粒度：小时
-            //name = "时间（时）";
-            milli = 3600000;
-            format = "yyyy-MM-dd HH";
-            len = Math.ceil(interval / 60);
-            url = "${basePath}/mc/stats/charts/chart1Hour?datetime=" + datetime + "&interval=" + interval;
-        } else { // 数据粒度：天
-            //name = "时间（日）";
-            milli = 86400000;
-            format = "yyyy-MM-dd";
-            len = Math.ceil(interval / 1440);
-            url = "${basePath}/mc/stats/charts/chart1Day?datetime=" + datetime + "&interval=" + interval;
-        }
         $.ajax({
-            url: url,
+            url: "${basePath}/mc/stats/charts/chart1?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
             data: {},
             async: true,
@@ -252,19 +199,9 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.datetime;
-                    if (record.status == '0')
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                    else if (record.status == '1')
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                });
-                for (var i = 0; i < len; i++) {
-                    var dt = nui.formatDate(new Date(befDatetime.getTime() + (i+1) * milli), format);
-                    xData[i] = dt;
-                    yData1[i] = getNum(dataMap1, dt);
-                    yData2[i] = getNum(dataMap2, dt);
-                }
+                var xList = data["X"];
+                var successList = data["SUCCESS"];
+                var defeatList = data["DEFEAT"];
                 var option = {
                     title: {
                         text: '时间维度-分结果状态的消费统计'
@@ -305,7 +242,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: false,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -326,7 +263,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: successList
                         },
                         {
                             name: '失败状态',
@@ -339,15 +276,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: defeatList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart1 = echarts.init(document.getElementById('chart1'));
-                    chart1.clear();
-                    chart1.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart1'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -357,48 +294,8 @@ ${extends("/goframe/function_layout.httl")}
      * 时间维度-分应用类型的消费统计
      */
     function optionChart2(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // IQ Array
-        var yData2 = []; // OLQ Array
-        var yData3 = []; // MM Array
-        var yData4 = []; // RTS_PRODUCER Array
-        var yData5 = []; // RTS_CONSUMER Array
-        var yData6 = []; // OLQ_APP Array
-        var yData7 = []; // IM Array
-        var dataMap1 = {}; // IQ Map
-        var dataMap2 = {}; // OLQ Map
-        var dataMap3 = {}; // MM Map
-        var dataMap4 = {}; // RTS_PRODUCER Map
-        var dataMap5 = {}; // RTS_CONSUMER Map
-        var dataMap6 = {}; // OLQ_APP Map
-        var dataMap7 = {}; // IM Map
-        var befDatetime = new Date(new Date(datetime).getTime() - interval * 60000);
-        //var name = "时间（分）";
-        var milli = 60000;
-        var format = "yyyy-MM-dd HH:mm";
-        var len = 30;
-        var url = "${basePath}/mc/stats/charts/chart2Minute?datetime=" + datetime + "&interval=" + interval;
-        if (interval <= 360) { // 数据粒度：分钟
-            //name = "时间（分）";
-            milli = 60000;
-            format = "yyyy-MM-dd HH:mm";
-            len = interval;
-            url = "${basePath}/mc/stats/charts/chart2Minute?datetime=" + datetime + "&interval=" + interval;
-        } else if (interval <= 2880) { // 数据粒度：小时
-            //name = "时间（时）";
-            milli = 3600000;
-            format = "yyyy-MM-dd HH";
-            len = Math.ceil(interval / 60);
-            url = "${basePath}/mc/stats/charts/chart2Hour?datetime=" + datetime + "&interval=" + interval;
-        } else { // 数据粒度：天
-            //name = "时间（日）";
-            milli = 86400000;
-            format = "yyyy-MM-dd";
-            len = Math.ceil(interval / 1440);
-            url = "${basePath}/mc/stats/charts/chart2Day?datetime=" + datetime + "&interval=" + interval;
-        }
         $.ajax({
-            url: url,
+            url: "${basePath}/mc/stats/charts/chart2?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
             data: {},
             async: true,
@@ -411,34 +308,14 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.datetime;
-                    if ('IQ' == record.appType)
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                    else if ('OLQ' == record.appType)
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                    else if ('MM' == record.appType)
-                        dataMap3[key] = getVal(dataMap3, key, record.countNum);
-                    else if ('RTS_PRODUCER' == record.appType)
-                        dataMap4[key] = getVal(dataMap4, key, record.countNum);
-                    else if ('RTS_CONSUMER' == record.appType)
-                        dataMap5[key] = getVal(dataMap5, key, record.countNum);
-                    else if ('OLQ_APP' == record.appType)
-                        dataMap6[key] = getVal(dataMap6, key, record.countNum);
-                    else if ('IM' == record.appType)
-                        dataMap7[key] = getVal(dataMap7, key, record.countNum);
-                });
-                for (var i = 0; i < len; i++) {
-                    var dt = nui.formatDate(new Date(befDatetime.getTime() + (i+1) * milli), format);
-                    xData[i] = dt;
-                    yData1[i] = getNum(dataMap1, dt);
-                    yData2[i] = getNum(dataMap2, dt);
-                    yData3[i] = getNum(dataMap3, dt);
-                    yData4[i] = getNum(dataMap4, dt);
-                    yData5[i] = getNum(dataMap5, dt);
-                    yData6[i] = getNum(dataMap6, dt);
-                    yData7[i] = getNum(dataMap7, dt);
-                }
+                var xList = data["X"];
+                var iqList = data["IQ"];
+                var olqList = data["OLQ"];
+                var mmList = data["MM"];
+                var rtsProducerList = data["RTS_PRODUCER"];
+                var rtsConsumerList = data["RTS_CONSUMER"];
+                var olqAppList = data["OLQ_APP"];
+                var imList = data["IM"];
                 var option = {
                     title: {
                         text: '时间维度-分应用类型的消费统计'
@@ -473,12 +350,12 @@ ${extends("/goframe/function_layout.httl")}
                         start: 0,
                         end: 100
                     },
-                    xAxis:[
+                    xAxis: [
                         {
                             type: 'category',
                             boundaryGap: false,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ]
                     ,
@@ -500,7 +377,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: iqList
                         },
                         {
                             name: '联机查询',
@@ -513,7 +390,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: olqList
                         },
                         {
                             name: '模型管理',
@@ -526,7 +403,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData3
+                            data: mmList
                         },
                         {
                             name: '实时流-生产者',
@@ -539,7 +416,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData4
+                            data: rtsProducerList
                         },
                         {
                             name: '实时流-消费者',
@@ -552,7 +429,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData5
+                            data: rtsConsumerList
                         },
                         {
                             name: '联机查询应用',
@@ -565,7 +442,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData6
+                            data: olqAppList
                         },
                         {
                             name: '交互建模',
@@ -578,15 +455,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData7
+                            data: imList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart2 = echarts.init(document.getElementById('chart2'));
-                    chart2.clear();
-                    chart2.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart2'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -596,11 +473,6 @@ ${extends("/goframe/function_layout.httl")}
      * 用户维度-分结果状态的消费统计
      */
     function optionChart3(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 成功Array
-        var yData2 = []; // 失败Array
-        var dataMap1 = {}; // 成功Map
-        var dataMap2 = {}; // 失败Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart3?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -615,23 +487,9 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.userName;
-                    if (record.status == '0') {
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                    } else if (record.status == '1') {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                    }
-                });
-                var i = 0;
-                for (var key in dataMap1) {
-                    xData[i] = key;
-                    yData1[i] = getNum(dataMap1, key);
-                    yData2[i] = getNum(dataMap2, key);
-                    i++;
-                }
+                var xList = data["X"];
+                var successList = data["SUCCESS"];
+                var defeatList = data["DEFEAT"];
                 var option = {
                     title: {
                         text: '用户维度-分结果状态的消费统计'
@@ -665,7 +523,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: true,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -687,7 +545,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: successList
                         },
                         {
                             name: '失败状态',
@@ -701,15 +559,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: defeatList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart3 = echarts.init(document.getElementById('chart3'));
-                    chart3.clear();
-                    chart3.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart3'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -719,21 +577,6 @@ ${extends("/goframe/function_layout.httl")}
      * 用户维度-分应用类型的消费统计
      */
     function optionChart4(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // IQ Array
-        var yData2 = []; // OLQ Array
-        var yData3 = []; // MM Array
-        var yData4 = []; // RTS_PRODUCER Array
-        var yData5 = []; // RTS_CONSUMER Array
-        var yData6 = []; // OLQ_APP Array
-        var yData7 = []; // IM Array
-        var dataMap1 = {}; // IQ Map
-        var dataMap2 = {}; // OLQ Map
-        var dataMap3 = {}; // MM Map
-        var dataMap4 = {}; // RTS_PRODUCER Map
-        var dataMap5 = {}; // RTS_CONSUMER Map
-        var dataMap6 = {}; // OLQ_APP Map
-        var dataMap7 = {}; // IM Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart4?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -748,78 +591,14 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.userName;
-                    if ('IQ' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap3[key] = getVal(dataMap3, key, 0);
-                        dataMap4[key] = getVal(dataMap4, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    } else if ('OLQ' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                        dataMap3[key] = getVal(dataMap3, key, 0);
-                        dataMap4[key] = getVal(dataMap4, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    } else if ('MM' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap3[key] = getVal(dataMap3, key, record.countNum);
-                        dataMap4[key] = getVal(dataMap4, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    } else if ('RTS_PRODUCER' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap4[key] = getVal(dataMap4, key, record.countNum);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    } else if ('RTS_CONSUMER' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap3[key] = getVal(dataMap3, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, record.countNum);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    }else if ('OLQ_APP' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap3[key] = getVal(dataMap3, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, record.countNum);
-                        dataMap7[key] = getVal(dataMap7, key, 0);
-                    }else if ('IM' == record.appType) {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                        dataMap3[key] = getVal(dataMap3, key, 0);
-                        dataMap5[key] = getVal(dataMap5, key, 0);
-                        dataMap6[key] = getVal(dataMap6, key, 0);
-                        dataMap7[key] = getVal(dataMap7, key, record.countNum);
-                    }
-                });
-                var i = 0;
-                for (var key in dataMap1) {
-                    xData[i] = key;
-                    yData1[i] = getNum(dataMap1, key);
-                    yData2[i] = getNum(dataMap2, key);
-                    yData3[i] = getNum(dataMap3, key);
-                    yData4[i] = getNum(dataMap4, key);
-                    yData5[i] = getNum(dataMap5, key);
-                    yData6[i] = getNum(dataMap6, key);
-                    yData7[i] = getNum(dataMap7, key);
-                    i++;
-                }
+                var xList = data["X"];
+                var iqList = data["IQ"];
+                var olqList = data["OLQ"];
+                var mmList = data["MM"];
+                var rtsProducerList = data["RTS_PRODUCER"];
+                var rtsConsumerList = data["RTS_CONSUMER"];
+                var olqAppList = data["OLQ_APP"];
+                var imList = data["IM"];
                 var option = {
                     title: {
                         text: '用户维度-分应用类型的消费统计'
@@ -831,7 +610,7 @@ ${extends("/goframe/function_layout.httl")}
                         x: 'left',
                         y: 'center',
                         orient: 'vertical',
-                        data: ['交互查询', '联机查询', '模型管理', '实时流-生产者', '实时流-消费者','联机查询应用','交互建模']
+                        data: ['交互查询', '联机查询', '模型管理', '实时流-生产者', '实时流-消费者', '联机查询应用', '交互建模']
                     },
                     toolbox: {
                         show: true,
@@ -853,7 +632,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: true,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -874,7 +653,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: iqList
                         },
                         {
                             name: '联机查询',
@@ -888,7 +667,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: olqList
                         },
                         {
                             name: '模型管理',
@@ -902,7 +681,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData3
+                            data: mmList
                         },
                         {
                             name: '实时流-生产者',
@@ -916,7 +695,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData4
+                            data: rtsProducerList
                         },
                         {
                             name: '实时流-消费者',
@@ -930,7 +709,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData5
+                            data: rtsConsumerList
                         },
                         {
                             name: '联机查询应用',
@@ -944,7 +723,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData6
+                            data: olqAppList
                         },
                         {
                             name: '交互建模',
@@ -958,15 +737,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData7
+                            data: imList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart4 = echarts.init(document.getElementById('chart4'));
-                    chart4.clear();
-                    chart4.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart4'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -976,11 +755,6 @@ ${extends("/goframe/function_layout.httl")}
      * 服务名维度-分结果状态的消费统计
      */
     function optionChart5(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 成功Array
-        var yData2 = []; // 失败Array
-        var dataMap1 = {}; // 成功Map
-        var dataMap2 = {}; // 失败Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart5?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -995,23 +769,9 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.serviceName;
-                    if (record.status == '0') {
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                    } else if (record.status == '1') {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                    }
-                });
-                var i = 0;
-                for (var key in dataMap1) {
-                    xData[i] = key;
-                    yData1[i] = getNum(dataMap1, key);
-                    yData2[i] = getNum(dataMap2, key);
-                    i++;
-                }
+                var xList = data["X"];
+                var successList = data["SUCCESS"];
+                var defeatList = data["DEFEAT"];
                 var option = {
                     title: {
                         text: '服务名维度-分结果状态的消费统计'
@@ -1045,7 +805,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: true,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -1067,7 +827,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: successList
                         },
                         {
                             name: '失败状态',
@@ -1081,15 +841,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: defeatList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart5 = echarts.init(document.getElementById('chart5'));
-                    chart5.clear();
-                    chart5.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart5'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -1099,11 +859,6 @@ ${extends("/goframe/function_layout.httl")}
      * 应用类型维度-分结果状态的消费统计
      */
     function optionChart6(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 成功Array
-        var yData2 = []; // 失败Array
-        var dataMap1 = {}; // 成功Map
-        var dataMap2 = {}; // 失败Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart6?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -1118,32 +873,9 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.appType;
-                    if (record.status == '0') {
-                        dataMap1[key] = getVal(dataMap1, key, record.countNum);
-                        dataMap2[key] = getVal(dataMap2, key, 0);
-                    } else if (record.status == '1') {
-                        dataMap1[key] = getVal(dataMap1, key, 0);
-                        dataMap2[key] = getVal(dataMap2, key, record.countNum);
-                    }
-                });
-                xData = ['交互查询', '联机查询', '模型管理', '实时流-生产者', '实时流-消费者', '交互建模'];
-
-                yData1[0] = getNum(dataMap1, "IQ");
-                yData1[1] = getNum(dataMap1, "OLQ");
-                yData1[2] = getNum(dataMap1, "MM");
-                yData1[3] = getNum(dataMap1, "RTS_PRODUCER");
-                yData1[4] = getNum(dataMap1, "RTS_CONSUMER");
-                yData1[5] = getNum(dataMap1, "IM");
-
-                yData2[0] = getNum(dataMap2, "IQ");
-                yData2[1] = getNum(dataMap2, "OLQ");
-                yData2[2] = getNum(dataMap2, "MM");
-                yData2[3] = getNum(dataMap2, "RTS_PRODUCER");
-                yData2[4] = getNum(dataMap2, "RTS_CONSUMER");
-                yData2[5] = getNum(dataMap2, "IM");
-
+                var xList = data["X"];
+                var successList = data["SUCCESS"];
+                var defeatList = data["DEFEAT"];
                 var option = {
                     title: {
                         text: '应用类型维度-分结果状态的消费统计'
@@ -1177,7 +909,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: true,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -1199,7 +931,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: successList
                         },
                         {
                             name: '失败状态',
@@ -1213,15 +945,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: defeatList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart6 = echarts.init(document.getElementById('chart6'));
-                    chart6.clear();
-                    chart6.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart6'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -1231,13 +963,6 @@ ${extends("/goframe/function_layout.httl")}
      * 服务名维度-同步请求的耗时统计
      */
     function optionChart7(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 最大耗时Array
-        var yData2 = []; // 平均耗时Array
-        var yData3 = []; // 最小耗时Array
-        var dataMap1 = {}; // 最大耗时Map
-        var dataMap2 = {}; // 平均耗时Map
-        var dataMap3 = {}; // 最小耗时Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart7?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -1252,20 +977,10 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.serviceName;
-                    dataMap1[key] = record.maxTime;
-                    dataMap2[key] = record.avgTime;
-                    dataMap3[key] = record.minTime;
-                });
-                var i = 0;
-                for (var key in dataMap1) {
-                    xData[i] = key;
-                    yData1[i] = getNum(dataMap1, key);
-                    yData2[i] = getNum(dataMap2, key);
-                    yData3[i] = getNum(dataMap3, key);
-                    i++;
-                }
+                var xList = data["X"];
+                var maxList = data["MAX"];
+                var avgList = data["AVG"];
+                var minList = data["MIN"];
                 var option = {
                     title: {
                         text: '时间维度-同步请求的耗时统计'
@@ -1306,7 +1021,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: false,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -1326,7 +1041,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: maxList
                         },
                         {
                             name: '平均耗时',
@@ -1338,7 +1053,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: avgList
                         },
                         {
                             name: '最小耗时',
@@ -1350,15 +1065,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData3
+                            data: minList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart7 = echarts.init(document.getElementById('chart7'));
-                    chart7.clear();
-                    chart7.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart7'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });
@@ -1368,13 +1083,6 @@ ${extends("/goframe/function_layout.httl")}
      * 服务名维度-异步请求的耗时统计
      */
     function optionChart8(datetime, interval) {
-        var xData = [];
-        var yData1 = []; // 最大耗时Array
-        var yData2 = []; // 平均耗时Array
-        var yData3 = []; // 最小耗时Array
-        var dataMap1 = {}; // 最大耗时Map
-        var dataMap2 = {}; // 平均耗时Map
-        var dataMap3 = {}; // 最小耗时Map
         $.ajax({
             url: "${basePath}/mc/stats/charts/chart8?datetime=" + datetime + "&interval=" + interval,
             type: 'POST',
@@ -1389,20 +1097,10 @@ ${extends("/goframe/function_layout.httl")}
                     return;
                 }
                 var data = result.data;
-                $.each(data, function (_index, record) {
-                    var key = record.serviceName;
-                    dataMap1[key] = record.maxTime;
-                    dataMap2[key] = record.avgTime;
-                    dataMap3[key] = record.minTime;
-                });
-                var i = 0;
-                for (var key in dataMap1) {
-                    xData[i] = key;
-                    yData1[i] = getNum(dataMap1, key);
-                    yData2[i] = getNum(dataMap2, key);
-                    yData3[i] = getNum(dataMap3, key);
-                    i++;
-                }
+                var xList = data["X"];
+                var maxList = data["MAX"];
+                var avgList = data["AVG"];
+                var minList = data["MIN"];
                 var option = {
                     title: {
                         text: '时间维度-异步请求的耗时统计'
@@ -1443,7 +1141,7 @@ ${extends("/goframe/function_layout.httl")}
                             type: 'category',
                             boundaryGap: false,
                             axisLine: {onZero: false},
-                            data: xData
+                            data: xList
                         }
                     ],
                     yAxis: [
@@ -1463,7 +1161,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData1
+                            data: maxList
                         },
                         {
                             name: '平均耗时',
@@ -1475,7 +1173,7 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData2
+                            data: avgList
                         },
                         {
                             name: '最小耗时',
@@ -1487,15 +1185,15 @@ ${extends("/goframe/function_layout.httl")}
                                     }
                                 }
                             },
-                            data: yData3
+                            data: minList
                         }
                     ]
                 };
                 //console.log(option);
                 setTimeout(function () {
-                    chart8 = echarts.init(document.getElementById('chart8'));
-                    chart8.clear();
-                    chart8.setOption(option, true);
+                    var chart = echarts.init(document.getElementById('chart8'));
+                    chart.clear();
+                    chart.setOption(option, true);
                 }, 500);
             }
         });

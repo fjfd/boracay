@@ -113,7 +113,7 @@ create table T_GF_FUNCATION
 (
   func_id        VARCHAR2(32) not null,
   func_code      VARCHAR2(32) not null,
-  func_name      VARCHAR2(64),
+  func_name      VARCHAR2(512),
   is_func        VARCHAR2(32),
   displayorder   INTEGER,
   url_acction    VARCHAR2(128),
@@ -162,7 +162,8 @@ create table T_GF_LOGINUSER
   app_id          VARCHAR2(32),
   user_comment    VARCHAR2(256),
   valid_startdate VARCHAR2(10),
-  valid_enddate   VARCHAR2(10)
+  valid_enddate   VARCHAR2(10),
+  error_count     INTEGER default (0)
 )
 ;
 alter table T_GF_LOGINUSER
@@ -175,7 +176,7 @@ prompt
 create table T_GF_MENU
 (
   menuid       VARCHAR2(32) not null,
-  menuname     VARCHAR2(60) not null,
+  menuname     VARCHAR2(256) not null,
   menulabel    VARCHAR2(80),
   menucode     VARCHAR2(120),
   isleaf       CHAR(1),
@@ -362,6 +363,5 @@ create table T_GF_USER_SESSION
 ;
 alter table T_GF_USER_SESSION
   add primary key (USER_ID);
-
 
 spool off

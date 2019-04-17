@@ -1,6 +1,7 @@
 package com.hex.bigdata.udsp.util;
 
 import com.alibaba.fastjson.JSON;
+import com.hex.bigdata.udsp.jdbc.netty.NettyClientHandler;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +28,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +44,7 @@ import java.util.Map;
 
 public class HttpUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpUtils.class);
+    private static Logger logger = LogManager.getLogger(HttpUtils.class);
 
     public static final String APPLICATION_JSON = "application/json;charset=UTF-8";
     public static final String TEXT_JSON = "text/json;charset=UTF-8";
@@ -179,7 +180,7 @@ public class HttpUtils {
      */
     public static HttpResponse requestSpringSecurityLogin(String url, List<NameValuePair> params,
                                                           Map<String, String> headers, Charset charset) {
-        LOG.info("url:" + url);
+        logger.info("url:" + url);
         CloseableHttpClient httpClient = null;
         HttpPost httpPost = null;
         HttpResponse response = null;
@@ -256,14 +257,14 @@ public class HttpUtils {
      */
     public static HttpResponse requestPageResponse(String url, List<NameValuePair> params,
                                                    Map<String, String> headers, Charset charset) {
-        LOG.info("url:" + url);
+        logger.info("url:" + url);
         HttpGet httpGet = null;
         CloseableHttpClient httpClient = null;
         HttpResponse response = null;
         String uri = url;
         if (params != null && params.size() >= 1) {
             String reqStr = URLEncodedUtils.format(params, charset);
-            LOG.info("params:" + reqStr);
+            logger.info("params:" + reqStr);
             uri += "?" + reqStr;
         }
         try {
@@ -364,8 +365,8 @@ public class HttpUtils {
      */
     public static <T> T requestPut(String url, String json, Map<String, String> headers,
                                    Class<T> clazz, Charset charset, String username, String password) {
-        LOG.info("url:" + url);
-        LOG.info("request:" + json);
+        logger.info("url:" + url);
+        logger.info("request:" + json);
         HttpPut httpPut = null;
         CloseableHttpClient httpClient = null;
         T responseObject = null;
@@ -412,14 +413,14 @@ public class HttpUtils {
      */
     public static <T> T requestGet(String url, List<NameValuePair> params, Map<String, String> headers,
                                    Class<T> clazz, Charset charset, String username, String password) {
-        LOG.info("url:" + url);
+        logger.info("url:" + url);
         HttpGet httpGet = null;
         CloseableHttpClient httpClient = null;
         T responseObject = null;
         String uri = url;
         if (params != null && params.size() >= 1) {
             String reqStr = URLEncodedUtils.format(params, charset);
-            LOG.info("params:" + reqStr);
+            logger.info("params:" + reqStr);
             uri += "?" + reqStr;
         }
         //System.out.println("uri:" + uri);
@@ -490,8 +491,8 @@ public class HttpUtils {
      */
     public static <T> T requestPost(String url, String json, Map<String, String> headers,
                                     Class<T> clazz, Charset charset, String username, String password) {
-        LOG.info("url:" + url);
-        LOG.info("request:" + json);
+        logger.info("url:" + url);
+        logger.info("request:" + json);
         HttpPost httpPost = null;
         CloseableHttpClient httpClient = null;
         T responseObject = null;

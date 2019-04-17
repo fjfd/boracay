@@ -1,5 +1,6 @@
 package com.hex.bigdata.udsp.im.converter.impl.factory;
 
+import com.hex.bigdata.udsp.common.api.model.Property;
 import com.hex.bigdata.udsp.im.converter.impl.model.HBaseDatasource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool.BasePoolableObjectFactory;
@@ -9,6 +10,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HConnection;
 import org.apache.hadoop.hbase.client.HConnectionManager;
+import org.apache.hadoop.security.UserGroupInformation;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +74,9 @@ class HBaseConnectionFactory extends BasePoolableObjectFactory {
 
     public HBaseConnectionFactory(HBaseDatasource datasource) {
         conf = HBaseConfiguration.create();
+        for (Property property : datasource.getProperties ()) {
+            conf.set (property.getName (), property.getValue ());
+        }
         conf.set("hbase.zookeeper.quorum", datasource.getZkQuorum());
         conf.set("hbase.zookeeper.property.clientPort", datasource.getZkPort());
         if (StringUtils.isNotBlank(datasource.getRpcTimeout()))
@@ -90,6 +95,31 @@ class HBaseConnectionFactory extends BasePoolableObjectFactory {
 //            conf.set("hbase.regionserver.lease.period", datasource.getRegionserverLeasePeriod()); // 已被弃用
         if (StringUtils.isNotBlank(datasource.getClientScannerTimeoutPeriod()))
             conf.set("hbase.client.scanner.timeout.period", datasource.getClientScannerTimeoutPeriod());
+        if (StringUtils.isNotBlank (datasource.getHBaseRootdir ()))
+            conf.set ("hbase.rootdir", datasource.getHBaseRootdir ());
+        if (StringUtils.isNotBlank (datasource.getZookeeperZnodeParent ()))
+            conf.set ("zookeeper.znode.parent", datasource.getZookeeperZnodeParent ());
+
+        /*
+        以下是HBase开启Kerberos认证后需要的配置
+         */
+        if (StringUtils.isNotBlank (datasource.getKerberosPrincipal ())
+                && StringUtils.isNotBlank (datasource.getKerberosKeytab ())) {
+            if (StringUtils.isNotBlank (datasource.getHbaseSecurityAuthentication ()))
+                conf.set ("hbase.security.authentication", datasource.getHbaseSecurityAuthentication ());
+            if (StringUtils.isNotBlank (datasource.getHadoopSecurityAuthentication ()))
+                conf.set ("hadoop.security.authentication", datasource.getHadoopSecurityAuthentication ());
+            if (StringUtils.isNotBlank (datasource.getHbaseMasterKerberosPrincipal ()))
+                conf.set ("hbase.master.kerberos.principal", datasource.getHbaseMasterKerberosPrincipal ());
+            if (StringUtils.isNotBlank (datasource.getHbaseRegionserverKerberosPrincipal ()))
+                conf.set ("hbase.regionserver.kerberos.principal", datasource.getHbaseRegionserverKerberosPrincipal ());
+            UserGroupInformation.setConfiguration (conf);
+            try {
+                UserGroupInformation.loginUserFromKeytab (datasource.getKerberosPrincipal (), datasource.getKerberosKeytab ());
+            } catch (IOException e) {
+                throw new RuntimeException (e);
+            }
+        }
     }
 
     @Override

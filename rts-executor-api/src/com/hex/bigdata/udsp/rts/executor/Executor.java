@@ -17,5 +17,6 @@ public interface Executor {
     // 拉
     ConsumerResponse pull(ConsumerRequest consumerRequest);
 
+    // 测试数据源
     boolean testDatasource(Datasource datasource);
 }

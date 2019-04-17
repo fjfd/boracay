@@ -160,7 +160,7 @@ comment on column IM_METADATA.status
 comment on column IM_METADATA.type
   is '类型（1：内表，2：外表）';
 alter table IM_METADATA
-  add constraint PK_IM_MATEDATA primary key (PK_ID);
+  add constraint PK_IM_METADATA primary key (PK_ID);
 
 prompt
 prompt Creating table IM_METADATA_COLUMN
@@ -206,7 +206,7 @@ comment on column IM_METADATA_COLUMN.primary
 comment on column IM_METADATA_COLUMN.stored
   is '存储（0：是；1：否）';
 alter table IM_METADATA_COLUMN
-  add constraint PK_IM_MATEDATA_COL primary key (PK_ID);
+  add constraint PK_IM_METADATA_COL primary key (PK_ID);
 
 prompt
 prompt Creating table IM_MODEL
@@ -614,7 +614,7 @@ create index IDX_IQ_MD_DELFLG on IQ_METADATA (DEL_FLG);
 create index IDX_IQ_MD_DELFLG_DSID on IQ_METADATA (DEL_FLG, DS_ID);
 create index IDX_IQ_MD_DELFLG_NAME on IQ_METADATA (DEL_FLG, NAME);
 alter table IQ_METADATA
-  add constraint PK_IQ_MATEDATA primary key (PK_ID);
+  add constraint PK_IQ_METADATA primary key (PK_ID);
 
 prompt
 prompt Creating table IQ_METADATA_COLUMN
@@ -1423,8 +1423,6 @@ ALTER TABLE MC_CONSUME_LOG ADD IS_CACHE CHAR(1);
 COMMENT ON COLUMN MC_CONSUME_LOG.IS_CACHE IS '是否从缓存获取（0：是，1：否）';
 
 -- 删除字段
-alter table IQ_APPLICATION drop column MAX_NUM;
-alter table MM_APPLICATION drop column MAX_NUM;
 alter table RTS_CUSTOMER_CONFIG drop column GROUP_ID;
 
 -- 删除字段

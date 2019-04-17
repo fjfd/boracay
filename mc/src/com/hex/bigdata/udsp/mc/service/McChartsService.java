@@ -32,46 +32,6 @@ public class McChartsService extends BaseService {
         return mcChartsMapper.chart1Day(new McChartsView(timeStart, timeEnd));
     }
 
-    public List<McChartsView> chart2Second(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart2Second(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart2Minute(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart2Minute(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart2Hour(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart2Hour(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart2Day(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart2Day(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart3(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart3(new McChartsView(timeStart, timeEnd));
-    }
-
-    public List<McChartsView> chart4(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart4(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart5(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart5(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart6(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart6(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart7(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart7(timeStart, timeEnd);
-    }
-
-    public List<McChartsView> chart8(String timeStart, String timeEnd) {
-        return mcChartsMapper.chart8(timeStart, timeEnd);
-    }
-
     public List<McChartsView> chart1Second(String timeStart, String timeEnd, String serverName) {
         return mcChartsMapper.chart1Second(new McChartsView(timeStart, timeEnd, serverName));
     }
@@ -88,4 +48,43 @@ public class McChartsService extends BaseService {
         return mcChartsMapper.chart1Day(new McChartsView(timeStart, timeEnd, serverName));
     }
 
+    public List<McChartsView> chart2Second(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart2Second(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart2Minute(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart2Minute(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart2Hour(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart2Hour(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart2Day(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart2Day(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart3(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart3(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart4(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart4(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart5(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart5(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart6(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart6(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart7(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart7(new McChartsView(timeStart, timeEnd));
+    }
+
+    public List<McChartsView> chart8(String timeStart, String timeEnd) {
+        return mcChartsMapper.chart8(new McChartsView(timeStart, timeEnd));
+    }
 }

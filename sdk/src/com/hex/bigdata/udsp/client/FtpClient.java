@@ -3,6 +3,7 @@ package com.hex.bigdata.udsp.client;
 import com.hex.bigdata.udsp.config.FtpClinetConfig;
 
 public class FtpClient {
+
     private String hostname = FtpClinetConfig.getHostname();
     private int port = FtpClinetConfig.getPort();
     private String username = FtpClinetConfig.getUsername();

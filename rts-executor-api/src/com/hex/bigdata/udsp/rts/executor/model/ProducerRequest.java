@@ -1,6 +1,6 @@
 package com.hex.bigdata.udsp.rts.executor.model;
 
-import org.apache.commons.lang3.time.FastDateFormat;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import java.util.Date;
 import java.util.List;

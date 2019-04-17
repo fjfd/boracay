@@ -23,6 +23,7 @@ public class KafkaDatasource extends Datasource {
         super(datasource);
     }
 
+    // 线程数
     public int getThreadNum() {
         String value = getProperty("thread.num").getValue();
         if (StringUtils.isBlank(value))
@@ -30,75 +31,54 @@ public class KafkaDatasource extends Datasource {
         return Integer.valueOf(value);
     }
 
+    // zookeeper集群的IP和端口地址，多个地址用逗号分隔
     public String getZookeeperConnect() {
         return getProperty("zookeeper.connect").getValue();
     }
 
+    // Kafka集群的IP和端口地址，多个地址用逗号分隔
     public String getMetadataBrokerList() {
         return getProperty("metadata.broker.list").getValue();
     }
 
+    // 连接zookeeper的session超时时间
     public String getZookeeperSessionTimeoutMs() {
         return getProperty("zookeeper.session.timeout.ms").getValue();
     }
 
+    // 客户端连接zookeeper的最大超时时间
     public String getZookeeperConnectionTimeoutMs() {
         return getProperty("zookeeper.connection.timeout.ms").getValue();
     }
 
+    // zookeeper同步时间
     public String getZookeeperSyncTimeMs() {
         return getProperty("zookeeper.sync.time.ms").getValue();
     }
 
-    public String getConsumerTimeoutMs() {
-        return getProperty("consumer.timeout.ms").getValue();
-    }
-
+    // 如果true,consumer定期地往zookeeper写入每个分区的offset
     public String getAutoCommitEnable() {
         return getProperty("auto.commit.enable").getValue();
     }
 
+    // 消费者向zookeeper发送offset的时间
     public String getAutoCommitIntervalMs() {
         return getProperty("auto.commit.interval.ms").getValue();
     }
 
+    // offset初始化或者达到上线时的处理方式
     public String getAutoOffsetReset() {
         return getProperty("auto.offset.reset").getValue();
     }
 
+    // rebalance时的最大尝试次数
     public String getRebalanceMaxRetries() {
         return getProperty("rebalance.max.retries").getValue();
     }
 
+    // 平衡补偿重试间隔时间
     public String getRebalanceBackoffMs() {
         return getProperty("rebalance.backoff.ms").getValue();
     }
 
-    public String getGroupId() {
-        String value = getProperty("group.id").getValue();
-        if (StringUtils.isBlank(value))
-            throw new IllegalArgumentException("group.id不能为空");
-        return value;
-    }
-
-    public String getSerializerClass() {
-        String value = getProperty("serializer.class").getValue();
-        if (StringUtils.isBlank(value))
-            value = "kafka.serializer.StringEncoder";
-        return value;
-    }
-
-    public String getKeySerializerClass() {
-        String value = getProperty("key.serializer.class").getValue();
-        if (StringUtils.isBlank(value))
-            value = "kafka.serializer.StringEncoder";
-        return value;
-    }
-
-    public String getRequestRequiredAcks() {
-        String value = getProperty("request.required.acks").getValue();
-        if (StringUtils.isBlank(value))
-            value = "0";
-        return value;
-    }
 }

@@ -24,15 +24,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Service
 public class WaitingService {
-    private static Logger logger = LoggerFactory.getLogger(WaitingService.class);
+    private static Logger logger = LoggerFactory.getLogger (WaitingService.class);
 
-    private static final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactory() {
-        private AtomicInteger id = new AtomicInteger(0);
+    private static final ExecutorService executorService = Executors.newCachedThreadPool (new ThreadFactory () {
+        private AtomicInteger id = new AtomicInteger (0);
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r);
-            thread.setName("wait-queue-service-" + id.addAndGet(1));
+            Thread thread = new Thread (r);
+            thread.setName ("wait-queue-service-" + id.addAndGet (1));
             return thread;
         }
     });
@@ -68,62 +68,62 @@ public class WaitingService {
      * @return
      */
     public boolean isWaiting(ConsumeRequest consumeRequest, long bef) {
-        final Current mcCurrent = consumeRequest.getMcCurrent();
-        QueueIsFullResult isFullResult = consumeRequest.getQueueIsFullResult();
+        final Current mcCurrent = consumeRequest.getMcCurrent ();
+        QueueIsFullResult isFullResult = consumeRequest.getQueueIsFullResult ();
         long maxWaitTimeout = 0;
-        RcUserService rcUserService = consumeRequest.getRcUserService();
-        if (ConsumerType.SYNC.getValue().equalsIgnoreCase(mcCurrent.getSyncType())) {
-            maxWaitTimeout = (rcUserService == null || rcUserService.getMaxSyncWaitTimeout() == 0) ?
-                    initParamService.getMaxSyncWaitTimeout() : rcUserService.getMaxSyncWaitTimeout();
+        RcUserService rcUserService = consumeRequest.getRcUserService ();
+        if (ConsumerType.SYNC.getValue ().equalsIgnoreCase (mcCurrent.getSyncType ())) {
+            maxWaitTimeout = (rcUserService == null || rcUserService.getMaxSyncWaitTimeout () == 0) ?
+                    initParamService.getMaxSyncWaitTimeout () : rcUserService.getMaxSyncWaitTimeout ();
         } else {
-            maxWaitTimeout = (rcUserService == null || rcUserService.getMaxAsyncWaitTimeout() == 0) ?
-                    initParamService.getMaxAsyncWaitTimeout() : rcUserService.getMaxAsyncWaitTimeout();
+            maxWaitTimeout = (rcUserService == null || rcUserService.getMaxAsyncWaitTimeout () == 0) ?
+                    initParamService.getMaxAsyncWaitTimeout () : rcUserService.getMaxAsyncWaitTimeout ();
         }
         boolean passFlg = true;
-        if (isFullResult != null && !isFullResult.isWaitQueueIsFull()) { // 任务进入等待队列
-            final String waitQueueTaskId = isFullResult.getWaitQueueTaskId();
+        if (isFullResult != null && !isFullResult.isWaitQueueIsFull ()) { // 任务进入等待队列
+            final String waitQueueTaskId = isFullResult.getWaitQueueTaskId ();
             passFlg = false;
             try {
                 // 开启一个新的线程，其内部循环判断是否可以执行，可以执行时或者等待超时时向下走
-                Future<Boolean> futureTask = executorService.submit(new Callable<Boolean>() {
+                Future<Boolean> futureTask = executorService.submit (new Callable<Boolean> () {
                     @Override
                     public Boolean call() throws Exception {
-                        String key = mcCurrent.getUserName() + ":" + mcCurrent.getAppId()
-                                + ":" + mcCurrent.getAppType().toUpperCase() + ":" + mcCurrent.getSyncType().toUpperCase();
+                        String key = mcCurrent.getUserName () + ":" + mcCurrent.getAppId ()
+                                + ":" + mcCurrent.getAppType ().toUpperCase () + ":" + mcCurrent.getSyncType ().toUpperCase ();
                         long cycleTimeInterval = 0;
-                        if (ConsumerType.SYNC.getValue().equalsIgnoreCase(mcCurrent.getSyncType())) {
+                        if (ConsumerType.SYNC.getValue ().equalsIgnoreCase (mcCurrent.getSyncType ())) {
                             cycleTimeInterval = syncCycleTimeInterval;
                         } else {
                             cycleTimeInterval = asyncCycleTimeInterval;
                         }
                         while (true) {
-                            synchronized (key.intern()) {
-                                if (initParamService.isUseClusterRedisLock())
-                                    redisDistributedLock.lock(key);
+                            synchronized (key.intern ()) {
+                                if (initParamService.isUseClusterRedisLock ()) {
+                                    redisDistributedLock.lock (key);
+                                }
                                 try {
                                     // 检查执行队列是否满
-                                    if (runQueueService.runQueueFull(mcCurrent)) continue; // 已满则继续循环
+                                    if (runQueueService.runQueueFull (mcCurrent)) continue; // 已满则继续循环
                                     // 检查任务是否是等待队列中的第一个
-                                    if (waitQueueService.checkWaitQueueIsFirst(mcCurrent, waitQueueTaskId)) {
+                                    if (waitQueueService.checkWaitQueueIsFirst (mcCurrent, waitQueueTaskId)) {
                                         return true;
                                     }
                                 } finally {
-                                    if (initParamService.isUseClusterRedisLock())
-                                        redisDistributedLock.unlock(key);
+                                    if (initParamService.isUseClusterRedisLock ()) {
+                                        redisDistributedLock.unlock (key);
+                                    }
                                 }
                             }
-                            Thread.sleep(cycleTimeInterval);
+                            Thread.sleep (cycleTimeInterval);
                         }
                     }
                 });
-                passFlg = futureTask.get(maxWaitTimeout, TimeUnit.SECONDS);
+                passFlg = futureTask.get (maxWaitTimeout, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                loggingService.writeResponseLog(null, consumeRequest, bef, 0,
-                        ErrorCode.ERROR_000014.getValue(), ErrorCode.ERROR_000014.getName() + ":" + e.toString());
+                loggingService.writeResponseLog (null, consumeRequest, bef, 0, ErrorCode.ERROR_000014, e.toString ());
             } catch (Exception e) {
-                e.printStackTrace();
-                loggingService.writeResponseLog(null, consumeRequest, bef, 0,
-                        ErrorCode.ERROR_000007.getValue(), ErrorCode.ERROR_000007.getName() + ":" + e.toString());
+                e.printStackTrace ();
+                loggingService.writeResponseLog (null, consumeRequest, bef, 0, ErrorCode.ERROR_000007, e.toString ());
             }
         }
         return passFlg;

@@ -1,7 +1,7 @@
 package com.hex.bigdata.udsp.iq.provider.model;
 
 import com.hex.bigdata.udsp.common.constant.DataType;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class DataColumn {
 

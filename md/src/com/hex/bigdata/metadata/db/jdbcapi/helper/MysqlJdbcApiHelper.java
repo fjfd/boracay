@@ -46,4 +46,5 @@ public class MysqlJdbcApiHelper extends BaseJdbcApiHelper {
     public String getDbType() {
         return DBType.MYSQL.getValue();
     }
+
 }

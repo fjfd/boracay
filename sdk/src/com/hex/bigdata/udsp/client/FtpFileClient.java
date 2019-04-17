@@ -11,9 +11,6 @@ import java.util.List;
 
 public class FtpFileClient {
 
-    /**
-     * 日志记录
-     */
     private static Logger logger = LogManager.getLogger(FtpFileClient.class);
 
     private SdkFtpUtil sdkFtpUtil;

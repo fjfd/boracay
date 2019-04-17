@@ -1,8 +1,6 @@
 package com.hex.bigdata.udsp.rts.service;
 
 import com.hex.bigdata.udsp.common.api.model.Datasource;
-import com.hex.bigdata.udsp.common.constant.Status;
-import com.hex.bigdata.udsp.common.constant.StatusCode;
 import com.hex.bigdata.udsp.common.model.ComDatasource;
 import com.hex.bigdata.udsp.common.model.ComProperties;
 import com.hex.bigdata.udsp.common.service.ComDatasourceService;
@@ -24,10 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by tomnic on 2017/3/7.
@@ -35,7 +30,7 @@ import java.util.Map;
 @Service
 public class RtsExecutorService extends BaseService {
 
-    private static Logger logger = LogManager.getLogger(RtsExecutorService.class);
+    private static Logger logger = LogManager.getLogger (RtsExecutorService.class);
 
     private static final String RTS_IMPL_CLASS = "RTS_IMPL_CLASS";
 
@@ -62,55 +57,52 @@ public class RtsExecutorService extends BaseService {
      * @return
      */
     public ConsumerResponse consumer(String consumerId, long timeout) {
-        timeout = (timeout == 0 ? 1000 : timeout);
-        RtsConsumer rtsConsumer = rtsConsumerService.select(consumerId);
-        RtsMetadata rtsMetadata = rtsMetadataService.select(rtsConsumer.getMdId());
-        List<RtsMetadataCol> rtsMetadataCols = rtsMetadataColService.selectByMdId(rtsMetadata.getPkId());
-        ComDatasource comDatasource = comDatasourceService.select(rtsMetadata.getDsId());
-        List<ComProperties> datasourceProperties = comPropertiesService.selectList(comDatasource.getPkId());
-        List<ComProperties> applicationProperties = comPropertiesService.selectList(rtsConsumer.getPkId());
-        datasourceProperties.addAll(applicationProperties);
-        Datasource datasource = new Datasource(DatasourceUtil.getDatasource(comDatasource, datasourceProperties));
-        Metadata metadata = getMetadata(datasource, rtsMetadata, rtsMetadataCols);
-        Application application = getApplication(rtsConsumer, metadata);
-        ConsumerRequest consumerRequest = new ConsumerRequest(application, timeout);
-        ConsumerResponse consumerResponse = getExecutorImpl(datasource).pull(consumerRequest);
-        consumerResponse.setColumns(putColumnIntoMap(rtsMetadataCols));
-        if (consumerResponse.getRecords() != null && consumerResponse.getRecords().size() > 0) {
-            consumerResponse.setStatus(Status.SUCCESS);
-            consumerResponse.setStatusCode(StatusCode.SUCCESS);
+        if (timeout <= 0) {
+            throw new IllegalArgumentException ("超时时间不能小于等于0");
         }
+        Application application = getConsumerApplication (consumerId);
+        Datasource datasource = application.getMetadata ().getDatasource ();
+        ConsumerRequest consumerRequest = new ConsumerRequest (application, timeout);
+        ConsumerResponse consumerResponse = getExecutorImpl (datasource).pull (consumerRequest);
+        consumerResponse.setColumns (getColumnMap (application.getMetadata ().getColumns ())); // 设置返回字段信息
         return consumerResponse;
-    }
-
-    private LinkedHashMap<String, String> putColumnIntoMap(List<RtsMetadataCol> rtsMetadataCols) {
-        LinkedHashMap<String, String> columnMap = new LinkedHashMap<>();
-        for (RtsMetadataCol rtsMetadataCol : rtsMetadataCols) {
-            columnMap.put(rtsMetadataCol.getName(), rtsMetadataCol.getType());
-        }
-        return columnMap;
     }
 
     /**
      * 获取生产者应用信息
      *
      * @param producerId
-     * @param messageDatas
+     * @param datas
      * @return
      */
-    public ProducerResponse producer(String producerId, List<Map<String, String>> messageDatas) {
-        RtsProducer rtsProducer = rtsProducerService.select(producerId);
-        RtsMetadata rtsMetadata = rtsMetadataService.select(rtsProducer.getMdId());
-        List<RtsMetadataCol> rtsMetadataCols = rtsMetadataColService.selectByMdId(rtsMetadata.getPkId());
-        ComDatasource comDatasource = comDatasourceService.select(rtsMetadata.getDsId());
-        List<ComProperties> datasourceProperties = comPropertiesService.selectList(comDatasource.getPkId());
-        List<ComProperties> applicationProperties = comPropertiesService.selectList(rtsProducer.getPkId());
-        datasourceProperties.addAll(applicationProperties);
-        Datasource datasource = new Datasource(DatasourceUtil.getDatasource(comDatasource, datasourceProperties));
-        Metadata metadata = getMetadata(datasource, rtsMetadata, rtsMetadataCols);
-        Application producerApplication = getApplication(rtsProducer, metadata);
-        ProducerRequest producerRequest = new ProducerRequest(producerApplication, messageDatas);
-        return getExecutorImpl(datasource).push(producerRequest);
+    public ProducerResponse producer(String producerId, List<Map<String, String>> datas) {
+        Application application = getProducerApplication (producerId);
+        List<Map<String, String>> messageDatas = getMessageDatas (application, datas);
+        ProducerRequest producerRequest = new ProducerRequest (application, messageDatas);
+        Datasource datasource = application.getMetadata ().getDatasource ();
+        return getExecutorImpl (datasource).push (producerRequest);
+    }
+
+    private List<Map<String, String>> getMessageDatas(Application application, List<Map<String, String>> datas) {
+        List<MetadataCol> metadataCols = application.getMetadata ().getColumns ();
+        List<Map<String, String>> messageDatas = new ArrayList<> ();
+        for (Map<String, String> data : datas) {
+            Map<String, String> messageData = new HashMap<> ();
+//            String message = "";
+            for (MetadataCol col : metadataCols) {
+                String name = col.getName ();
+                String value = data.get (name);
+//                if (StringUtils.isBlank (value)) {
+//                    message += (StringUtils.isBlank (message) ? "" : ", ") + name;
+//                }
+                messageData.put (name, value);
+            }
+//            if (StringUtils.isNotBlank (message)) {
+//                throw new IllegalArgumentException (message + "参数不能为空!");
+//            }
+            messageDatas.add (messageData);
+        }
+        return messageDatas;
     }
 
     /**
@@ -120,7 +112,7 @@ public class RtsExecutorService extends BaseService {
      * @return
      */
     public boolean testDatasource(com.hex.bigdata.udsp.common.api.model.Datasource datasource) {
-        return getExecutorImpl(datasource).testDatasource(datasource);
+        return getExecutorImpl (datasource).testDatasource (datasource);
     }
 
     /**
@@ -130,54 +122,81 @@ public class RtsExecutorService extends BaseService {
      * @return
      */
     private Executor getExecutorImpl(com.hex.bigdata.udsp.common.api.model.Datasource datasource) {
-        return (Executor) ObjectUtil.newInstance(getImplClass(datasource));
+        return (Executor) ObjectUtil.newInstance (getImplClass (datasource));
     }
 
     private String getImplClass(com.hex.bigdata.udsp.common.api.model.Datasource datasource) {
-        String implClass = datasource.getImplClass();
-        if (StringUtils.isBlank(implClass)) {
-            GFDict gfDict = gfDictMapper.selectByPrimaryKey(RTS_IMPL_CLASS, datasource.getType());
-            implClass = gfDict.getDictName();
+        String implClass = datasource.getImplClass ();
+        if (StringUtils.isBlank (implClass)) {
+            GFDict gfDict = gfDictMapper.selectByPrimaryKey (RTS_IMPL_CLASS, datasource.getType ());
+            implClass = gfDict.getDictName ();
         }
         return implClass;
     }
 
-    private Application getApplication(RtsConsumer rtsConsumer, Metadata metadata) {
-        Application application = new Application();
-        application.setMetadata(metadata);
-        application.setName(rtsConsumer.getName());
-        application.setDescribe(rtsConsumer.getDescribe());
-        application.setName(rtsConsumer.getNote());
+    private LinkedHashMap<String, String> getColumnMap(List<MetadataCol> metadataCols) {
+        LinkedHashMap<String, String> columnMap = new LinkedHashMap<> ();
+        for (MetadataCol col : metadataCols) {
+            columnMap.put (col.getName (), col.getType ());
+        }
+        return columnMap;
+    }
+
+    private Application getConsumerApplication(String consumerId) {
+        RtsConsumer rtsConsumer = rtsConsumerService.select (consumerId);
+        RtsMetadata rtsMetadata = rtsMetadataService.select (rtsConsumer.getMdId ());
+        List<RtsMetadataCol> rtsMetadataCols = rtsMetadataColService.selectByMdId (rtsMetadata.getPkId ());
+        ComDatasource comDatasource = comDatasourceService.select (rtsMetadata.getDsId ());
+        List<ComProperties> datasourceProperties = comPropertiesService.selectList (comDatasource.getPkId ());
+        List<ComProperties> applicationProperties = comPropertiesService.selectList (rtsConsumer.getPkId ());
+        datasourceProperties.addAll (applicationProperties);
+        Datasource datasource = new Datasource (DatasourceUtil.getDatasource (comDatasource, datasourceProperties));
+        Metadata metadata = getMetadata (datasource, rtsMetadata, rtsMetadataCols);
+        Application application = new Application ();
+        application.setMetadata (metadata);
+        application.setName (rtsConsumer.getName ());
+        application.setDescribe (rtsConsumer.getDescribe ());
+        application.setName (rtsConsumer.getNote ());
         return application;
     }
 
     private Metadata getMetadata(Datasource datasource, RtsMetadata rtsMetadata, List<RtsMetadataCol> rtsMetadataCols) {
-        Metadata metadata = new Metadata();
-        metadata.setDatasource(datasource);
-        metadata.setName(rtsMetadata.getName());
-        metadata.setDescribe(rtsMetadata.getDescribe());
-        metadata.setNote(rtsMetadata.getNote());
-        metadata.setTopic(rtsMetadata.getTopic());
-        metadata.setColumns(getColumns(rtsMetadataCols));
+        Metadata metadata = new Metadata ();
+        metadata.setDatasource (datasource);
+        metadata.setName (rtsMetadata.getName ());
+        metadata.setDescribe (rtsMetadata.getDescribe ());
+        metadata.setNote (rtsMetadata.getNote ());
+        metadata.setTopic (rtsMetadata.getTopic ());
+        metadata.setColumns (getColumns (rtsMetadataCols));
         return metadata;
     }
 
-    private Application getApplication(RtsProducer rtsProducer, Metadata metadata) {
-        Application producerApplication = new Application();
-        producerApplication.setName(rtsProducer.getName());
-        producerApplication.setDescribe(rtsProducer.getDescribe());
-        producerApplication.setNote(rtsProducer.getNote());
-        producerApplication.setMetadata(metadata);
+    private Application getProducerApplication(String producerId) {
+        RtsProducer rtsProducer = rtsProducerService.select (producerId);
+        RtsMetadata rtsMetadata = rtsMetadataService.select (rtsProducer.getMdId ());
+        List<RtsMetadataCol> rtsMetadataCols = rtsMetadataColService.selectByMdId (rtsMetadata.getPkId ());
+        ComDatasource comDatasource = comDatasourceService.select (rtsMetadata.getDsId ());
+        List<ComProperties> datasourceProperties = comPropertiesService.selectList (comDatasource.getPkId ());
+        List<ComProperties> applicationProperties = comPropertiesService.selectList (rtsProducer.getPkId ());
+        datasourceProperties.addAll (applicationProperties);
+        Datasource datasource = new Datasource (DatasourceUtil.getDatasource (comDatasource, datasourceProperties));
+        Metadata metadata = getMetadata (datasource, rtsMetadata, rtsMetadataCols);
+        Application producerApplication = new Application ();
+        producerApplication.setName (rtsProducer.getName ());
+        producerApplication.setDescribe (rtsProducer.getDescribe ());
+        producerApplication.setNote (rtsProducer.getNote ());
+        producerApplication.setMetadata (metadata);
         return producerApplication;
     }
 
     private List<MetadataCol> getColumns(List<RtsMetadataCol> rtsMetadataCols) {
-        List<MetadataCol> columns = new ArrayList<>();
+        List<MetadataCol> columns = new ArrayList<> ();
         for (RtsMetadataCol col : rtsMetadataCols) {
-            MetadataCol column = new MetadataCol();
-            column.setName(col.getName());
-            column.setDescribe(col.getDescribe());
-            column.setSeq(col.getSeq());
+            MetadataCol column = new MetadataCol ();
+            column.setName (col.getName ());
+            column.setDescribe (col.getDescribe ());
+            column.setSeq (col.getSeq ());
+            column.setType (col.getType ());
         }
         return columns;
     }

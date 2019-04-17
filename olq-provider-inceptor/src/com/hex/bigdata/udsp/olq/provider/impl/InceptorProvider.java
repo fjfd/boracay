@@ -8,13 +8,14 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by junjiem on 2017-2-15.
  */
-//@Component("com.hex.bigdata.udsp.olq.provider.impl.InceptorProvider")
 public class InceptorProvider extends JdbcProvider {
+
     private static Logger logger = LogManager.getLogger(InceptorProvider.class);
 
+    @Override
     protected OlqQuerySql getPageSql(String sql, Page page) {
         OlqQuerySql olqQuerySql = new OlqQuerySql(sql);
-        if (page == null || !sql.toUpperCase().trim().contains("SELECT")) {
+        if (page == null || !sql.toUpperCase().contains("SELECT")) {
             return olqQuerySql;
         }
         // 分页sql组装
@@ -22,7 +23,7 @@ public class InceptorProvider extends JdbcProvider {
         int pageIndex = page.getPageIndex();
         pageIndex = (pageIndex == 0 ? 1 : pageIndex);
         int startRow = (pageIndex - 1) * pageSize;
-        String pageSql = "SELECT * FROM (" + sql + " ) UDSP_VIEW LIMIT " + pageSize + ", " + startRow;
+        String pageSql = "SELECT * FROM (" + sql + ") UDSP_VIEW LIMIT " + pageSize + ", " + startRow;
         olqQuerySql.setPageSql(pageSql);
         // 总记录数查询SQL组装
         String totalSql = "SELECT COUNT(1) FROM (" + sql + ") UDSP_VIEW";

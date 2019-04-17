@@ -12,6 +12,7 @@ import java.sql.SQLException;
  * Created by junjiem on 2016-6-21.
  */
 public class TDJdbcApiHelper extends BaseJdbcApiHelper {
+
     public TDJdbcApiHelper(Connection conn) throws SQLException {
         super(conn);
     }

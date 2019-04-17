@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="hex-udsp-rts-executor-kafka1">
+    <output-path>$PROJECT_DIR$/out/artifacts/hex_udsp_rts_executor_kafka1</output-path>
+    <root id="archive" name="hex-udsp-rts-executor-kafka1.jar">
+      <element id="module-output" name="rts-executor-kafka1" />
+    </root>
+  </artifact>
+</component>

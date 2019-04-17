@@ -10,11 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 /**
- * 临时文件清除
- * Created with IntelliJ IDEA
- * Author: tomnic.wang
- * DATE:2017/6/14
- * TIME:8:55
+ * 临时文件定时清理
  */
 @Component
 public class TempFileCleanTask {
@@ -22,7 +18,6 @@ public class TempFileCleanTask {
      * 日志打印
      */
     private static Logger logger = LogManager.getLogger(TempFileCleanTask.class);
-
 
     /**
      * 清理N天前的数据，即保留最近N天数据

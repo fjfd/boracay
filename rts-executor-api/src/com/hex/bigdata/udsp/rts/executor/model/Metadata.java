@@ -1,7 +1,7 @@
 package com.hex.bigdata.udsp.rts.executor.model;
 
 import com.hex.bigdata.udsp.common.api.model.Datasource;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;

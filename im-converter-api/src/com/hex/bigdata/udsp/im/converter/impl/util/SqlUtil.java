@@ -245,7 +245,7 @@ public class SqlUtil {
         for (MetadataCol col : metadataCol) {
             if (col.isStored()) { // 存储
                 TableColumn tableColumn = new TableColumn(col.getName(), col.getType().getValue(), col.getDescribe(),
-                        org.apache.commons.lang.StringUtils.isEmpty(col.getLength()) ? "0" : col.getLength(), col.isPrimary());
+                        StringUtils.isBlank(col.getLength()) ? "0" : col.getLength(), col.isPrimary());
                 tableColumns.add(tableColumn);
             }
         }

@@ -43,6 +43,8 @@ insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent
 values ('OLQ_DS_PROPS_PGSQL', 'remove.abandoned', '是否进行没用连接的回收', null, 18, null, null, 'default', 'true');
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
 values ('OLQ_DS_PROPS_PGSQL', 'max.data.size', '最大数据返回条数', null, 19, null, null, 'default', '65535');
+insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)
+values ('OLQ_DS_PROPS_PGSQL', 'max.data.size.alarm', '超过最大返回数是否告警', null, 20, null, null, 'default', 'true');
 
 -- 添加OLQ的接口实现类
 insert into T_GF_DICT (dict_type_id, dict_id, dict_name, status, sort_no, parent_id, seqno, appid, filter)

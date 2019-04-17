@@ -1,5 +1,6 @@
 package com.hex.bigdata.udsp.jdbc.netty;
 
+import com.hex.bigdata.udsp.config.NettyClientConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -22,14 +23,14 @@ public class NettyClientFactory extends AbstractClientFactory {
     /**
      * 共享IO线程
      **/
-    public static final NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+    public static final NioEventLoopGroup workerGroup = new NioEventLoopGroup ();
 
     public static final ByteBufAllocator byteBufAllocator;
 
     static {
-        workerGroup.setIoRatio(SystemPropertyUtil.getInt("ioratio", 100));
+        workerGroup.setIoRatio (SystemPropertyUtil.getInt ("ioratio", 100));
 
-        if (SystemPropertyUtil.getBoolean("bytebuf.pool", false)) {
+        if (SystemPropertyUtil.getBoolean ("bytebuf.pool", false)) {
             byteBufAllocator = PooledByteBufAllocator.DEFAULT;
         } else {
             byteBufAllocator = UnpooledByteBufAllocator.DEFAULT;
@@ -38,32 +39,34 @@ public class NettyClientFactory extends AbstractClientFactory {
 
     @Override
     protected Client createClient(RemotingUrl url) throws Exception {
-        final Bootstrap bootstrap = new Bootstrap();
-        NettyClientInitializer initializer = new NettyClientInitializer();
-        bootstrap.group(NettyClientFactory.workerGroup) //
-                .option(ChannelOption.TCP_NODELAY, true) // 有数据立即发送
-                .option(ChannelOption.SO_REUSEADDR, true) //
-                .option(ChannelOption.SO_KEEPALIVE, true) // 保持连接
-                .option(ChannelOption.ALLOCATOR, NettyClientFactory.byteBufAllocator) //
-                .option(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(Integer.MAX_VALUE)) // 最大接收返回数据大小
-                .channel(NioSocketChannel.class) //
-                .handler(initializer); //
-        int connectTimeout = url.getConnectionTimeout();
+        final Bootstrap bootstrap = new Bootstrap ();
+        NettyClientInitializer initializer = new NettyClientInitializer ();
+        bootstrap.group (NettyClientFactory.workerGroup) //
+                .option (ChannelOption.TCP_NODELAY, true) // 有数据立即发送
+                .option (ChannelOption.SO_REUSEADDR, true) //
+                .option (ChannelOption.SO_KEEPALIVE, true) // 保持连接
+                .option (ChannelOption.ALLOCATOR, NettyClientFactory.byteBufAllocator) //
+                // 最大接收返回数据大小，这里的值太小会导致返回大的结果被分段，值太大会导致对外内存溢出需要设置-XX:MaxDirectMemorySize=xxx加大。
+                .option (ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator (NettyClientConfig.getBufferSize ()))
+                .channel (NioSocketChannel.class) //
+                .handler (initializer); //
+        System.out.println ("========>" + NettyClientConfig.getBufferSize ());
+        int connectTimeout = url.getConnectionTimeout ();
         if (connectTimeout < 1000) {
-            bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
+            bootstrap.option (ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
         } else {
-            bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
+            bootstrap.option (ChannelOption.CONNECT_TIMEOUT_MILLIS, connectTimeout);
         }
-        String targetIP = url.getHost();
-        int targetPort = url.getPort();
-        ChannelFuture future = bootstrap.connect(new InetSocketAddress(targetIP, targetPort));
-        if (future.awaitUninterruptibly(connectTimeout) && future.isSuccess() && future.channel().isActive()) {
-            Channel channel = future.channel();
-            return new NettyClient(url, channel, initializer);
+        String targetIP = url.getHost ();
+        int targetPort = url.getPort ();
+        ChannelFuture future = bootstrap.connect (new InetSocketAddress (targetIP, targetPort));
+        if (future.awaitUninterruptibly (connectTimeout) && future.isSuccess () && future.channel ().isActive ()) {
+            Channel channel = future.channel ();
+            return new NettyClient (url, channel, initializer);
         } else {
-            future.cancel(true);
-            future.channel().close();
-            throw new Exception(targetIP);
+            future.cancel (true);
+            future.channel ().close ();
+            throw new Exception (targetIP);
         }
     }
 

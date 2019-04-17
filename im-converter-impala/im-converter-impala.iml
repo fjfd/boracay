@@ -8,7 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="common" level="project" />
-    <orderEntry type="library" name="impala-jdbc" level="project" />
+    <orderEntry type="library" name="hive-jdbc" level="project" />
     <orderEntry type="module" module-name="md" />
     <orderEntry type="module" module-name="common-api" />
     <orderEntry type="module" module-name="im-converter-api" />

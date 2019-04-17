@@ -24,6 +24,6 @@
     <orderEntry type="module" module-name="olq-provider-mysql" />
     <orderEntry type="module" module-name="olq-provider-oracle" />
     <orderEntry type="module" module-name="olq-provider-pgsql" />
-    <orderEntry type="library" name="hbase" level="project" />
+    <orderEntry type="module" module-name="olq-provider-dsl" />
   </component>
 </module>
